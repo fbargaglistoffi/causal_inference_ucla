@@ -18,7 +18,7 @@ library(ggplot2)
 library(dplyr)
 ```
 
-# Class Materials
+# Foundations of Causal Thinking
 
 **Slides:** [Module 1](https://drive.google.com/file/d/1cDgTAxA05Z87-gjDN3Ooljl2bF1Cc4ug/view?usp=sharing)
 
@@ -40,7 +40,7 @@ library(dplyr)
 
 ---
 
-# Association vs. Causation
+## Association vs. Causation
 
 **Association** refers to a statistical relationship where two variables move together, but one doesn't necessarily cause the other. For instance, ice cream sales and drowning incidents both rise in the summer, not because one causes the other, but because they share a third factor: temperature. In contrast, **causation** implies a direct cause-and-effect relationship, where changing one variable leads to changes in another. Establishing causation requires rigorous methods, such as randomized controlled trials, to rule out confounding factors.
 
