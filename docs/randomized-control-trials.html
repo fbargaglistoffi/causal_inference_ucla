@@ -4,22 +4,23 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>2 Randomized Control Trials | Causal-Inference-Graduate.knit</title>
+  <title>6 Randomized Control Trials | Week 1: Foundations of Causal Thinking in Public Health</title>
   <meta name="description" content="An undergraduate course on causal inference" />
   <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="2 Randomized Control Trials | Causal-Inference-Graduate.knit" />
+  <meta property="og:title" content="6 Randomized Control Trials | Week 1: Foundations of Causal Thinking in Public Health" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="An undergraduate course on causal inference" />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="2 Randomized Control Trials | Causal-Inference-Graduate.knit" />
+  <meta name="twitter:title" content="6 Randomized Control Trials | Week 1: Foundations of Causal Thinking in Public Health" />
   
   <meta name="twitter:description" content="An undergraduate course on causal inference" />
   
 
+<meta name="author" content="Falco J. Bargagli-Stoffi" />
 
 
 
@@ -28,7 +29,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="foundations-of-causal-thinking-in-public-health.html"/>
+<link rel="prev" href="measuring-effects-for-binary-outcomes.html"/>
 <link rel="next" href="observational-studies.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -161,71 +162,92 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="setup.html"><a href="setup.html#base-r-version-simple"><i class="fa fa-check"></i>Base R version (simple)</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="causal-dictionary.html"><a href="causal-dictionary.html"><i class="fa fa-check"></i>Causal Dictionary</a></li>
-<li class="chapter" data-level="1" data-path="foundations-of-causal-thinking-in-public-health.html"><a href="foundations-of-causal-thinking-in-public-health.html"><i class="fa fa-check"></i><b>1</b> Foundations of Causal Thinking in Public Health</a>
+<li class="chapter" data-level="1" data-path="class-materials.html"><a href="class-materials.html"><i class="fa fa-check"></i><b>1</b> Class Materials</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="foundations-of-causal-thinking-in-public-health.html"><a href="foundations-of-causal-thinking-in-public-health.html#association-vs.-causation"><i class="fa fa-check"></i><b>1.1</b> Association vs. Causation</a></li>
-<li class="chapter" data-level="1.2" data-path="foundations-of-causal-thinking-in-public-health.html"><a href="foundations-of-causal-thinking-in-public-health.html#introduction-to-counterfactuals-and-potential-outcomes"><i class="fa fa-check"></i><b>1.2</b> Introduction to Counterfactuals and Potential Outcomes</a></li>
-<li class="chapter" data-level="1.3" data-path="foundations-of-causal-thinking-in-public-health.html"><a href="foundations-of-causal-thinking-in-public-health.html#causal-estimands-and-identification"><i class="fa fa-check"></i><b>1.3</b> Causal Estimands and Identification</a></li>
-<li class="chapter" data-level="1.4" data-path="foundations-of-causal-thinking-in-public-health.html"><a href="foundations-of-causal-thinking-in-public-health.html#measuring-effects-for-binary-outcomes"><i class="fa fa-check"></i><b>1.4</b> Measuring Effects for Binary Outcomes</a></li>
+<li class="chapter" data-level="1.1" data-path="class-materials.html"><a href="class-materials.html#textbook-reading"><i class="fa fa-check"></i><b>1.1</b> Textbook Reading</a></li>
+<li class="chapter" data-level="1.2" data-path="class-materials.html"><a href="class-materials.html#supplementary-reading"><i class="fa fa-check"></i><b>1.2</b> Supplementary Reading</a></li>
+<li class="chapter" data-level="1.3" data-path="class-materials.html"><a href="class-materials.html#topics-covered"><i class="fa fa-check"></i><b>1.3</b> Topics Covered</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="randomized-control-trials.html"><a href="randomized-control-trials.html"><i class="fa fa-check"></i><b>2</b> Randomized Control Trials</a>
+<li class="chapter" data-level="2" data-path="association-vs.-causation.html"><a href="association-vs.-causation.html"><i class="fa fa-check"></i><b>2</b> Association vs. Causation</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="randomized-control-trials.html"><a href="randomized-control-trials.html#randomized-controlled-trials-the-gold-standard"><i class="fa fa-check"></i><b>2.1</b> Randomized controlled trials: the gold standard</a></li>
-<li class="chapter" data-level="2.2" data-path="randomized-control-trials.html"><a href="randomized-control-trials.html#basic-experimental-design-principles"><i class="fa fa-check"></i><b>2.2</b> Basic Experimental Design Principles</a></li>
-<li class="chapter" data-level="2.3" data-path="randomized-control-trials.html"><a href="randomized-control-trials.html#limitations-of-rcts-in-public-health-contexts"><i class="fa fa-check"></i><b>2.3</b> Limitations of RCTs in Public Health Contexts</a></li>
-<li class="chapter" data-level="2.4" data-path="randomized-control-trials.html"><a href="randomized-control-trials.html#common-threats-to-internal-and-external-validity"><i class="fa fa-check"></i><b>2.4</b> Common Threats to Internal and External Validity</a></li>
-<li class="chapter" data-level="2.5" data-path="randomized-control-trials.html"><a href="randomized-control-trials.html#causal-quantities-sate-vs-pate"><i class="fa fa-check"></i><b>2.5</b> Causal Quantities: SATE vs PATE</a></li>
+<li class="chapter" data-level="2.1" data-path="association-vs.-causation.html"><a href="association-vs.-causation.html#simulating-simpsons-paradox"><i class="fa fa-check"></i><b>2.1</b> Simulating Simpson’s Paradox</a></li>
+<li class="chapter" data-level="2.2" data-path="association-vs.-causation.html"><a href="association-vs.-causation.html#visualizing-the-overall-misleading-trend"><i class="fa fa-check"></i><b>2.2</b> Visualizing the Overall (Misleading) Trend</a></li>
+<li class="chapter" data-level="2.3" data-path="association-vs.-causation.html"><a href="association-vs.-causation.html#stratifying-by-severity-reveals-the-truth"><i class="fa fa-check"></i><b>2.3</b> Stratifying by Severity Reveals the Truth</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="observational-studies.html"><a href="observational-studies.html"><i class="fa fa-check"></i><b>3</b> Observational Studies</a>
+<li class="chapter" data-level="3" data-path="introduction-to-counterfactuals-and-potential-outcomes.html"><a href="introduction-to-counterfactuals-and-potential-outcomes.html"><i class="fa fa-check"></i><b>3</b> Introduction to Counterfactuals and Potential Outcomes</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="observational-studies.html"><a href="observational-studies.html#the-challenge-of-confounding-in-public-health-and-medical-research"><i class="fa fa-check"></i><b>3.1</b> The challenge of confounding in public health and medical research</a></li>
-<li class="chapter" data-level="3.2" data-path="observational-studies.html"><a href="observational-studies.html#exchangeability-positivity-and-sutva"><i class="fa fa-check"></i><b>3.2</b> Exchangeability, positivity, and SUTVA</a></li>
-<li class="chapter" data-level="3.3" data-path="observational-studies.html"><a href="observational-studies.html#effect-identification-in-observational-studies"><i class="fa fa-check"></i><b>3.3</b> Effect Identification in Observational Studies</a></li>
+<li class="chapter" data-level="3.1" data-path="introduction-to-counterfactuals-and-potential-outcomes.html"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#notation"><i class="fa fa-check"></i><b>3.1</b> Notation</a></li>
+<li class="chapter" data-level="3.2" data-path="introduction-to-counterfactuals-and-potential-outcomes.html"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#simulation-seeing-confounding-bias-in-action"><i class="fa fa-check"></i><b>3.2</b> Simulation: Seeing Confounding Bias in Action</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="effect-modification-and-interaction.html"><a href="effect-modification-and-interaction.html"><i class="fa fa-check"></i><b>4</b> Effect Modification and Interaction</a>
+<li class="chapter" data-level="4" data-path="causal-estimands-and-identification.html"><a href="causal-estimands-and-identification.html"><i class="fa fa-check"></i><b>4</b> Causal Estimands and Identification</a></li>
+<li class="chapter" data-level="5" data-path="measuring-effects-for-binary-outcomes.html"><a href="measuring-effects-for-binary-outcomes.html"><i class="fa fa-check"></i><b>5</b> Measuring Effects for Binary Outcomes</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="effect-modification-and-interaction.html"><a href="effect-modification-and-interaction.html#effect-modification-and-adjustment-methods"><i class="fa fa-check"></i><b>4.1</b> Effect Modification and Adjustment Methods</a></li>
-<li class="chapter" data-level="4.2" data-path="effect-modification-and-interaction.html"><a href="effect-modification-and-interaction.html#interaction"><i class="fa fa-check"></i><b>4.2</b> Interaction</a></li>
-<li class="chapter" data-level="4.3" data-path="effect-modification-and-interaction.html"><a href="effect-modification-and-interaction.html#identifying-interaction"><i class="fa fa-check"></i><b>4.3</b> Identifying Interaction</a></li>
-<li class="chapter" data-level="4.4" data-path="effect-modification-and-interaction.html"><a href="effect-modification-and-interaction.html#effect-modification-vs-interaction"><i class="fa fa-check"></i><b>4.4</b> Effect Modification vs Interaction</a></li>
+<li class="chapter" data-level="5.1" data-path="measuring-effects-for-binary-outcomes.html"><a href="measuring-effects-for-binary-outcomes.html#g-computation-a-preview"><i class="fa fa-check"></i><b>5.1</b> G-Computation: A Preview</a></li>
+<li class="chapter" data-level="5.2" data-path="measuring-effects-for-binary-outcomes.html"><a href="measuring-effects-for-binary-outcomes.html#simulation-heart-surgery-and-survival"><i class="fa fa-check"></i><b>5.2</b> Simulation: Heart Surgery and Survival</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="measuring-effects-for-binary-outcomes.html"><a href="measuring-effects-for-binary-outcomes.html#step-1-fit-the-logistic-regression-model"><i class="fa fa-check"></i><b>5.2.1</b> Step 1: Fit the Logistic Regression Model</a></li>
+<li class="chapter" data-level="5.2.2" data-path="measuring-effects-for-binary-outcomes.html"><a href="measuring-effects-for-binary-outcomes.html#step-23-predict-counterfactual-outcomes"><i class="fa fa-check"></i><b>5.2.2</b> Step 2–3: Predict Counterfactual Outcomes</a></li>
+<li class="chapter" data-level="5.2.3" data-path="measuring-effects-for-binary-outcomes.html"><a href="measuring-effects-for-binary-outcomes.html#step-4-estimate-causal-effects"><i class="fa fa-check"></i><b>5.2.3</b> Step 4: Estimate Causal Effects</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="introduction-to-causal-diagrams.html"><a href="introduction-to-causal-diagrams.html"><i class="fa fa-check"></i><b>5</b> Introduction to Causal Diagrams</a>
-<ul>
-<li class="chapter" data-level="5.1" data-path="introduction-to-causal-diagrams.html"><a href="introduction-to-causal-diagrams.html#basic-principles-of-directed-acyclic-graphs-dags"><i class="fa fa-check"></i><b>5.1</b> Basic principles of directed acyclic graphs (DAGs)</a></li>
-<li class="chapter" data-level="5.2" data-path="introduction-to-causal-diagrams.html"><a href="introduction-to-causal-diagrams.html#common-causal-structures-in-public-health"><i class="fa fa-check"></i><b>5.2</b> Common Causal Structures in Public Health</a></li>
-<li class="chapter" data-level="5.3" data-path="introduction-to-causal-diagrams.html"><a href="introduction-to-causal-diagrams.html#application-drawing-dags-for-public-health-scenarios"><i class="fa fa-check"></i><b>5.3</b> Application: drawing DAGs for public health scenarios</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="confounding-and-selection-bias.html"><a href="confounding-and-selection-bias.html"><i class="fa fa-check"></i><b>6</b> Confounding and Selection Bias</a>
+<li class="chapter" data-level="6" data-path="randomized-control-trials.html"><a href="randomized-control-trials.html"><i class="fa fa-check"></i><b>6</b> Randomized Control Trials</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="confounding-and-selection-bias.html"><a href="confounding-and-selection-bias.html#the-form-of-selection-bias"><i class="fa fa-check"></i><b>6.1</b> The Form of Selection Bias</a></li>
-<li class="chapter" data-level="6.2" data-path="confounding-and-selection-bias.html"><a href="confounding-and-selection-bias.html#how-to-adjust-for-selection-bias"><i class="fa fa-check"></i><b>6.2</b> How to Adjust for Selection Bias</a></li>
-<li class="chapter" data-level="6.3" data-path="confounding-and-selection-bias.html"><a href="confounding-and-selection-bias.html#the-structure-of-confounding"><i class="fa fa-check"></i><b>6.3</b> The Structure of Confounding</a></li>
-<li class="chapter" data-level="6.4" data-path="confounding-and-selection-bias.html"><a href="confounding-and-selection-bias.html#how-to-adjust-for-confounding"><i class="fa fa-check"></i><b>6.4</b> How to Adjust for Confounding</a></li>
+<li class="chapter" data-level="6.1" data-path="randomized-control-trials.html"><a href="randomized-control-trials.html#randomized-controlled-trials-the-gold-standard"><i class="fa fa-check"></i><b>6.1</b> Randomized controlled trials: the gold standard</a></li>
+<li class="chapter" data-level="6.2" data-path="randomized-control-trials.html"><a href="randomized-control-trials.html#basic-experimental-design-principles"><i class="fa fa-check"></i><b>6.2</b> Basic Experimental Design Principles</a></li>
+<li class="chapter" data-level="6.3" data-path="randomized-control-trials.html"><a href="randomized-control-trials.html#limitations-of-rcts-in-public-health-contexts"><i class="fa fa-check"></i><b>6.3</b> Limitations of RCTs in Public Health Contexts</a></li>
+<li class="chapter" data-level="6.4" data-path="randomized-control-trials.html"><a href="randomized-control-trials.html#common-threats-to-internal-and-external-validity"><i class="fa fa-check"></i><b>6.4</b> Common Threats to Internal and External Validity</a></li>
+<li class="chapter" data-level="6.5" data-path="randomized-control-trials.html"><a href="randomized-control-trials.html#causal-quantities-sate-vs-pate"><i class="fa fa-check"></i><b>6.5</b> Causal Quantities: SATE vs PATE</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="other-common-pitfalls-of-causal-analyses.html"><a href="other-common-pitfalls-of-causal-analyses.html"><i class="fa fa-check"></i><b>7</b> Other Common Pitfalls of Causal Analyses</a>
+<li class="chapter" data-level="7" data-path="observational-studies.html"><a href="observational-studies.html"><i class="fa fa-check"></i><b>7</b> Observational Studies</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="other-common-pitfalls-of-causal-analyses.html"><a href="other-common-pitfalls-of-causal-analyses.html#measurement-bias"><i class="fa fa-check"></i><b>7.1</b> Measurement Bias</a></li>
-<li class="chapter" data-level="7.2" data-path="other-common-pitfalls-of-causal-analyses.html"><a href="other-common-pitfalls-of-causal-analyses.html#non-compliance"><i class="fa fa-check"></i><b>7.2</b> Non-compliance</a></li>
-<li class="chapter" data-level="7.3" data-path="other-common-pitfalls-of-causal-analyses.html"><a href="other-common-pitfalls-of-causal-analyses.html#non-causal-diagrams"><i class="fa fa-check"></i><b>7.3</b> Non-Causal Diagrams</a></li>
-<li class="chapter" data-level="7.4" data-path="other-common-pitfalls-of-causal-analyses.html"><a href="other-common-pitfalls-of-causal-analyses.html#publication-bias-and-p-hacking"><i class="fa fa-check"></i><b>7.4</b> Publication Bias and P-Hacking</a></li>
-<li class="chapter" data-level="7.5" data-path="other-common-pitfalls-of-causal-analyses.html"><a href="other-common-pitfalls-of-causal-analyses.html#over--and-mis-interpretation-of-statistical-analyses"><i class="fa fa-check"></i><b>7.5</b> Over- and Mis-Interpretation of Statistical Analyses</a></li>
+<li class="chapter" data-level="7.1" data-path="observational-studies.html"><a href="observational-studies.html#the-challenge-of-confounding-in-public-health-and-medical-research"><i class="fa fa-check"></i><b>7.1</b> The challenge of confounding in public health and medical research</a></li>
+<li class="chapter" data-level="7.2" data-path="observational-studies.html"><a href="observational-studies.html#exchangeability-positivity-and-sutva"><i class="fa fa-check"></i><b>7.2</b> Exchangeability, positivity, and SUTVA</a></li>
+<li class="chapter" data-level="7.3" data-path="observational-studies.html"><a href="observational-studies.html#effect-identification-in-observational-studies"><i class="fa fa-check"></i><b>7.3</b> Effect Identification in Observational Studies</a></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="from-identification-to-estimation.html"><a href="from-identification-to-estimation.html"><i class="fa fa-check"></i><b>8</b> From Identification to Estimation</a>
+<li class="chapter" data-level="8" data-path="effect-modification-and-interaction.html"><a href="effect-modification-and-interaction.html"><i class="fa fa-check"></i><b>8</b> Effect Modification and Interaction</a>
 <ul>
-<li class="chapter" data-level="8.1" data-path="from-identification-to-estimation.html"><a href="from-identification-to-estimation.html#identification-and-estimation"><i class="fa fa-check"></i><b>8.1</b> Identification and Estimation</a></li>
-<li class="chapter" data-level="8.2" data-path="from-identification-to-estimation.html"><a href="from-identification-to-estimation.html#estimation-of-causal-effects"><i class="fa fa-check"></i><b>8.2</b> Estimation of causal effects</a></li>
-<li class="chapter" data-level="8.3" data-path="from-identification-to-estimation.html"><a href="from-identification-to-estimation.html#taxonomy-of-estimation-models"><i class="fa fa-check"></i><b>8.3</b> Taxonomy of estimation models</a></li>
+<li class="chapter" data-level="8.1" data-path="effect-modification-and-interaction.html"><a href="effect-modification-and-interaction.html#effect-modification-and-adjustment-methods"><i class="fa fa-check"></i><b>8.1</b> Effect Modification and Adjustment Methods</a></li>
+<li class="chapter" data-level="8.2" data-path="effect-modification-and-interaction.html"><a href="effect-modification-and-interaction.html#interaction"><i class="fa fa-check"></i><b>8.2</b> Interaction</a></li>
+<li class="chapter" data-level="8.3" data-path="effect-modification-and-interaction.html"><a href="effect-modification-and-interaction.html#identifying-interaction"><i class="fa fa-check"></i><b>8.3</b> Identifying Interaction</a></li>
+<li class="chapter" data-level="8.4" data-path="effect-modification-and-interaction.html"><a href="effect-modification-and-interaction.html#effect-modification-vs-interaction"><i class="fa fa-check"></i><b>8.4</b> Effect Modification vs Interaction</a></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="applications-of-causal-inference-in-public-health-and-medical-research.html"><a href="applications-of-causal-inference-in-public-health-and-medical-research.html"><i class="fa fa-check"></i><b>9</b> Applications of Causal Inference in Public Health and Medical Research</a>
+<li class="chapter" data-level="9" data-path="introduction-to-causal-diagrams.html"><a href="introduction-to-causal-diagrams.html"><i class="fa fa-check"></i><b>9</b> Introduction to Causal Diagrams</a>
 <ul>
-<li class="chapter" data-level="9.1" data-path="applications-of-causal-inference-in-public-health-and-medical-research.html"><a href="applications-of-causal-inference-in-public-health-and-medical-research.html#public-health-policy-evaluation"><i class="fa fa-check"></i><b>9.1</b> Public health policy evaluation</a></li>
-<li class="chapter" data-level="9.2" data-path="applications-of-causal-inference-in-public-health-and-medical-research.html"><a href="applications-of-causal-inference-in-public-health-and-medical-research.html#environmental-exposure-studies"><i class="fa fa-check"></i><b>9.2</b> Environmental exposure studies</a></li>
-<li class="chapter" data-level="9.3" data-path="applications-of-causal-inference-in-public-health-and-medical-research.html"><a href="applications-of-causal-inference-in-public-health-and-medical-research.html#health-disparities-research"><i class="fa fa-check"></i><b>9.3</b> Health disparities research</a></li>
-<li class="chapter" data-level="9.4" data-path="applications-of-causal-inference-in-public-health-and-medical-research.html"><a href="applications-of-causal-inference-in-public-health-and-medical-research.html#prevention-program-evaluation"><i class="fa fa-check"></i><b>9.4</b> Prevention program evaluation</a></li>
+<li class="chapter" data-level="9.1" data-path="introduction-to-causal-diagrams.html"><a href="introduction-to-causal-diagrams.html#basic-principles-of-directed-acyclic-graphs-dags"><i class="fa fa-check"></i><b>9.1</b> Basic principles of directed acyclic graphs (DAGs)</a></li>
+<li class="chapter" data-level="9.2" data-path="introduction-to-causal-diagrams.html"><a href="introduction-to-causal-diagrams.html#common-causal-structures-in-public-health"><i class="fa fa-check"></i><b>9.2</b> Common Causal Structures in Public Health</a></li>
+<li class="chapter" data-level="9.3" data-path="introduction-to-causal-diagrams.html"><a href="introduction-to-causal-diagrams.html#application-drawing-dags-for-public-health-scenarios"><i class="fa fa-check"></i><b>9.3</b> Application: drawing DAGs for public health scenarios</a></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="presentation-of-final-projects.html"><a href="presentation-of-final-projects.html"><i class="fa fa-check"></i><b>10</b> Presentation of Final Projects</a>
+<li class="chapter" data-level="10" data-path="confounding-and-selection-bias.html"><a href="confounding-and-selection-bias.html"><i class="fa fa-check"></i><b>10</b> Confounding and Selection Bias</a>
 <ul>
-<li class="chapter" data-level="10.1" data-path="presentation-of-final-projects.html"><a href="presentation-of-final-projects.html#final-project"><i class="fa fa-check"></i><b>10.1</b> Final Project</a></li>
+<li class="chapter" data-level="10.1" data-path="confounding-and-selection-bias.html"><a href="confounding-and-selection-bias.html#the-form-of-selection-bias"><i class="fa fa-check"></i><b>10.1</b> The Form of Selection Bias</a></li>
+<li class="chapter" data-level="10.2" data-path="confounding-and-selection-bias.html"><a href="confounding-and-selection-bias.html#how-to-adjust-for-selection-bias"><i class="fa fa-check"></i><b>10.2</b> How to Adjust for Selection Bias</a></li>
+<li class="chapter" data-level="10.3" data-path="confounding-and-selection-bias.html"><a href="confounding-and-selection-bias.html#the-structure-of-confounding"><i class="fa fa-check"></i><b>10.3</b> The Structure of Confounding</a></li>
+<li class="chapter" data-level="10.4" data-path="confounding-and-selection-bias.html"><a href="confounding-and-selection-bias.html#how-to-adjust-for-confounding"><i class="fa fa-check"></i><b>10.4</b> How to Adjust for Confounding</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="other-common-pitfalls-of-causal-analyses.html"><a href="other-common-pitfalls-of-causal-analyses.html"><i class="fa fa-check"></i><b>11</b> Other Common Pitfalls of Causal Analyses</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="other-common-pitfalls-of-causal-analyses.html"><a href="other-common-pitfalls-of-causal-analyses.html#measurement-bias"><i class="fa fa-check"></i><b>11.1</b> Measurement Bias</a></li>
+<li class="chapter" data-level="11.2" data-path="other-common-pitfalls-of-causal-analyses.html"><a href="other-common-pitfalls-of-causal-analyses.html#non-compliance"><i class="fa fa-check"></i><b>11.2</b> Non-compliance</a></li>
+<li class="chapter" data-level="11.3" data-path="other-common-pitfalls-of-causal-analyses.html"><a href="other-common-pitfalls-of-causal-analyses.html#non-causal-diagrams"><i class="fa fa-check"></i><b>11.3</b> Non-Causal Diagrams</a></li>
+<li class="chapter" data-level="11.4" data-path="other-common-pitfalls-of-causal-analyses.html"><a href="other-common-pitfalls-of-causal-analyses.html#publication-bias-and-p-hacking"><i class="fa fa-check"></i><b>11.4</b> Publication Bias and P-Hacking</a></li>
+<li class="chapter" data-level="11.5" data-path="other-common-pitfalls-of-causal-analyses.html"><a href="other-common-pitfalls-of-causal-analyses.html#over--and-mis-interpretation-of-statistical-analyses"><i class="fa fa-check"></i><b>11.5</b> Over- and Mis-Interpretation of Statistical Analyses</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="from-identification-to-estimation.html"><a href="from-identification-to-estimation.html"><i class="fa fa-check"></i><b>12</b> From Identification to Estimation</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="from-identification-to-estimation.html"><a href="from-identification-to-estimation.html#identification-and-estimation"><i class="fa fa-check"></i><b>12.1</b> Identification and Estimation</a></li>
+<li class="chapter" data-level="12.2" data-path="from-identification-to-estimation.html"><a href="from-identification-to-estimation.html#estimation-of-causal-effects"><i class="fa fa-check"></i><b>12.2</b> Estimation of causal effects</a></li>
+<li class="chapter" data-level="12.3" data-path="from-identification-to-estimation.html"><a href="from-identification-to-estimation.html#taxonomy-of-estimation-models"><i class="fa fa-check"></i><b>12.3</b> Taxonomy of estimation models</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="applications-of-causal-inference-in-public-health-and-medical-research.html"><a href="applications-of-causal-inference-in-public-health-and-medical-research.html"><i class="fa fa-check"></i><b>13</b> Applications of Causal Inference in Public Health and Medical Research</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="applications-of-causal-inference-in-public-health-and-medical-research.html"><a href="applications-of-causal-inference-in-public-health-and-medical-research.html#public-health-policy-evaluation"><i class="fa fa-check"></i><b>13.1</b> Public health policy evaluation</a></li>
+<li class="chapter" data-level="13.2" data-path="applications-of-causal-inference-in-public-health-and-medical-research.html"><a href="applications-of-causal-inference-in-public-health-and-medical-research.html#environmental-exposure-studies"><i class="fa fa-check"></i><b>13.2</b> Environmental exposure studies</a></li>
+<li class="chapter" data-level="13.3" data-path="applications-of-causal-inference-in-public-health-and-medical-research.html"><a href="applications-of-causal-inference-in-public-health-and-medical-research.html#health-disparities-research"><i class="fa fa-check"></i><b>13.3</b> Health disparities research</a></li>
+<li class="chapter" data-level="13.4" data-path="applications-of-causal-inference-in-public-health-and-medical-research.html"><a href="applications-of-causal-inference-in-public-health-and-medical-research.html#prevention-program-evaluation"><i class="fa fa-check"></i><b>13.4</b> Prevention program evaluation</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="presentation-of-final-projects.html"><a href="presentation-of-final-projects.html"><i class="fa fa-check"></i><b>14</b> Presentation of Final Projects</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="presentation-of-final-projects.html"><a href="presentation-of-final-projects.html#final-project"><i class="fa fa-check"></i><b>14.1</b> Final Project</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://www.falcobargaglistoffi.com/" target="blank">Instructor: Falco J. Bargagli-Stoffi</a></li>
@@ -238,7 +260,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"></a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Week 1: Foundations of Causal Thinking in Public Health</a>
           </h1>
         </div>
 
@@ -246,8 +268,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="randomized-control-trials" class="section level1 hasAnchor" number="2">
-<h1><span class="header-section-number">2</span> Randomized Control Trials<a href="randomized-control-trials.html#randomized-control-trials" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="randomized-control-trials" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">6</span> Randomized Control Trials<a href="randomized-control-trials.html#randomized-control-trials" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <blockquote>
 <h2 id="class-materials-1" class="hasAnchor">Class materials<a href="randomized-control-trials.html#class-materials-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Slides: <a href="https://drive.google.com/file/d/1lseBc7nuJOFFTBKwjDdK7OLf0CLr3_10/view"><strong>Module 2</strong></a></p>
@@ -278,8 +300,8 @@ Selected DAG examples from public health studies (provided in class)</p>
 <li>Critical reading exercise: evaluating a published RCT</li>
 </ul>
 </blockquote>
-<div id="randomized-controlled-trials-the-gold-standard" class="section level2 hasAnchor" number="2.1">
-<h2><span class="header-section-number">2.1</span> Randomized controlled trials: the gold standard<a href="randomized-control-trials.html#randomized-controlled-trials-the-gold-standard" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="randomized-controlled-trials-the-gold-standard" class="section level2 hasAnchor" number="6.1">
+<h2><span class="header-section-number">6.1</span> Randomized controlled trials: the gold standard<a href="randomized-control-trials.html#randomized-controlled-trials-the-gold-standard" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Randomized Controlled Trials (RCTs) are widely considered the gold standard in causal inference because they offer the most rigorous way to establish whether a treatment or intervention truly causes an outcome. The key feature that sets RCTs apart is randomization: participants are randomly assigned to treatment or control groups, which ensures that—on average—all other characteristics (like age, health status, and behaviors) are equally distributed across groups. This process breaks any systematic link between confounders and treatment assignment, making the groups exchangeable and allowing us to interpret differences in outcomes as causal effects of the treatment.</p>
 <p><strong>Exchangeability</strong> is the key assumption for RCTs, and random assignment of the treatment in RCTs allows us to defend this assumption. Mathematically, exchangeability is written as:</p>
 <p><span class="math display">\[
@@ -297,39 +319,39 @@ ATE &amp;= E[Y(1) - Y(0)] \\
 <p>Because of this design, RCTs eliminate the need to adjust for confounders or worry about selection bias in the same way observational studies do. They provide clean estimates of the average treatment effect (ATE) with high internal validity, especially when they are well-executed and have minimal loss to follow-up. However, RCTs are not without limitations. They can be expensive, time-consuming, and sometimes unethical or impractical—such as when withholding treatment would cause harm. Despite these limitations, RCTs serve as the benchmark against which other study designs are compared, and understanding their strengths helps us interpret both experimental and non-experimental evidence more critically.</p>
 <p>In this simulation, I will recreate a simple randomized controlled trial (RCT) to estimate the effect of a new treatment on a patient’s blood pressure (mmHg). I randomly assigned 2,000 individuals to either a treatment or control group and simulate their outcomes based on their assignment. Because of randomization, I expected the two groups to be similar in baseline characteristics, allowing for an unbiased estimate of the treatment effect. In this example, the baseline characteristics that were measured were age, BMI, cholesterol (mg/dL), and daily sodium intake (mg/day). After simulating the data, I estimated the Average Treatment Effect (ATE) by comparing mean outcomes between the groups, and visualized the distribution of outcomes to confirm the treatment impact.</p>
 <p><strong>Simulated Baseline Data and Treatment Assignment</strong></p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="randomized-control-trials.html#cb36-1" tabindex="-1"></a><span class="co"># pacman::p_load(&quot;dplyr&quot;, &quot;ggplot2&quot;)</span></span>
-<span id="cb36-2"><a href="randomized-control-trials.html#cb36-2" tabindex="-1"></a></span>
-<span id="cb36-3"><a href="randomized-control-trials.html#cb36-3" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb36-4"><a href="randomized-control-trials.html#cb36-4" tabindex="-1"></a></span>
-<span id="cb36-5"><a href="randomized-control-trials.html#cb36-5" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">2000</span></span>
-<span id="cb36-6"><a href="randomized-control-trials.html#cb36-6" tabindex="-1"></a></span>
-<span id="cb36-7"><a href="randomized-control-trials.html#cb36-7" tabindex="-1"></a>age <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">50</span>, <span class="dv">10</span>)</span>
-<span id="cb36-8"><a href="randomized-control-trials.html#cb36-8" tabindex="-1"></a></span>
-<span id="cb36-9"><a href="randomized-control-trials.html#cb36-9" tabindex="-1"></a>bmi <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">27</span>, <span class="dv">4</span>)</span>
-<span id="cb36-10"><a href="randomized-control-trials.html#cb36-10" tabindex="-1"></a></span>
-<span id="cb36-11"><a href="randomized-control-trials.html#cb36-11" tabindex="-1"></a>cholesterol <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">200</span>, <span class="dv">30</span>)</span>
-<span id="cb36-12"><a href="randomized-control-trials.html#cb36-12" tabindex="-1"></a></span>
-<span id="cb36-13"><a href="randomized-control-trials.html#cb36-13" tabindex="-1"></a>sodium_intake <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">3000</span>, <span class="dv">500</span>)</span>
-<span id="cb36-14"><a href="randomized-control-trials.html#cb36-14" tabindex="-1"></a></span>
-<span id="cb36-15"><a href="randomized-control-trials.html#cb36-15" tabindex="-1"></a>treatment <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fl">0.5</span>)</span>
-<span id="cb36-16"><a href="randomized-control-trials.html#cb36-16" tabindex="-1"></a></span>
-<span id="cb36-17"><a href="randomized-control-trials.html#cb36-17" tabindex="-1"></a>y_0 <span class="ot">&lt;-</span> <span class="dv">90</span> <span class="sc">+</span> <span class="fl">0.4</span> <span class="sc">*</span> age <span class="sc">+</span> <span class="fl">0.05</span> <span class="sc">*</span> cholesterol <span class="sc">+</span> <span class="fl">0.004</span> <span class="sc">*</span> sodium_intake <span class="sc">+</span> </span>
-<span id="cb36-18"><a href="randomized-control-trials.html#cb36-18" tabindex="-1"></a>  <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="dv">10</span>)</span>
-<span id="cb36-19"><a href="randomized-control-trials.html#cb36-19" tabindex="-1"></a></span>
-<span id="cb36-20"><a href="randomized-control-trials.html#cb36-20" tabindex="-1"></a>y_1 <span class="ot">&lt;-</span> y_0 <span class="sc">-</span> <span class="dv">10</span> <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="dv">5</span>)</span>
-<span id="cb36-21"><a href="randomized-control-trials.html#cb36-21" tabindex="-1"></a></span>
-<span id="cb36-22"><a href="randomized-control-trials.html#cb36-22" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(treatment <span class="sc">==</span> <span class="dv">1</span>, y_1, y_0)</span>
-<span id="cb36-23"><a href="randomized-control-trials.html#cb36-23" tabindex="-1"></a></span>
-<span id="cb36-24"><a href="randomized-control-trials.html#cb36-24" tabindex="-1"></a>rct_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb36-25"><a href="randomized-control-trials.html#cb36-25" tabindex="-1"></a>  <span class="at">age =</span> age,</span>
-<span id="cb36-26"><a href="randomized-control-trials.html#cb36-26" tabindex="-1"></a>  <span class="at">bmi =</span> bmi,</span>
-<span id="cb36-27"><a href="randomized-control-trials.html#cb36-27" tabindex="-1"></a>  <span class="at">cholesterol =</span> cholesterol,</span>
-<span id="cb36-28"><a href="randomized-control-trials.html#cb36-28" tabindex="-1"></a>  <span class="at">sodium_intake =</span> sodium_intake,</span>
-<span id="cb36-29"><a href="randomized-control-trials.html#cb36-29" tabindex="-1"></a>  <span class="at">treatment =</span> treatment,</span>
-<span id="cb36-30"><a href="randomized-control-trials.html#cb36-30" tabindex="-1"></a>  <span class="at">y =</span> y</span>
-<span id="cb36-31"><a href="randomized-control-trials.html#cb36-31" tabindex="-1"></a>)</span>
-<span id="cb36-32"><a href="randomized-control-trials.html#cb36-32" tabindex="-1"></a></span>
-<span id="cb36-33"><a href="randomized-control-trials.html#cb36-33" tabindex="-1"></a><span class="fu">head</span>(rct_data)</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="randomized-control-trials.html#cb46-1" tabindex="-1"></a><span class="co"># pacman::p_load(&quot;dplyr&quot;, &quot;ggplot2&quot;)</span></span>
+<span id="cb46-2"><a href="randomized-control-trials.html#cb46-2" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="randomized-control-trials.html#cb46-3" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb46-4"><a href="randomized-control-trials.html#cb46-4" tabindex="-1"></a></span>
+<span id="cb46-5"><a href="randomized-control-trials.html#cb46-5" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">2000</span></span>
+<span id="cb46-6"><a href="randomized-control-trials.html#cb46-6" tabindex="-1"></a></span>
+<span id="cb46-7"><a href="randomized-control-trials.html#cb46-7" tabindex="-1"></a>age <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">50</span>, <span class="dv">10</span>)</span>
+<span id="cb46-8"><a href="randomized-control-trials.html#cb46-8" tabindex="-1"></a></span>
+<span id="cb46-9"><a href="randomized-control-trials.html#cb46-9" tabindex="-1"></a>bmi <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">27</span>, <span class="dv">4</span>)</span>
+<span id="cb46-10"><a href="randomized-control-trials.html#cb46-10" tabindex="-1"></a></span>
+<span id="cb46-11"><a href="randomized-control-trials.html#cb46-11" tabindex="-1"></a>cholesterol <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">200</span>, <span class="dv">30</span>)</span>
+<span id="cb46-12"><a href="randomized-control-trials.html#cb46-12" tabindex="-1"></a></span>
+<span id="cb46-13"><a href="randomized-control-trials.html#cb46-13" tabindex="-1"></a>sodium_intake <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">3000</span>, <span class="dv">500</span>)</span>
+<span id="cb46-14"><a href="randomized-control-trials.html#cb46-14" tabindex="-1"></a></span>
+<span id="cb46-15"><a href="randomized-control-trials.html#cb46-15" tabindex="-1"></a>treatment <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fl">0.5</span>)</span>
+<span id="cb46-16"><a href="randomized-control-trials.html#cb46-16" tabindex="-1"></a></span>
+<span id="cb46-17"><a href="randomized-control-trials.html#cb46-17" tabindex="-1"></a>y_0 <span class="ot">&lt;-</span> <span class="dv">90</span> <span class="sc">+</span> <span class="fl">0.4</span> <span class="sc">*</span> age <span class="sc">+</span> <span class="fl">0.05</span> <span class="sc">*</span> cholesterol <span class="sc">+</span> <span class="fl">0.004</span> <span class="sc">*</span> sodium_intake <span class="sc">+</span> </span>
+<span id="cb46-18"><a href="randomized-control-trials.html#cb46-18" tabindex="-1"></a>  <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="dv">10</span>)</span>
+<span id="cb46-19"><a href="randomized-control-trials.html#cb46-19" tabindex="-1"></a></span>
+<span id="cb46-20"><a href="randomized-control-trials.html#cb46-20" tabindex="-1"></a>y_1 <span class="ot">&lt;-</span> y_0 <span class="sc">-</span> <span class="dv">10</span> <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="dv">5</span>)</span>
+<span id="cb46-21"><a href="randomized-control-trials.html#cb46-21" tabindex="-1"></a></span>
+<span id="cb46-22"><a href="randomized-control-trials.html#cb46-22" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(treatment <span class="sc">==</span> <span class="dv">1</span>, y_1, y_0)</span>
+<span id="cb46-23"><a href="randomized-control-trials.html#cb46-23" tabindex="-1"></a></span>
+<span id="cb46-24"><a href="randomized-control-trials.html#cb46-24" tabindex="-1"></a>rct_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb46-25"><a href="randomized-control-trials.html#cb46-25" tabindex="-1"></a>  <span class="at">age =</span> age,</span>
+<span id="cb46-26"><a href="randomized-control-trials.html#cb46-26" tabindex="-1"></a>  <span class="at">bmi =</span> bmi,</span>
+<span id="cb46-27"><a href="randomized-control-trials.html#cb46-27" tabindex="-1"></a>  <span class="at">cholesterol =</span> cholesterol,</span>
+<span id="cb46-28"><a href="randomized-control-trials.html#cb46-28" tabindex="-1"></a>  <span class="at">sodium_intake =</span> sodium_intake,</span>
+<span id="cb46-29"><a href="randomized-control-trials.html#cb46-29" tabindex="-1"></a>  <span class="at">treatment =</span> treatment,</span>
+<span id="cb46-30"><a href="randomized-control-trials.html#cb46-30" tabindex="-1"></a>  <span class="at">y =</span> y</span>
+<span id="cb46-31"><a href="randomized-control-trials.html#cb46-31" tabindex="-1"></a>)</span>
+<span id="cb46-32"><a href="randomized-control-trials.html#cb46-32" tabindex="-1"></a></span>
+<span id="cb46-33"><a href="randomized-control-trials.html#cb46-33" tabindex="-1"></a><span class="fu">head</span>(rct_data)</span></code></pre></div>
 <pre><code>##        age      bmi cholesterol sodium_intake treatment        y
 ## 1 44.39524 24.95359    205.8965      2650.386         1 139.3092
 ## 2 47.69823 27.94775    219.5034      3498.226         0 127.8826
@@ -338,39 +360,39 @@ ATE &amp;= E[Y(1) - Y(0)] \\
 ## 5 51.29288 27.69654    139.2167      3301.933         0 157.9980
 ## 6 67.15065 24.53893    266.1598      2695.978         1 125.1818</code></pre>
 <p><strong>Estimated the Average Treatment Effect (ATE)</strong></p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="randomized-control-trials.html#cb38-1" tabindex="-1"></a>ate_estimate <span class="ot">&lt;-</span> rct_data <span class="sc">|&gt;</span></span>
-<span id="cb38-2"><a href="randomized-control-trials.html#cb38-2" tabindex="-1"></a>  <span class="fu">group_by</span>(treatment) <span class="sc">|&gt;</span></span>
-<span id="cb38-3"><a href="randomized-control-trials.html#cb38-3" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_outcome =</span> <span class="fu">mean</span>(y)) <span class="sc">|&gt;</span></span>
-<span id="cb38-4"><a href="randomized-control-trials.html#cb38-4" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">ATE =</span> <span class="fu">diff</span>(mean_outcome)) <span class="sc">|&gt;</span></span>
-<span id="cb38-5"><a href="randomized-control-trials.html#cb38-5" tabindex="-1"></a>  <span class="fu">pull</span>(ATE)</span>
-<span id="cb38-6"><a href="randomized-control-trials.html#cb38-6" tabindex="-1"></a></span>
-<span id="cb38-7"><a href="randomized-control-trials.html#cb38-7" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">&quot;Estimated ATE: &quot;</span>, <span class="fu">round</span>(ate_estimate, <span class="dv">2</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="randomized-control-trials.html#cb48-1" tabindex="-1"></a>ate_estimate <span class="ot">&lt;-</span> rct_data <span class="sc">|&gt;</span></span>
+<span id="cb48-2"><a href="randomized-control-trials.html#cb48-2" tabindex="-1"></a>  <span class="fu">group_by</span>(treatment) <span class="sc">|&gt;</span></span>
+<span id="cb48-3"><a href="randomized-control-trials.html#cb48-3" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_outcome =</span> <span class="fu">mean</span>(y)) <span class="sc">|&gt;</span></span>
+<span id="cb48-4"><a href="randomized-control-trials.html#cb48-4" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">ATE =</span> <span class="fu">diff</span>(mean_outcome)) <span class="sc">|&gt;</span></span>
+<span id="cb48-5"><a href="randomized-control-trials.html#cb48-5" tabindex="-1"></a>  <span class="fu">pull</span>(ATE)</span>
+<span id="cb48-6"><a href="randomized-control-trials.html#cb48-6" tabindex="-1"></a></span>
+<span id="cb48-7"><a href="randomized-control-trials.html#cb48-7" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">&quot;Estimated ATE: &quot;</span>, <span class="fu">round</span>(ate_estimate, <span class="dv">2</span>))</span></code></pre></div>
 <pre><code>## [1] &quot;Estimated ATE:  -10.01&quot;</code></pre>
 <p>Based on our estimate, the treatment reduces blood pressure by 10 mmHg.</p>
 <p><strong>Visualization of the Outcome Distributions</strong></p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="randomized-control-trials.html#cb40-1" tabindex="-1"></a><span class="fu">ggplot</span>(rct_data, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.factor</span>(treatment), <span class="at">y =</span> y, <span class="at">fill =</span> <span class="fu">as.factor</span>(treatment))) <span class="sc">+</span> </span>
-<span id="cb40-2"><a href="randomized-control-trials.html#cb40-2" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span> </span>
-<span id="cb40-3"><a href="randomized-control-trials.html#cb40-3" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb40-4"><a href="randomized-control-trials.html#cb40-4" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Distribution of Outcomes by Treatment Group&quot;</span>, </span>
-<span id="cb40-5"><a href="randomized-control-trials.html#cb40-5" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Treatment: Control (0) vs Treated (1)&quot;</span>,</span>
-<span id="cb40-6"><a href="randomized-control-trials.html#cb40-6" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Outcome&quot;</span></span>
-<span id="cb40-7"><a href="randomized-control-trials.html#cb40-7" tabindex="-1"></a>  ) <span class="sc">+</span> </span>
-<span id="cb40-8"><a href="randomized-control-trials.html#cb40-8" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>)) <span class="sc">+</span></span>
-<span id="cb40-9"><a href="randomized-control-trials.html#cb40-9" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
-<p><img src="Causal-Inference-Graduate_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="randomized-control-trials.html#cb41-1" tabindex="-1"></a><span class="co"># library(cobalt)</span></span>
-<span id="cb41-2"><a href="randomized-control-trials.html#cb41-2" tabindex="-1"></a></span>
-<span id="cb41-3"><a href="randomized-control-trials.html#cb41-3" tabindex="-1"></a>bal.out <span class="ot">&lt;-</span> <span class="fu">bal.tab</span>(treatment<span class="sc">~</span>age<span class="sc">+</span>bmi<span class="sc">+</span>cholesterol<span class="sc">+</span>sodium_intake, <span class="at">data =</span> rct_data, <span class="at">s.d.denom =</span> <span class="st">&quot;pooled&quot;</span>)</span>
-<span id="cb41-4"><a href="randomized-control-trials.html#cb41-4" tabindex="-1"></a></span>
-<span id="cb41-5"><a href="randomized-control-trials.html#cb41-5" tabindex="-1"></a><span class="fu">set.cobalt.options</span>(<span class="at">binary =</span> <span class="st">&quot;std&quot;</span>)</span>
-<span id="cb41-6"><a href="randomized-control-trials.html#cb41-6" tabindex="-1"></a></span>
-<span id="cb41-7"><a href="randomized-control-trials.html#cb41-7" tabindex="-1"></a><span class="fu">love.plot</span>(bal.out, <span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.1</span>, <span class="fl">0.1</span>))</span></code></pre></div>
-<p><img src="Causal-Inference-Graduate_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="randomized-control-trials.html#cb50-1" tabindex="-1"></a><span class="fu">ggplot</span>(rct_data, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.factor</span>(treatment), <span class="at">y =</span> y, <span class="at">fill =</span> <span class="fu">as.factor</span>(treatment))) <span class="sc">+</span> </span>
+<span id="cb50-2"><a href="randomized-control-trials.html#cb50-2" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span> </span>
+<span id="cb50-3"><a href="randomized-control-trials.html#cb50-3" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb50-4"><a href="randomized-control-trials.html#cb50-4" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Distribution of Outcomes by Treatment Group&quot;</span>, </span>
+<span id="cb50-5"><a href="randomized-control-trials.html#cb50-5" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Treatment: Control (0) vs Treated (1)&quot;</span>,</span>
+<span id="cb50-6"><a href="randomized-control-trials.html#cb50-6" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Outcome&quot;</span></span>
+<span id="cb50-7"><a href="randomized-control-trials.html#cb50-7" tabindex="-1"></a>  ) <span class="sc">+</span> </span>
+<span id="cb50-8"><a href="randomized-control-trials.html#cb50-8" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb50-9"><a href="randomized-control-trials.html#cb50-9" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<p><img src="Causal-Inference-Graduate_files/figure-html/unnamed-chunk-6-1.png" width="768" /></p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="randomized-control-trials.html#cb51-1" tabindex="-1"></a><span class="co"># library(cobalt)</span></span>
+<span id="cb51-2"><a href="randomized-control-trials.html#cb51-2" tabindex="-1"></a></span>
+<span id="cb51-3"><a href="randomized-control-trials.html#cb51-3" tabindex="-1"></a>bal.out <span class="ot">&lt;-</span> <span class="fu">bal.tab</span>(treatment<span class="sc">~</span>age<span class="sc">+</span>bmi<span class="sc">+</span>cholesterol<span class="sc">+</span>sodium_intake, <span class="at">data =</span> rct_data, <span class="at">s.d.denom =</span> <span class="st">&quot;pooled&quot;</span>)</span>
+<span id="cb51-4"><a href="randomized-control-trials.html#cb51-4" tabindex="-1"></a></span>
+<span id="cb51-5"><a href="randomized-control-trials.html#cb51-5" tabindex="-1"></a><span class="fu">set.cobalt.options</span>(<span class="at">binary =</span> <span class="st">&quot;std&quot;</span>)</span>
+<span id="cb51-6"><a href="randomized-control-trials.html#cb51-6" tabindex="-1"></a></span>
+<span id="cb51-7"><a href="randomized-control-trials.html#cb51-7" tabindex="-1"></a><span class="fu">love.plot</span>(bal.out, <span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.1</span>, <span class="fl">0.1</span>))</span></code></pre></div>
+<p><img src="Causal-Inference-Graduate_files/figure-html/unnamed-chunk-7-1.png" width="768" /></p>
 <p>This visualization is called a <strong>love plot</strong>. It shows how balanced each of the observed characteristics is between the treated and control group. For example, a value of 0.05 for age means that the treated group’s mean age is 0.05 standard deviations above the control group’s mean age, which is not much. Typically, an absolute standardized difference value of 0.10 or less typically means that the difference between the groups is negligible.</p>
 <p>So in this plot, all the observed characteristics are balanced. This example shows that random assignment of the treatment balances observed and unobserved characteristics. Since the groups are so similar, we say that the treated and control groups are exchangeable.</p>
 </div>
-<div id="basic-experimental-design-principles" class="section level2 hasAnchor" number="2.2">
-<h2><span class="header-section-number">2.2</span> Basic Experimental Design Principles<a href="randomized-control-trials.html#basic-experimental-design-principles" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="basic-experimental-design-principles" class="section level2 hasAnchor" number="6.2">
+<h2><span class="header-section-number">6.2</span> Basic Experimental Design Principles<a href="randomized-control-trials.html#basic-experimental-design-principles" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>At the heart of randomized controlled trials (RCTs) lies experimental design, the set of strategies we use to ensure that the comparison between groups is fair, unbiased, and informative. Good experimental design ensures that any differences in outcomes between the treatment and control groups can be confidently attributed to the treatment itself, and not to other confounding variables. Three basic principles guide experimental design: randomization, control, and replication.</p>
 <ul>
 <li>Randomization is the process of randomly assigning participants to treatment or control groups. This prevents systematic differences between groups at baseline and ensures that confounding variables (both known and unknown) are evenly distributed.<br />
@@ -381,14 +403,14 @@ ATE &amp;= E[Y(1) - Y(0)] \\
 </ul>
 <p>In our previous simulation, we applied these principles by randomly assigning 2,000 individuals to either a treatment or control group, simulating outcomes based only on treatment status and baseline characteristics (age). Because we randomized treatment assignment, we can be confident that any observed difference in outcomes is causally attributable to the treatment, not to age differences, baseline health, or other confounders. Without randomization, we would have needed to control for these factors. This simulation highlights why randomization is considered the gold standard for causal inference.</p>
 </div>
-<div id="limitations-of-rcts-in-public-health-contexts" class="section level2 hasAnchor" number="2.3">
-<h2><span class="header-section-number">2.3</span> Limitations of RCTs in Public Health Contexts<a href="randomized-control-trials.html#limitations-of-rcts-in-public-health-contexts" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="limitations-of-rcts-in-public-health-contexts" class="section level2 hasAnchor" number="6.3">
+<h2><span class="header-section-number">6.3</span> Limitations of RCTs in Public Health Contexts<a href="randomized-control-trials.html#limitations-of-rcts-in-public-health-contexts" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>While randomized controlled trials (RCTs) are the gold standard for establishing causality, they are not without important limitations when applied to public health settings. First, ethical constraints often limit what interventions can be randomly assigned. For example, it would be unethical to randomly assign people to smoke or not smoke in order to study lung cancer. Public health research must often rely on observational studies where randomization is impossible.</p>
 <p>Second, feasibility and cost can be major barriers. Conducting large-scale RCTs can require enormous resources, making them impractical for studying widespread or long-term public health interventions like school nutrition programs or climate effects on health. Generalizability is another concern. Many RCTs are conducted in tightly controlled environments with selective populations, meaning their results may not apply to broader, more diverse real-world populations.</p>
 <p>In our earlier simulation, randomization guaranteed an unbiased estimate of the average treatment effect (ATE) within the study population. However, in real-world public health research, participants who volunteer for RCTs may differ from the general public, and interventions may behave differently outside of controlled settings. This highlights the importance of thinking critically about how experimental results translate into everyday public health practice.</p>
 </div>
-<div id="common-threats-to-internal-and-external-validity" class="section level2 hasAnchor" number="2.4">
-<h2><span class="header-section-number">2.4</span> Common Threats to Internal and External Validity<a href="randomized-control-trials.html#common-threats-to-internal-and-external-validity" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="common-threats-to-internal-and-external-validity" class="section level2 hasAnchor" number="6.4">
+<h2><span class="header-section-number">6.4</span> Common Threats to Internal and External Validity<a href="randomized-control-trials.html#common-threats-to-internal-and-external-validity" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>When evaluating any causal study, it’s critical to think about validity, whether the results are accurate (internal validity) and whether they generalize beyond the study setting (external validity).</p>
 <p>Internal validity refers to whether the observed effect truly reflects the causal effect within the study population. Threats to internal validity include:</p>
 <ul>
@@ -408,8 +430,8 @@ ATE &amp;= E[Y(1) - Y(0)] \\
 </ul>
 <p>In the earlier RCT simulation, we achieved excellent internal validity because treatment was randomized perfectly and outcomes were cleanly measured. However, that simulation assumes an idealized setting; in real public health research, threats to validity often creep in, and careful design and critical thinking are needed to recognize and minimize them.</p>
 </div>
-<div id="causal-quantities-sate-vs-pate" class="section level2 hasAnchor" number="2.5">
-<h2><span class="header-section-number">2.5</span> Causal Quantities: SATE vs PATE<a href="randomized-control-trials.html#causal-quantities-sate-vs-pate" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="causal-quantities-sate-vs-pate" class="section level2 hasAnchor" number="6.5">
+<h2><span class="header-section-number">6.5</span> Causal Quantities: SATE vs PATE<a href="randomized-control-trials.html#causal-quantities-sate-vs-pate" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>When we do an RCT, we must be careful about the causal quantity of interest we are trying to estimate.</p>
 <p>If we are interested in understanding the effect of a treatment for just the individuals in our sample, then we are estimating the <strong>Sample Average Treatment Effect (SATE)</strong>.</p>
 <p><span class="math display">\[
@@ -440,7 +462,7 @@ Since the difference in means estimator is used to estimate both estimands, we h
           </div>
         </div>
       </div>
-<a href="foundations-of-causal-thinking-in-public-health.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="measuring-effects-for-binary-outcomes.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="observational-studies.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

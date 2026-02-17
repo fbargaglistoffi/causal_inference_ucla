@@ -1,54 +1,65 @@
-# Foundations of Causal Thinking in Public Health
+---
+title: "Week 1: Foundations of Causal Thinking in Public Health"
+subtitle: "The Science of Why — Causal Inference for Public Health"
+author: "Falco J. Bargagli-Stoffi"
+date: "UCLA Fielding School of Public Health"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+    highlight: tango
+    code_folding: show
+---
 
-> ## Class materials
->
-> Slides: [**Module 1**](https://drive.google.com/file/d/1cDgTAxA05Z87-gjDN3Ooljl2bF1Cc4ug/view?usp=sharing)
-<!--
->
-> Recording: [**Module 1, Part 1.1**](https://drive.google.com/file/d/14yxdT8so1w2LQV2pwoGm1ys3Ek5yuLET/view?usp=sharing)
->
-> Recording: [**Module 1, Part 2.1**](https://drive.google.com/file/d/1rUQnbOTkVk5DPu8Ghbu2W80NJ008Auyt/view?usp=sharing)
->
-> Recording: [**Module 1, Part 2.2**](https://drive.google.com/file/d/1hsA1CZ0jpVycsNmuH0A7C5AHmlvBpOvM/view?usp=sharing)
--->
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.width = 8, fig.height = 5)
+library(ggplot2)
+library(dplyr)
+```
 
-> ## Textbook reading
->
-> [**Hernán & Robins, Causal Inference: What If – Chapters 1**](https://static1.squarespace.com/static/675db8b0dd37046447128f5f/t/677676888e31cc50c2c33877/1735816881944/hernanrobins_WhatIf_2jan25.pdf)
+# Class Materials
 
-> ## Supplementary reading
->
-> [**Pearl, J. and Mackenzie, D. (2018) The Book of Why: The New Science of Cause and Effect. Basic Books.**](https://bayes.cs.ucla.edu/WHY/why-ch1.pdf) Selected public health news articles (provided on the course site).
+**Slides:** [Module 1](https://drive.google.com/file/d/1cDgTAxA05Z87-gjDN3Ooljl2bF1Cc4ug/view?usp=sharing)
 
-> ## Topics covered
->
-> -   Association vs. Causation\
-> -   Introduction to Counterfactuals and Potential Outcomes\
-> -   Causal Estimands and Identification\
-> -   Measuring Effects for Binary Outcomes
-> -   Critical reading exercise: analyzing causal claims in public health news
+## Textbook Reading
 
-## Association vs. Causation
+[Hernán & Robins, *Causal Inference: What If* – Chapter 1](https://static1.squarespace.com/static/675db8b0dd37046447128f5f/t/677676888e31cc50c2c33877/1735816881944/hernanrobins_WhatIf_2jan25.pdf)
 
-**Association** refers to a statistical relationship where two variables move together, but one doesn’t necessarily cause the other. For instance, ice cream sales and drowning incidents both rise in the summer, not because one causes the other, but because they share a third factor: temperature. In contrast, **causation** implies a direct cause-and-effect relationship, where changing one variable leads to changes in another. Establishing causation requires rigorous methods, such as randomized controlled trials, to rule out confounding factors.
+## Supplementary Reading
 
-**Simpson’s Paradox** occurs when a trend appears in separate groups but reverses when the data are combined. This paradox is driven by **confounding variables**—unaccounted factors that influence both the treatment and the outcome. It illustrates how aggregated data can be misleading and emphasizes the importance of analyzing relationships within subgroups to avoid drawing incorrect conclusions.
+[Pearl, J. and Mackenzie, D. (2018) *The Book of Why: The New Science of Cause and Effect*. Basic Books.](https://bayes.cs.ucla.edu/WHY/why-ch1.pdf) Selected public health news articles (provided on the course site).
 
-To demonstrate this paradox, I simulated a study comparing two pneumonia treatments across 2,000 people Treatment A was mostly given to mild cases, while Treatment B was given to severe cases. When data were analyzed without considering severity, Treatment A seemed more effective. However, when stratified by severity, Treatment B consistently showed lower death rates in both mild and severe groups. This was visualized through two plots: one showing the misleading overall trend, and another stratified by severity revealing the true relationship. 
+## Topics Covered
 
-```{r}
+- Association vs. Causation
+- Introduction to Counterfactuals and Potential Outcomes
+- Causal Estimands and Identification
+- Measuring Effects for Binary Outcomes
+- Critical reading exercise: analyzing causal claims in public health news
 
-# library(ggplot2)
-# library(dplyr)
+---
 
+# Association vs. Causation
+
+**Association** refers to a statistical relationship where two variables move together, but one doesn't necessarily cause the other. For instance, ice cream sales and drowning incidents both rise in the summer, not because one causes the other, but because they share a third factor: temperature. In contrast, **causation** implies a direct cause-and-effect relationship, where changing one variable leads to changes in another. Establishing causation requires rigorous methods, such as randomized controlled trials, to rule out confounding factors.
+
+**Simpson's Paradox** occurs when a trend appears in separate groups but reverses when the data are combined. This paradox is driven by **confounding variables**—unaccounted factors that influence both the treatment and the outcome. It illustrates how aggregated data can be misleading and emphasizes the importance of analyzing relationships within subgroups to avoid drawing incorrect conclusions.
+
+To demonstrate this paradox, we simulate a study comparing two pneumonia treatments across 2,000 people. Treatment A was mostly given to mild cases, while Treatment B was given to severe cases. When data are analyzed without considering severity, Treatment A seems more effective. However, when stratified by severity, Treatment B consistently shows lower death rates in both mild and severe groups.
+
+> **Checklist Item 1 — What is the causal question?** Before looking at the data, let's define the question: *What is the effect of Treatment B (vs. Treatment A) on mortality risk in pneumonia patients?* Treatment ($W$): Treatment B vs. Treatment A. Outcome ($Y$): Death (binary). Population: Pneumonia patients. Estimand: Risk difference.
+
+## Simulating Simpson's Paradox
+
+```{r simpsons-data}
 set.seed(123)
-
 n <- 2050
 
 severity <- rep(c("Mild", "Severe"), times = c(1450, 600))
 
-treatment <- c(rep("Treatment A", 1400), rep("Treatment B", 50), 
-               rep("Treatment A", 100), rep("Treatment B", 500)) 
+treatment <- c(rep("Treatment A", 1400), rep("Treatment B", 50),
+               rep("Treatment A", 100), rep("Treatment B", 500))
 
 outcome <- c(rbinom(1400, 1, 0.15),  # Mild + A (15% death rate)
              rbinom(50, 1, 0.10),    # Mild + B (10% death rate)
@@ -61,6 +72,7 @@ df <- data.frame(
   Outcome = outcome
 )
 
+# Compute death rates by severity and treatment
 death_counts <- tapply(df$Outcome, list(df$Severity, df$Treatment), sum)
 table_counts <- table(df$Severity, df$Treatment)
 death_rates <- round(death_counts / table_counts, 3)
@@ -70,14 +82,13 @@ overall_b <- sum(df$Outcome[df$Treatment == "Treatment B"]) / sum(df$Treatment =
 
 print("Death rates by severity and treatment:")
 print(death_rates)
-
 cat("Overall death rate (Treatment A):", round(overall_a, 3), "\n")
 cat("Overall death rate (Treatment B):", round(overall_b, 3), "\n")
-
 ```
 
-```{r}
+## Visualizing the Overall (Misleading) Trend
 
+```{r simpsons-overall}
 overall_plot_data <- data.frame(
   X_Pos = c(1, 2),
   Death_rate = c(overall_a, overall_b),
@@ -94,13 +105,13 @@ p1 <- ggplot(overall_plot_data, aes(x = X_Pos, y = Death_rate, color = Treatment
   guides(color = "none")
 
 print(p1)
-
 ```
 
-If we only compare the death rates between groups that received treatment A against groups that received treatment B, treatment A seems to be more effective at treating patients.
+If we only compare the death rates between groups that received Treatment A against groups that received Treatment B, Treatment A seems to be more effective at treating patients.
 
-```{r}
+## Stratifying by Severity Reveals the Truth
 
+```{r simpsons-stratified}
 group_means <- df %>%
   group_by(Severity, Treatment) %>%
   summarize(Death_rate = mean(Outcome), .groups = "drop") %>%
@@ -111,8 +122,8 @@ group_means <- df %>%
     Severity == "Severe" & Treatment == "Treatment B" ~ 4
   ),
   Group = paste(Severity, "-", Treatment),
-  Treatment_Color = Treatment
-)
+  Treatment_Color = Treatment)
+
 p2 <- ggplot(group_means, aes(x = X_Pos, y = Death_rate, color = Treatment_Color)) +
   geom_point(size = 5) +
   geom_line(aes(group = Severity), color = "black", linewidth = 1.2) +
@@ -128,38 +139,46 @@ p2 <- ggplot(group_means, aes(x = X_Pos, y = Death_rate, color = Treatment_Color
   theme_minimal()
 
 print(p2)
-
 ```
 
-Only after stratifying by the severity of the case are we able to observe that treatment B is actually more effective than treatment A for both mild and severe pneumonia cases.
+Only after stratifying by the severity of the case are we able to observe that Treatment B is actually more effective than Treatment A for both mild and severe pneumonia cases. The confounding variable—severity—was distorting the overall comparison.
 
-## Introduction to Counterfactuals and Potential Outcomes
+---
 
-At the heart of causal inference lies a simple yet powerful idea: counterfactuals — what would have happened if something else had occurred. However, we can never observe both outcomes for the same person. This is known as the Fundamental Problem of Causal Inference. We only observe the outcome under the condition that actually occurred — everything else is unobserved, or counterfactual.
+# Introduction to Counterfactuals and Potential Outcomes
 
-Building on the concept of counterfactuals, the Average Treatment Effect (ATE) provides a formal way to quantify the impact of a treatment or intervention across a population. Since we cannot observe both potential outcomes (treated and untreated) for the same individual, ATE instead compares the average outcome we would see if everyone received the treatment versus if no one did. Mathematically, it is the difference between the expected value of the potential outcome under treatment and the expected value under control. While individual causal effects remain unobservable, the ATE offers a population-level summary of the treatment's impact — a cornerstone of policy evaluation, randomized experiments, and observational causal analysis.
+At the heart of causal inference lies a simple yet powerful idea: **counterfactuals** — what would have happened if something else had occurred. However, we can never observe both outcomes for the same person. This is known as the **Fundamental Problem of Causal Inference**. We only observe the outcome under the condition that actually occurred — everything else is unobserved, or counterfactual.
 
-Counterfactuals can be represented using potential outcomes notation. Here is the basic notation:
+Building on the concept of counterfactuals, the **Average Treatment Effect (ATE)** provides a formal way to quantify the impact of a treatment or intervention across a population. Since we cannot observe both potential outcomes (treated and untreated) for the same individual, ATE instead compares the average outcome we would see if everyone received the treatment versus if no one did. Mathematically, it is the difference between the expected value of the potential outcome under treatment and the expected value under control. While individual causal effects remain unobservable, the ATE offers a population-level summary of the treatment's impact — a cornerstone of policy evaluation, randomized experiments, and observational causal analysis.
 
-- $Y\;=\;$ the observed outcome
-- $Y(0)\;=\;$ the potential outcome under no treatment  
-- $Y(1)\;=\;$ the potential outcome under treatment  
-- $W\;=\;$ a binary variable that represents whether a unit was treated or not. If $W = 1$, then the unit was treated. If $W = 0$, then the unit was not treated.  
-Notice that the observed outcome can be expressed in terms of potential outcomes: $Y = (W)Y(1) + (1-W)Y(0)$. So $Y = Y(1)$ if the unit was treated and $Y = Y(0)$ if the unit was not treated. The previous equation is known as consistency.
+## Notation
 
-The simulation below is testing the effect of a treatment on 2000 patients. The treatment was assigned to older people with higher levels of cholesterol. If we simply take the difference of the average outcome of the treated group and average outcome of the control group, then our estimate of the average treatment effect will be biased because age and cholesterol levels are confounding the effect of the treatment. This is shown by how the true average treatment effect differs from naive average treatment effect estimate.
+Counterfactuals can be represented using **potential outcomes notation**:
 
-```{r}
+- $Y$ = the observed outcome
+- $Y(0)$ = the potential outcome under no treatment
+- $Y(1)$ = the potential outcome under treatment
+- $W$ = a binary variable that represents whether a unit was treated or not. If $W = 1$, then the unit was treated. If $W = 0$, then the unit was not treated.
 
+Notice that the observed outcome can be expressed in terms of potential outcomes:
+
+$$Y = W \cdot Y(1) + (1 - W) \cdot Y(0)$$
+
+So $Y = Y(1)$ if the unit was treated and $Y = Y(0)$ if the unit was not treated. This equation is known as **consistency**.
+
+## Simulation: Seeing Confounding Bias in Action
+
+The simulation below tests the effect of a treatment on 2,000 patients. The treatment was assigned to older people with higher levels of cholesterol. If we simply take the difference of the average outcome of the treated group and the average outcome of the control group, then our estimate of the average treatment effect will be biased because age and cholesterol levels are **confounding** the effect of the treatment. This is shown by how the true average treatment effect differs from the naive average treatment effect estimate.
+
+```{r confounding-sim}
 set.seed(123)
-
 n <- 2000
 
 age <- rnorm(n, mean = 50, sd = 10)
 bmi <- rnorm(n, mean = 25, sd = 4)
 cholesterol <- rnorm(n, mean = 200, sd = 30)
 
-# More extreme treatment assignment: strong bias toward older, high-cholesterol people
+# Treatment assignment: strong bias toward older, high-cholesterol people
 treatment <- rbinom(n, 1, plogis(0.2 * age + 0.05 * cholesterol - 25))
 
 # True untreated outcome
@@ -174,138 +193,150 @@ y <- ifelse(treatment == 1, y_1, y_0)
 # True ATE: average of individual-level effects
 true_ate <- mean(y_1 - y_0)
 
-df <- data.frame(age, bmi, cholesterol, treatment, y)
+df_conf <- data.frame(age, bmi, cholesterol, treatment, y)
 
 # Naive estimate: difference in means
-naive_ate <- mean(df$y[df$treatment == 1]) - mean(df$y[df$treatment == 0])
+naive_ate <- mean(df_conf$y[df_conf$treatment == 1]) - mean(df_conf$y[df_conf$treatment == 0])
+
 cat("True ATE:", round(true_ate, 3), "\n")
 cat("Naive (unadjusted) ATE estimate:", round(naive_ate, 3), "\n")
-
+cat("\nThe naive estimate is biased because treatment was assigned based on age and cholesterol.\n")
+cat("We'll learn methods to close this gap starting in Week 2.\n")
 ```
 
-## Causal Estimands and Identification
+---
 
-Causal estimands are the quantities we aim to estimate to understand the effect of a treatment or intervention. The most common estimands include:\
+# Causal Estimands and Identification
 
-- Average Treatment Effect (ATE): Measures the average difference in outcomes if everyone received the treatment versus if no one did.\
+**Causal estimands** are the quantities we aim to estimate to understand the effect of a treatment or intervention. The most common estimands include:
 
-$$
-ATE = E[Y(1)-Y(0)]
-$$
+- **Average Treatment Effect (ATE):** Measures the average difference in outcomes if everyone received the treatment versus if no one did.
 
-- Average Treatment Effect on the Treated (ATT): Measures the effect of treatment for those who actually received the treatment.\
+$$ATE = E[Y(1) - Y(0)]$$
 
-$$
-ATT = E[Y(1) - Y(0)\ | \ W = 1]
-$$
+- **Average Treatment Effect on the Treated (ATT):** Measures the effect of treatment for those who actually received the treatment.
 
-- Average Treatment Effect on the Controls (ATC): Measures the effect for those who did not receive the treatment.\
+$$ATT = E[Y(1) - Y(0) \mid W = 1]$$
 
-$$
-ATC = E[Y(1) - Y(0)\ | \ W = 0]
-$$
+- **Average Treatment Effect on the Controls (ATC):** Measures the effect for those who did not receive the treatment.
 
-- Conditional Average Treatment Effect (CATE): Measures the treatment effect for subgroups defined by observed characteristics (e.g., older vs. younger patients). 
+$$ATC = E[Y(1) - Y(0) \mid W = 0]$$
 
-$$
-CATE = E[Y(1) - Y(0)\ | \ X = x] 
-$$
-Think of $X=x$ where $X$ is some form of age classification and $x$ could be a value of the age classifcation, such as younger or older.
+- **Conditional Average Treatment Effect (CATE):** Measures the treatment effect for subgroups defined by observed characteristics (e.g., older vs. younger patients).
 
-Identification is the process of linking a causal estimand (like ATE) to observable data. Without valid identification, any estimates we produce may be biased or incorrect. One major challenge in causal inference is that we can never observe both potential outcomes for the same person — only the outcome under the actual treatment they received. This is the Fundamental Problem of Causal Inference.
+$$CATE = E[Y(1) - Y(0) \mid X = x]$$
 
-##  Measuring Effects for Binary Outcomes
+Think of $X = x$ where $X$ is some form of age classification and $x$ could be a value of the age classification, such as younger or older.
 
-Often times in public health settings, we have to estimate the causal effect on a binary outcome such as survival. For example, if we are trying to measure the effect of a heart surgery on a patient's survival status, we can say that the outcome $Y = 1$ means that the patient died and $Y = 0$ means that the patient survived. There are only two possible outcomes. In this case, we try to quantify or measure the causal effect using two main **effect measures**.
+**Identification** is the process of linking a causal estimand (like ATE) to observable data. Without valid identification, any estimates we produce may be biased or incorrect. One major challenge in causal inference is that we can never observe both potential outcomes for the same person — only the outcome under the actual treatment they received. This is the Fundamental Problem of Causal Inference.
 
-$$
-Pr[Y(1) = 1] - Pr[Y(0) = 1] \quad \text{(Risk Difference)} \\
-$$
+---
 
-The risk difference measures average individual causal effects additively. For example, if we estimated the heart surgery to have a risk difference of -0.5, then on average, the surgery reduced the probability of death by 0.5.
+# Measuring Effects for Binary Outcomes
 
-$$
-\frac{Pr[Y(1) = 1]}{Pr[Y(0) = 1]} \quad \text{(Risk Ratio)} \\
-$$
+Often in public health settings, we have to estimate the causal effect on a binary outcome such as survival. For example, if we are trying to measure the effect of a heart surgery on a patient's survival status, we can say that the outcome $Y = 1$ means that the patient died and $Y = 0$ means that the patient survived. There are only two possible outcomes. In this case, we try to quantify or measure the causal effect using two main **effect measures**.
 
-The risk ratio measures causal effects multiplicatively. For example if the heart surgery was estimated to have a risk ratio of 0.5, then the risk of death under surgery is half compared to the risk of death under no surgery.
+**Risk Difference** (additive scale):
+
+$$Pr[Y(1) = 1] - Pr[Y(0) = 1]$$
+
+For example, if we estimated the heart surgery to have a risk difference of $-0.5$, then on average, the surgery reduced the probability of death by 0.5.
+
+**Risk Ratio** (multiplicative scale):
+
+$$\frac{Pr[Y(1) = 1]}{Pr[Y(0) = 1]}$$
+
+For example, if the heart surgery was estimated to have a risk ratio of 0.5, then the risk of death under surgery is half compared to the risk of death under no surgery.
+
+## G-Computation: A Preview
 
 Since we are working with binary outcomes, we can model these probabilities using a logistic regression. Let's consider the example about measuring the effect of heart surgery. To estimate the risk difference using a logistic regression, we follow a set of steps called **g-computation**:
 
 1. Fit a logistic regression model to the observed data
-
 2. Set the treatment status of all units to 1 and predict $Y(1)$. This gets the probability of $Y = 1$ had each unit been treated.
-
 3. Set the treatment status of all units to 0 and predict $Y(0)$. This gets the probability of $Y = 1$ had each unit been untreated.
+4. Use (2) and (3) to estimate a risk difference or risk ratio.
 
-4. Use (2) and (3) to estimate a risk difference or risk ratio
+[Visual Steps for G-Computation](https://github.com/kathoffman/causal-inference-visual-guides/blob/master/visual-guides/G-Computation.pdf)
+
+> **Important caveat:** The g-computation approach below produces valid causal estimates in our simulation because we generated the data and *know* all the confounders. In practice, this assumption — called "no unmeasured confounding" — is never guaranteed and often questionable. Much of this course is devoted to understanding when such assumptions are credible and what can go wrong when they're not. For now, treat this as a preview of the tools; the rest of the course gives you the judgment to know when to trust them.
+
+## Simulation: Heart Surgery and Survival
 
 In the example below, we are trying to measure the causal effect of a heart transplant on a patient's survival status. Our study includes 200 total patients. We have data on the patient's age, health score (ranging from 0 to 100, where a higher score means more healthy), whether they are diabetic, and whether they have had a prior heart attack. Patients that tend to be older, less healthy, have had diabetes, or have had a prior heart attack are more likely to receive the surgery. Out of 200 patients, 127 did not receive heart surgery, while 73 did.
 
-For simulation purposes, the true risk difference is -0.093 and the risk ratio is 0.76. This means that the heart surgery reduces chance of death by 9.3 percentage points on average according to the risk difference. The risk ratio of 0.76 means that the probability of death under surgery is 76% of the probability of death under no surgery, which is a 28% decrease relative to the probability of death under no surgery.
+For simulation purposes, the true risk difference is $-0.093$ and the risk ratio is $0.76$. This means that the heart surgery reduces chance of death by 9.3 percentage points on average according to the risk difference. The risk ratio of 0.76 means that the probability of death under surgery is 76% of the probability of death under no surgery, which is a 24% relative decrease.
 
-[Visual Steps for g-computation](https://github.com/kathoffman/causal-inference-visual-guides/blob/master/visual-guides/G-Computation.pdf)
-
-
-```{r}
-
-#library(e1071)
-#library(dplyr)
-
-### Step 1: Data Generating Process
-
+```{r gcomp}
 set.seed(123)
+n <- 200
 
-n <- 200 # 200 subjects in study
-
-# simulate covariates
+# Simulate covariates
 age <- rnorm(n, 60, 12)
-age <- pmax(25, pmin(90, age)) # cap age to range from 25 to 90
-health_score <- rnorm(n , 60, 15)
-health_score <- pmax(0, pmin(100, health_score)) # cap health scores between 0 and 100
-diabetic <- rbinom(n, 1, 0.25) # 25% chance of diabetes
-prior_heart_attack <- rbinom(n, 1, 0.3) # 30% chance of heart attack
+age <- pmax(25, pmin(90, age))
+health_score <- rnorm(n, 60, 15)
+health_score <- pmax(0, pmin(100, health_score))
+diabetic <- rbinom(n, 1, 0.25)
+prior_heart_attack <- rbinom(n, 1, 0.3)
 
-# generate potential linear predictions for all units (lp0 = untreated, lp1 = treated)
-lp0 <- -0.98 + 0.034*age - 0.036*health_score + 0.53*diabetic + 0.79*prior_heart_attack 
+# True potential outcome models
+lp0 <- -0.98 + 0.034 * age - 0.036 * health_score + 0.53 * diabetic + 0.79 * prior_heart_attack
 lp1 <- lp0 - 0.51
 
-# convert linear predictions to probabilites using sigmoid function
+# Convert to probabilities
 p0 <- plogis(lp0)
 p1 <- plogis(lp1)
 
-# generate probabilites of getting treated based on covariates to assign treatment status to each unit
-W_linear <- -1 + 0.03*age - 0.03*health_score + 0.7*diabetic + 0.6*prior_heart_attack
+# Treatment assignment (confounded)
+W_linear <- -1 + 0.03 * age - 0.03 * health_score + 0.7 * diabetic + 0.6 * prior_heart_attack
 W_prob <- plogis(W_linear)
 W <- rbinom(n, 1, W_prob)
 
-# generate observed outcomes
+# Generate observed outcomes
 Y0 <- rbinom(n, 1, p0)
 Y1 <- rbinom(n, 1, p1)
 Y <- ifelse(W == 1, Y1, Y0)
 
-df <- data.frame(age, health_score, diabetic, prior_heart_attack, W, Y) # observed data
+df_heart <- data.frame(age, health_score, diabetic, prior_heart_attack, W, Y)
 
-### Step 2: Estimating causal effects using g-computation
-
-model <- glm(Y~W+age+health_score+diabetic+prior_heart_attack, 
-             data = df, 
-             family = binomial(link = "logit")) # fit logistic regression model
-
-df_treat <- df |> mutate(W = 1) # create a copy of observed data where all units are treated
-
-df_untreat <- df |> mutate(W = 0) # create a copy of observed data where all units are not treated
-
-# predict potential outcomes (in probabilities) using model
-p0_hat <- predict(model, newdata = df_untreat, type = "response") 
-p1_hat <- predict(model, newdata = df_treat, type = "response")
-
-cat("True Risk Difference: ", mean(p1) - mean(p0), "\n")
-cat("True Risk Ratio: ", mean(p1) / mean(p0), "\n")
-cat("\n")
-cat("Estimated Risk Difference: ", mean(p1_hat) - mean(p0_hat), "\n")
-cat("Estimated Risk Ratio: ", mean(p1_hat) / mean(p0_hat), "\n")
-
+cat("Patients treated:", sum(W), "\n")
+cat("Patients untreated:", sum(1 - W), "\n\n")
 ```
 
-Though they are not perfect estimates, we were able to estimate the risk differences and ratios using g-computation.
+### Step 1: Fit the Logistic Regression Model
+
+```{r gcomp-model}
+model <- glm(Y ~ W + age + health_score + diabetic + prior_heart_attack,
+             data = df_heart,
+             family = binomial(link = "logit"))
+
+summary(model)
+```
+
+### Step 2–3: Predict Counterfactual Outcomes
+
+```{r gcomp-predict}
+# Create copies where everyone is treated / untreated
+df_treat <- df_heart |> mutate(W = 1)
+df_untreat <- df_heart |> mutate(W = 0)
+
+# Predict P(Y=1) under each scenario
+p0_hat <- predict(model, newdata = df_untreat, type = "response")
+p1_hat <- predict(model, newdata = df_treat, type = "response")
+```
+
+### Step 4: Estimate Causal Effects
+
+```{r gcomp-results}
+cat("True Risk Difference:", round(mean(p1) - mean(p0), 3), "\n")
+cat("True Risk Ratio:", round(mean(p1) / mean(p0), 3), "\n\n")
+
+cat("Estimated Risk Difference:", round(mean(p1_hat) - mean(p0_hat), 3), "\n")
+cat("Estimated Risk Ratio:", round(mean(p1_hat) / mean(p0_hat), 3), "\n")
+```
+
+Though they are not perfect estimates, we were able to estimate the risk differences and ratios using g-computation. Remember: these estimates are only valid because we included all confounders in our model. In the coming weeks, we will develop the tools to evaluate when this assumption is reasonable — and what to do when it is not.
+
+---
+
+*Next week: Randomized Controlled Trials — why randomization solves the confounding problem, and we add Checklist Items 2–3 to our toolkit.*

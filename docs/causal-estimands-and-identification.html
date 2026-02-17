@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>12 From Identification to Estimation | Week 1: Foundations of Causal Thinking in Public Health</title>
+  <title>4 Causal Estimands and Identification | Week 1: Foundations of Causal Thinking in Public Health</title>
   <meta name="description" content="An undergraduate course on causal inference" />
   <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="12 From Identification to Estimation | Week 1: Foundations of Causal Thinking in Public Health" />
+  <meta property="og:title" content="4 Causal Estimands and Identification | Week 1: Foundations of Causal Thinking in Public Health" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="An undergraduate course on causal inference" />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="12 From Identification to Estimation | Week 1: Foundations of Causal Thinking in Public Health" />
+  <meta name="twitter:title" content="4 Causal Estimands and Identification | Week 1: Foundations of Causal Thinking in Public Health" />
   
   <meta name="twitter:description" content="An undergraduate course on causal inference" />
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="other-common-pitfalls-of-causal-analyses.html"/>
-<link rel="next" href="applications-of-causal-inference-in-public-health-and-medical-research.html"/>
+<link rel="prev" href="introduction-to-counterfactuals-and-potential-outcomes.html"/>
+<link rel="next" href="measuring-effects-for-binary-outcomes.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -268,56 +268,36 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="from-identification-to-estimation" class="section level1 hasAnchor" number="12">
-<h1><span class="header-section-number">12</span> From Identification to Estimation<a href="from-identification-to-estimation.html#from-identification-to-estimation" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<blockquote>
-<h2 id="class-materials-7" class="hasAnchor">Class materials<a href="from-identification-to-estimation.html#class-materials-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Slides: <a href="https://your-slide-link.com"><strong>Module 8</strong></a></p>
-<p>Recording: <a href="https://your-recording-link.com"><strong>Module 8, Part 1</strong></a></p>
-<p>Recording: <a href="https://your-recording-link.com"><strong>Module 8, Part 2</strong></a></p>
-</blockquote>
-<blockquote>
-<h2 id="textbook-reading-7" class="hasAnchor">Textbook reading<a href="from-identification-to-estimation.html#textbook-reading-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p><a href="https://static1.squarespace.com/static/675db8b0dd37046447128f5f/t/677676888e31cc50c2c33877/1735816881944/hernanrobins_WhatIf_2jan25.pdf"><strong>Hernán &amp; Robins, Causal Inference: What If – Chapter 10</strong></a></p>
-</blockquote>
-<blockquote>
-<h2 id="supplementary-reading-7" class="hasAnchor">Supplementary reading<a href="from-identification-to-estimation.html#supplementary-reading-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p><strong>ADD RELEVANT READING</strong><br />
-Case studies on unmeasured confounding and robustness of findings</p>
-</blockquote>
-<blockquote>
-<h2 id="topics-covered-7" class="hasAnchor">Topics covered<a href="from-identification-to-estimation.html#topics-covered-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="causal-estimands-and-identification" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">4</span> Causal Estimands and Identification<a href="causal-estimands-and-identification.html#causal-estimands-and-identification" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p><strong>Causal estimands</strong> are the quantities we aim to estimate to understand the effect of a treatment or intervention. The most common estimands include:</p>
 <ul>
-<li>Identification versus estimation<br />
-</li>
-<li>Estimation of causal effects</li>
-<li>Taxonomy of estimation models</li>
-<li>Critical reading exercise: evaluating identification and estimation in a published study</li>
+<li><strong>Average Treatment Effect (ATE):</strong> Measures the average difference in outcomes if everyone received the treatment versus if no one did.</li>
 </ul>
-</blockquote>
-<div id="identification-and-estimation" class="section level2 hasAnchor" number="12.1">
-<h2><span class="header-section-number">12.1</span> Identification and Estimation<a href="from-identification-to-estimation.html#identification-and-estimation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>In causal inference, identification refers to the theoretical question of whether a causal effect can be determined from the observed data and the assumptions encoded in the study design or model. It answers the question: “Can we, in principle, express the causal effect of interest as a function of the observed variables?” Identification depends on assumptions such as exchangeability (no unmeasured confounding), positivity, and consistency, and often involves tools like potential outcomes or directed acyclic graphs (DAGs). If a causal effect is not identifiable, no amount of statistical analysis will yield a valid estimate — because the data alone cannot disentangle the causal effect from bias or confounding.</p>
-<p>Once identification is established, the next step is estimation, which involves applying statistical methods to calculate the size of the effect using real data. Estimation uses techniques like regression, inverse probability weighting, or matching to quantify the identified causal relationship. In our simulations, for example, once we specify that the causal effect of smoking on lung cancer is identifiable by adjusting for age, we use regression to estimate that effect. If we skip the identification step and go straight to estimation without accounting for confounding or bias, our estimates may be precise — but wrong. Together, identification and estimation form the backbone of credible causal analysis: one ensures that we’re asking the right question, and the other that we’re answering it correctly.</p>
-<p><strong>ADD AN EXAMPLE OF GOING END-TO-END FROM CAUSAL QUESTION -&gt; IDENTIFICATION STRATEGY -&gt; DEFENDING ASSUMPTIONS –&gt; ESTIMATION</strong></p>
-</div>
-<div id="estimation-of-causal-effects" class="section level2 hasAnchor" number="12.2">
-<h2><span class="header-section-number">12.2</span> Estimation of causal effects<a href="from-identification-to-estimation.html#estimation-of-causal-effects" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Estimation of causal effects refers to the process of using statistical methods to quantify the size and direction of a causal relationship between an exposure and an outcome. Once a causal effect has been identified—meaning that, under certain assumptions, it can be expressed in terms of observed variables—estimation allows us to compute a numerical value for that effect using data. Common estimation techniques include linear regression, inverse probability weighting, and matching. The goal is not just to observe an association, but to measure how much changing the exposure would change the outcome, assuming the identification conditions are satisfied.</p>
-</div>
-<div id="taxonomy-of-estimation-models" class="section level2 hasAnchor" number="12.3">
-<h2><span class="header-section-number">12.3</span> Taxonomy of estimation models<a href="from-identification-to-estimation.html#taxonomy-of-estimation-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The taxonomy of estimation models refers to the classification of different statistical approaches used to estimate causal effects based on the structure of the data and the assumptions made. Broadly, estimation models fall into categories such as outcome regression (e.g., linear or logistic regression), exposure modeling (e.g., propensity scores), and doubly robust methods that combine both. These models vary in how they handle confounding, missing data, and complexity of relationships between variables. Choosing the appropriate estimation model depends on the research question, the nature of the confounding, and how well the model’s assumptions align with the underlying causal structure.</p>
-
-</div>
+<p><span class="math display">\[ATE = E[Y(1) - Y(0)]\]</span></p>
+<ul>
+<li><strong>Average Treatment Effect on the Treated (ATT):</strong> Measures the effect of treatment for those who actually received the treatment.</li>
+</ul>
+<p><span class="math display">\[ATT = E[Y(1) - Y(0) \mid W = 1]\]</span></p>
+<ul>
+<li><strong>Average Treatment Effect on the Controls (ATC):</strong> Measures the effect for those who did not receive the treatment.</li>
+</ul>
+<p><span class="math display">\[ATC = E[Y(1) - Y(0) \mid W = 0]\]</span></p>
+<ul>
+<li><strong>Conditional Average Treatment Effect (CATE):</strong> Measures the treatment effect for subgroups defined by observed characteristics (e.g., older vs. younger patients).</li>
+</ul>
+<p><span class="math display">\[CATE = E[Y(1) - Y(0) \mid X = x]\]</span></p>
+<p>Think of <span class="math inline">\(X = x\)</span> where <span class="math inline">\(X\)</span> is some form of age classification and <span class="math inline">\(x\)</span> could be a value of the age classification, such as younger or older.</p>
+<p><strong>Identification</strong> is the process of linking a causal estimand (like ATE) to observable data. Without valid identification, any estimates we produce may be biased or incorrect. One major challenge in causal inference is that we can never observe both potential outcomes for the same person — only the outcome under the actual treatment they received. This is the Fundamental Problem of Causal Inference.</p>
+<hr />
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="other-common-pitfalls-of-causal-analyses.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="applications-of-causal-inference-in-public-health-and-medical-research.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="introduction-to-counterfactuals-and-potential-outcomes.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="measuring-effects-for-binary-outcomes.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -348,7 +328,7 @@ gitbook.start({
     "size": 2
   },
   "edit": {
-    "link": "https://github.com/fbargaglistoffi/causal_inference_graduate/edit/main/08_identification_estimation.Rmd",
+    "link": "https://github.com/fbargaglistoffi/causal_inference_graduate/edit/main/01_potential_outcomes.Rmd",
     "text": "Edit"
   },
   "history": {
@@ -356,7 +336,7 @@ gitbook.start({
     "text": null
   },
   "view": {
-    "link": "https://github.com/fbargaglistoffi/causal_inference_graduate/blob/main/08_identification_estimation.Rmd",
+    "link": "https://github.com/fbargaglistoffi/causal_inference_graduate/blob/main/01_potential_outcomes.Rmd",
     "text": null
   },
   "download": null,

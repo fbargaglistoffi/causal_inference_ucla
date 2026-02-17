@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>12 From Identification to Estimation | Week 1: Foundations of Causal Thinking in Public Health</title>
+  <title>5 Measuring Effects for Binary Outcomes | Week 1: Foundations of Causal Thinking in Public Health</title>
   <meta name="description" content="An undergraduate course on causal inference" />
   <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="12 From Identification to Estimation | Week 1: Foundations of Causal Thinking in Public Health" />
+  <meta property="og:title" content="5 Measuring Effects for Binary Outcomes | Week 1: Foundations of Causal Thinking in Public Health" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="An undergraduate course on causal inference" />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="12 From Identification to Estimation | Week 1: Foundations of Causal Thinking in Public Health" />
+  <meta name="twitter:title" content="5 Measuring Effects for Binary Outcomes | Week 1: Foundations of Causal Thinking in Public Health" />
   
   <meta name="twitter:description" content="An undergraduate course on causal inference" />
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="other-common-pitfalls-of-causal-analyses.html"/>
-<link rel="next" href="applications-of-causal-inference-in-public-health-and-medical-research.html"/>
+<link rel="prev" href="causal-estimands-and-identification.html"/>
+<link rel="next" href="randomized-control-trials.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -268,47 +268,124 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="from-identification-to-estimation" class="section level1 hasAnchor" number="12">
-<h1><span class="header-section-number">12</span> From Identification to Estimation<a href="from-identification-to-estimation.html#from-identification-to-estimation" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="measuring-effects-for-binary-outcomes" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">5</span> Measuring Effects for Binary Outcomes<a href="measuring-effects-for-binary-outcomes.html#measuring-effects-for-binary-outcomes" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Often in public health settings, we have to estimate the causal effect on a binary outcome such as survival. For example, if we are trying to measure the effect of a heart surgery on a patient’s survival status, we can say that the outcome <span class="math inline">\(Y = 1\)</span> means that the patient died and <span class="math inline">\(Y = 0\)</span> means that the patient survived. There are only two possible outcomes. In this case, we try to quantify or measure the causal effect using two main <strong>effect measures</strong>.</p>
+<p><strong>Risk Difference</strong> (additive scale):</p>
+<p><span class="math display">\[Pr[Y(1) = 1] - Pr[Y(0) = 1]\]</span></p>
+<p>For example, if we estimated the heart surgery to have a risk difference of <span class="math inline">\(-0.5\)</span>, then on average, the surgery reduced the probability of death by 0.5.</p>
+<p><strong>Risk Ratio</strong> (multiplicative scale):</p>
+<p><span class="math display">\[\frac{Pr[Y(1) = 1]}{Pr[Y(0) = 1]}\]</span></p>
+<p>For example, if the heart surgery was estimated to have a risk ratio of 0.5, then the risk of death under surgery is half compared to the risk of death under no surgery.</p>
+<div id="g-computation-a-preview" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> G-Computation: A Preview<a href="measuring-effects-for-binary-outcomes.html#g-computation-a-preview" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Since we are working with binary outcomes, we can model these probabilities using a logistic regression. Let’s consider the example about measuring the effect of heart surgery. To estimate the risk difference using a logistic regression, we follow a set of steps called <strong>g-computation</strong>:</p>
+<ol style="list-style-type: decimal">
+<li>Fit a logistic regression model to the observed data</li>
+<li>Set the treatment status of all units to 1 and predict <span class="math inline">\(Y(1)\)</span>. This gets the probability of <span class="math inline">\(Y = 1\)</span> had each unit been treated.</li>
+<li>Set the treatment status of all units to 0 and predict <span class="math inline">\(Y(0)\)</span>. This gets the probability of <span class="math inline">\(Y = 1\)</span> had each unit been untreated.</li>
+<li>Use (2) and (3) to estimate a risk difference or risk ratio.</li>
+</ol>
+<p><a href="https://github.com/kathoffman/causal-inference-visual-guides/blob/master/visual-guides/G-Computation.pdf">Visual Steps for G-Computation</a></p>
 <blockquote>
-<h2 id="class-materials-7" class="hasAnchor">Class materials<a href="from-identification-to-estimation.html#class-materials-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Slides: <a href="https://your-slide-link.com"><strong>Module 8</strong></a></p>
-<p>Recording: <a href="https://your-recording-link.com"><strong>Module 8, Part 1</strong></a></p>
-<p>Recording: <a href="https://your-recording-link.com"><strong>Module 8, Part 2</strong></a></p>
+<p><strong>Important caveat:</strong> The g-computation approach below produces valid causal estimates in our simulation because we generated the data and <em>know</em> all the confounders. In practice, this assumption — called “no unmeasured confounding” — is never guaranteed and often questionable. Much of this course is devoted to understanding when such assumptions are credible and what can go wrong when they’re not. For now, treat this as a preview of the tools; the rest of the course gives you the judgment to know when to trust them.</p>
 </blockquote>
-<blockquote>
-<h2 id="textbook-reading-7" class="hasAnchor">Textbook reading<a href="from-identification-to-estimation.html#textbook-reading-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p><a href="https://static1.squarespace.com/static/675db8b0dd37046447128f5f/t/677676888e31cc50c2c33877/1735816881944/hernanrobins_WhatIf_2jan25.pdf"><strong>Hernán &amp; Robins, Causal Inference: What If – Chapter 10</strong></a></p>
-</blockquote>
-<blockquote>
-<h2 id="supplementary-reading-7" class="hasAnchor">Supplementary reading<a href="from-identification-to-estimation.html#supplementary-reading-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p><strong>ADD RELEVANT READING</strong><br />
-Case studies on unmeasured confounding and robustness of findings</p>
-</blockquote>
-<blockquote>
-<h2 id="topics-covered-7" class="hasAnchor">Topics covered<a href="from-identification-to-estimation.html#topics-covered-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<ul>
-<li>Identification versus estimation<br />
-</li>
-<li>Estimation of causal effects</li>
-<li>Taxonomy of estimation models</li>
-<li>Critical reading exercise: evaluating identification and estimation in a published study</li>
-</ul>
-</blockquote>
-<div id="identification-and-estimation" class="section level2 hasAnchor" number="12.1">
-<h2><span class="header-section-number">12.1</span> Identification and Estimation<a href="from-identification-to-estimation.html#identification-and-estimation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>In causal inference, identification refers to the theoretical question of whether a causal effect can be determined from the observed data and the assumptions encoded in the study design or model. It answers the question: “Can we, in principle, express the causal effect of interest as a function of the observed variables?” Identification depends on assumptions such as exchangeability (no unmeasured confounding), positivity, and consistency, and often involves tools like potential outcomes or directed acyclic graphs (DAGs). If a causal effect is not identifiable, no amount of statistical analysis will yield a valid estimate — because the data alone cannot disentangle the causal effect from bias or confounding.</p>
-<p>Once identification is established, the next step is estimation, which involves applying statistical methods to calculate the size of the effect using real data. Estimation uses techniques like regression, inverse probability weighting, or matching to quantify the identified causal relationship. In our simulations, for example, once we specify that the causal effect of smoking on lung cancer is identifiable by adjusting for age, we use regression to estimate that effect. If we skip the identification step and go straight to estimation without accounting for confounding or bias, our estimates may be precise — but wrong. Together, identification and estimation form the backbone of credible causal analysis: one ensures that we’re asking the right question, and the other that we’re answering it correctly.</p>
-<p><strong>ADD AN EXAMPLE OF GOING END-TO-END FROM CAUSAL QUESTION -&gt; IDENTIFICATION STRATEGY -&gt; DEFENDING ASSUMPTIONS –&gt; ESTIMATION</strong></p>
 </div>
-<div id="estimation-of-causal-effects" class="section level2 hasAnchor" number="12.2">
-<h2><span class="header-section-number">12.2</span> Estimation of causal effects<a href="from-identification-to-estimation.html#estimation-of-causal-effects" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Estimation of causal effects refers to the process of using statistical methods to quantify the size and direction of a causal relationship between an exposure and an outcome. Once a causal effect has been identified—meaning that, under certain assumptions, it can be expressed in terms of observed variables—estimation allows us to compute a numerical value for that effect using data. Common estimation techniques include linear regression, inverse probability weighting, and matching. The goal is not just to observe an association, but to measure how much changing the exposure would change the outcome, assuming the identification conditions are satisfied.</p>
+<div id="simulation-heart-surgery-and-survival" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> Simulation: Heart Surgery and Survival<a href="measuring-effects-for-binary-outcomes.html#simulation-heart-surgery-and-survival" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In the example below, we are trying to measure the causal effect of a heart transplant on a patient’s survival status. Our study includes 200 total patients. We have data on the patient’s age, health score (ranging from 0 to 100, where a higher score means more healthy), whether they are diabetic, and whether they have had a prior heart attack. Patients that tend to be older, less healthy, have had diabetes, or have had a prior heart attack are more likely to receive the surgery. Out of 200 patients, 127 did not receive heart surgery, while 73 did.</p>
+<p>For simulation purposes, the true risk difference is <span class="math inline">\(-0.093\)</span> and the risk ratio is <span class="math inline">\(0.76\)</span>. This means that the heart surgery reduces chance of death by 9.3 percentage points on average according to the risk difference. The risk ratio of 0.76 means that the probability of death under surgery is 76% of the probability of death under no surgery, which is a 24% relative decrease.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="measuring-effects-for-binary-outcomes.html#cb31-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb31-2"><a href="measuring-effects-for-binary-outcomes.html#cb31-2" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">200</span></span>
+<span id="cb31-3"><a href="measuring-effects-for-binary-outcomes.html#cb31-3" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="measuring-effects-for-binary-outcomes.html#cb31-4" tabindex="-1"></a><span class="co"># Simulate covariates</span></span>
+<span id="cb31-5"><a href="measuring-effects-for-binary-outcomes.html#cb31-5" tabindex="-1"></a>age <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">60</span>, <span class="dv">12</span>)</span>
+<span id="cb31-6"><a href="measuring-effects-for-binary-outcomes.html#cb31-6" tabindex="-1"></a>age <span class="ot">&lt;-</span> <span class="fu">pmax</span>(<span class="dv">25</span>, <span class="fu">pmin</span>(<span class="dv">90</span>, age))</span>
+<span id="cb31-7"><a href="measuring-effects-for-binary-outcomes.html#cb31-7" tabindex="-1"></a>health_score <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">60</span>, <span class="dv">15</span>)</span>
+<span id="cb31-8"><a href="measuring-effects-for-binary-outcomes.html#cb31-8" tabindex="-1"></a>health_score <span class="ot">&lt;-</span> <span class="fu">pmax</span>(<span class="dv">0</span>, <span class="fu">pmin</span>(<span class="dv">100</span>, health_score))</span>
+<span id="cb31-9"><a href="measuring-effects-for-binary-outcomes.html#cb31-9" tabindex="-1"></a>diabetic <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fl">0.25</span>)</span>
+<span id="cb31-10"><a href="measuring-effects-for-binary-outcomes.html#cb31-10" tabindex="-1"></a>prior_heart_attack <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fl">0.3</span>)</span>
+<span id="cb31-11"><a href="measuring-effects-for-binary-outcomes.html#cb31-11" tabindex="-1"></a></span>
+<span id="cb31-12"><a href="measuring-effects-for-binary-outcomes.html#cb31-12" tabindex="-1"></a><span class="co"># True potential outcome models</span></span>
+<span id="cb31-13"><a href="measuring-effects-for-binary-outcomes.html#cb31-13" tabindex="-1"></a>lp0 <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fl">0.98</span> <span class="sc">+</span> <span class="fl">0.034</span> <span class="sc">*</span> age <span class="sc">-</span> <span class="fl">0.036</span> <span class="sc">*</span> health_score <span class="sc">+</span> <span class="fl">0.53</span> <span class="sc">*</span> diabetic <span class="sc">+</span> <span class="fl">0.79</span> <span class="sc">*</span> prior_heart_attack</span>
+<span id="cb31-14"><a href="measuring-effects-for-binary-outcomes.html#cb31-14" tabindex="-1"></a>lp1 <span class="ot">&lt;-</span> lp0 <span class="sc">-</span> <span class="fl">0.51</span></span>
+<span id="cb31-15"><a href="measuring-effects-for-binary-outcomes.html#cb31-15" tabindex="-1"></a></span>
+<span id="cb31-16"><a href="measuring-effects-for-binary-outcomes.html#cb31-16" tabindex="-1"></a><span class="co"># Convert to probabilities</span></span>
+<span id="cb31-17"><a href="measuring-effects-for-binary-outcomes.html#cb31-17" tabindex="-1"></a>p0 <span class="ot">&lt;-</span> <span class="fu">plogis</span>(lp0)</span>
+<span id="cb31-18"><a href="measuring-effects-for-binary-outcomes.html#cb31-18" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">plogis</span>(lp1)</span>
+<span id="cb31-19"><a href="measuring-effects-for-binary-outcomes.html#cb31-19" tabindex="-1"></a></span>
+<span id="cb31-20"><a href="measuring-effects-for-binary-outcomes.html#cb31-20" tabindex="-1"></a><span class="co"># Treatment assignment (confounded)</span></span>
+<span id="cb31-21"><a href="measuring-effects-for-binary-outcomes.html#cb31-21" tabindex="-1"></a>W_linear <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> <span class="fl">0.03</span> <span class="sc">*</span> age <span class="sc">-</span> <span class="fl">0.03</span> <span class="sc">*</span> health_score <span class="sc">+</span> <span class="fl">0.7</span> <span class="sc">*</span> diabetic <span class="sc">+</span> <span class="fl">0.6</span> <span class="sc">*</span> prior_heart_attack</span>
+<span id="cb31-22"><a href="measuring-effects-for-binary-outcomes.html#cb31-22" tabindex="-1"></a>W_prob <span class="ot">&lt;-</span> <span class="fu">plogis</span>(W_linear)</span>
+<span id="cb31-23"><a href="measuring-effects-for-binary-outcomes.html#cb31-23" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, W_prob)</span>
+<span id="cb31-24"><a href="measuring-effects-for-binary-outcomes.html#cb31-24" tabindex="-1"></a></span>
+<span id="cb31-25"><a href="measuring-effects-for-binary-outcomes.html#cb31-25" tabindex="-1"></a><span class="co"># Generate observed outcomes</span></span>
+<span id="cb31-26"><a href="measuring-effects-for-binary-outcomes.html#cb31-26" tabindex="-1"></a>Y0 <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, p0)</span>
+<span id="cb31-27"><a href="measuring-effects-for-binary-outcomes.html#cb31-27" tabindex="-1"></a>Y1 <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, p1)</span>
+<span id="cb31-28"><a href="measuring-effects-for-binary-outcomes.html#cb31-28" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(W <span class="sc">==</span> <span class="dv">1</span>, Y1, Y0)</span>
+<span id="cb31-29"><a href="measuring-effects-for-binary-outcomes.html#cb31-29" tabindex="-1"></a></span>
+<span id="cb31-30"><a href="measuring-effects-for-binary-outcomes.html#cb31-30" tabindex="-1"></a>df_heart <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(age, health_score, diabetic, prior_heart_attack, W, Y)</span>
+<span id="cb31-31"><a href="measuring-effects-for-binary-outcomes.html#cb31-31" tabindex="-1"></a></span>
+<span id="cb31-32"><a href="measuring-effects-for-binary-outcomes.html#cb31-32" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Patients treated:&quot;</span>, <span class="fu">sum</span>(W), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Patients treated: 73</code></pre>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="measuring-effects-for-binary-outcomes.html#cb33-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Patients untreated:&quot;</span>, <span class="fu">sum</span>(<span class="dv">1</span> <span class="sc">-</span> W), <span class="st">&quot;</span><span class="sc">\n\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Patients untreated: 127</code></pre>
+<div id="step-1-fit-the-logistic-regression-model" class="section level3 hasAnchor" number="5.2.1">
+<h3><span class="header-section-number">5.2.1</span> Step 1: Fit the Logistic Regression Model<a href="measuring-effects-for-binary-outcomes.html#step-1-fit-the-logistic-regression-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="measuring-effects-for-binary-outcomes.html#cb35-1" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">glm</span>(Y <span class="sc">~</span> W <span class="sc">+</span> age <span class="sc">+</span> health_score <span class="sc">+</span> diabetic <span class="sc">+</span> prior_heart_attack,</span>
+<span id="cb35-2"><a href="measuring-effects-for-binary-outcomes.html#cb35-2" tabindex="-1"></a>             <span class="at">data =</span> df_heart,</span>
+<span id="cb35-3"><a href="measuring-effects-for-binary-outcomes.html#cb35-3" tabindex="-1"></a>             <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>))</span>
+<span id="cb35-4"><a href="measuring-effects-for-binary-outcomes.html#cb35-4" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="measuring-effects-for-binary-outcomes.html#cb35-5" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = Y ~ W + age + health_score + diabetic + prior_heart_attack, 
+##     family = binomial(link = &quot;logit&quot;), data = df_heart)
+## 
+## Coefficients:
+##                    Estimate Std. Error z value Pr(&gt;|z|)   
+## (Intercept)        -1.20148    1.11919  -1.074  0.28304   
+## W                  -0.42754    0.36737  -1.164  0.24452   
+## age                 0.03518    0.01528   2.303  0.02129 * 
+## health_score       -0.03139    0.01202  -2.611  0.00903 **
+## diabetic           -0.13832    0.40171  -0.344  0.73060   
+## prior_heart_attack  0.94929    0.35058   2.708  0.00677 **
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 246.02  on 199  degrees of freedom
+## Residual deviance: 226.37  on 194  degrees of freedom
+## AIC: 238.37
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
 </div>
-<div id="taxonomy-of-estimation-models" class="section level2 hasAnchor" number="12.3">
-<h2><span class="header-section-number">12.3</span> Taxonomy of estimation models<a href="from-identification-to-estimation.html#taxonomy-of-estimation-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The taxonomy of estimation models refers to the classification of different statistical approaches used to estimate causal effects based on the structure of the data and the assumptions made. Broadly, estimation models fall into categories such as outcome regression (e.g., linear or logistic regression), exposure modeling (e.g., propensity scores), and doubly robust methods that combine both. These models vary in how they handle confounding, missing data, and complexity of relationships between variables. Choosing the appropriate estimation model depends on the research question, the nature of the confounding, and how well the model’s assumptions align with the underlying causal structure.</p>
+<div id="step-23-predict-counterfactual-outcomes" class="section level3 hasAnchor" number="5.2.2">
+<h3><span class="header-section-number">5.2.2</span> Step 2–3: Predict Counterfactual Outcomes<a href="measuring-effects-for-binary-outcomes.html#step-23-predict-counterfactual-outcomes" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="measuring-effects-for-binary-outcomes.html#cb37-1" tabindex="-1"></a><span class="co"># Create copies where everyone is treated / untreated</span></span>
+<span id="cb37-2"><a href="measuring-effects-for-binary-outcomes.html#cb37-2" tabindex="-1"></a>df_treat <span class="ot">&lt;-</span> df_heart <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">W =</span> <span class="dv">1</span>)</span>
+<span id="cb37-3"><a href="measuring-effects-for-binary-outcomes.html#cb37-3" tabindex="-1"></a>df_untreat <span class="ot">&lt;-</span> df_heart <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">W =</span> <span class="dv">0</span>)</span>
+<span id="cb37-4"><a href="measuring-effects-for-binary-outcomes.html#cb37-4" tabindex="-1"></a></span>
+<span id="cb37-5"><a href="measuring-effects-for-binary-outcomes.html#cb37-5" tabindex="-1"></a><span class="co"># Predict P(Y=1) under each scenario</span></span>
+<span id="cb37-6"><a href="measuring-effects-for-binary-outcomes.html#cb37-6" tabindex="-1"></a>p0_hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(model, <span class="at">newdata =</span> df_untreat, <span class="at">type =</span> <span class="st">&quot;response&quot;</span>)</span>
+<span id="cb37-7"><a href="measuring-effects-for-binary-outcomes.html#cb37-7" tabindex="-1"></a>p1_hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(model, <span class="at">newdata =</span> df_treat, <span class="at">type =</span> <span class="st">&quot;response&quot;</span>)</span></code></pre></div>
+</div>
+<div id="step-4-estimate-causal-effects" class="section level3 hasAnchor" number="5.2.3">
+<h3><span class="header-section-number">5.2.3</span> Step 4: Estimate Causal Effects<a href="measuring-effects-for-binary-outcomes.html#step-4-estimate-causal-effects" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="measuring-effects-for-binary-outcomes.html#cb38-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;True Risk Difference:&quot;</span>, <span class="fu">round</span>(<span class="fu">mean</span>(p1) <span class="sc">-</span> <span class="fu">mean</span>(p0), <span class="dv">3</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## True Risk Difference: -0.093</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="measuring-effects-for-binary-outcomes.html#cb40-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;True Risk Ratio:&quot;</span>, <span class="fu">round</span>(<span class="fu">mean</span>(p1) <span class="sc">/</span> <span class="fu">mean</span>(p0), <span class="dv">3</span>), <span class="st">&quot;</span><span class="sc">\n\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## True Risk Ratio: 0.722</code></pre>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="measuring-effects-for-binary-outcomes.html#cb42-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Estimated Risk Difference:&quot;</span>, <span class="fu">round</span>(<span class="fu">mean</span>(p1_hat) <span class="sc">-</span> <span class="fu">mean</span>(p0_hat), <span class="dv">3</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Estimated Risk Difference: -0.08</code></pre>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="measuring-effects-for-binary-outcomes.html#cb44-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Estimated Risk Ratio:&quot;</span>, <span class="fu">round</span>(<span class="fu">mean</span>(p1_hat) <span class="sc">/</span> <span class="fu">mean</span>(p0_hat), <span class="dv">3</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Estimated Risk Ratio: 0.765</code></pre>
+<p>Though they are not perfect estimates, we were able to estimate the risk differences and ratios using g-computation. Remember: these estimates are only valid because we included all confounders in our model. In the coming weeks, we will develop the tools to evaluate when this assumption is reasonable — and what to do when it is not.</p>
+<hr />
+<p><em>Next week: Randomized Controlled Trials — why randomization solves the confounding problem, and we add Checklist Items 2–3 to our toolkit.</em></p>
 
+</div>
 </div>
 </div>
             </section>
@@ -316,8 +393,8 @@ Case studies on unmeasured confounding and robustness of findings</p>
           </div>
         </div>
       </div>
-<a href="other-common-pitfalls-of-causal-analyses.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="applications-of-causal-inference-in-public-health-and-medical-research.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="causal-estimands-and-identification.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="randomized-control-trials.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -348,7 +425,7 @@ gitbook.start({
     "size": 2
   },
   "edit": {
-    "link": "https://github.com/fbargaglistoffi/causal_inference_graduate/edit/main/08_identification_estimation.Rmd",
+    "link": "https://github.com/fbargaglistoffi/causal_inference_graduate/edit/main/01_potential_outcomes.Rmd",
     "text": "Edit"
   },
   "history": {
@@ -356,7 +433,7 @@ gitbook.start({
     "text": null
   },
   "view": {
-    "link": "https://github.com/fbargaglistoffi/causal_inference_graduate/blob/main/08_identification_estimation.Rmd",
+    "link": "https://github.com/fbargaglistoffi/causal_inference_graduate/blob/main/01_potential_outcomes.Rmd",
     "text": null
   },
   "download": null,

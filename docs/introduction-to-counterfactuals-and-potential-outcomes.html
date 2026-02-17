@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>12 From Identification to Estimation | Week 1: Foundations of Causal Thinking in Public Health</title>
+  <title>3 Introduction to Counterfactuals and Potential Outcomes | Week 1: Foundations of Causal Thinking in Public Health</title>
   <meta name="description" content="An undergraduate course on causal inference" />
   <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="12 From Identification to Estimation | Week 1: Foundations of Causal Thinking in Public Health" />
+  <meta property="og:title" content="3 Introduction to Counterfactuals and Potential Outcomes | Week 1: Foundations of Causal Thinking in Public Health" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="An undergraduate course on causal inference" />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="12 From Identification to Estimation | Week 1: Foundations of Causal Thinking in Public Health" />
+  <meta name="twitter:title" content="3 Introduction to Counterfactuals and Potential Outcomes | Week 1: Foundations of Causal Thinking in Public Health" />
   
   <meta name="twitter:description" content="An undergraduate course on causal inference" />
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="other-common-pitfalls-of-causal-analyses.html"/>
-<link rel="next" href="applications-of-causal-inference-in-public-health-and-medical-research.html"/>
+<link rel="prev" href="association-vs.-causation.html"/>
+<link rel="next" href="causal-estimands-and-identification.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -268,47 +268,63 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="from-identification-to-estimation" class="section level1 hasAnchor" number="12">
-<h1><span class="header-section-number">12</span> From Identification to Estimation<a href="from-identification-to-estimation.html#from-identification-to-estimation" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<blockquote>
-<h2 id="class-materials-7" class="hasAnchor">Class materials<a href="from-identification-to-estimation.html#class-materials-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Slides: <a href="https://your-slide-link.com"><strong>Module 8</strong></a></p>
-<p>Recording: <a href="https://your-recording-link.com"><strong>Module 8, Part 1</strong></a></p>
-<p>Recording: <a href="https://your-recording-link.com"><strong>Module 8, Part 2</strong></a></p>
-</blockquote>
-<blockquote>
-<h2 id="textbook-reading-7" class="hasAnchor">Textbook reading<a href="from-identification-to-estimation.html#textbook-reading-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p><a href="https://static1.squarespace.com/static/675db8b0dd37046447128f5f/t/677676888e31cc50c2c33877/1735816881944/hernanrobins_WhatIf_2jan25.pdf"><strong>Hernán &amp; Robins, Causal Inference: What If – Chapter 10</strong></a></p>
-</blockquote>
-<blockquote>
-<h2 id="supplementary-reading-7" class="hasAnchor">Supplementary reading<a href="from-identification-to-estimation.html#supplementary-reading-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p><strong>ADD RELEVANT READING</strong><br />
-Case studies on unmeasured confounding and robustness of findings</p>
-</blockquote>
-<blockquote>
-<h2 id="topics-covered-7" class="hasAnchor">Topics covered<a href="from-identification-to-estimation.html#topics-covered-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="introduction-to-counterfactuals-and-potential-outcomes" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">3</span> Introduction to Counterfactuals and Potential Outcomes<a href="introduction-to-counterfactuals-and-potential-outcomes.html#introduction-to-counterfactuals-and-potential-outcomes" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>At the heart of causal inference lies a simple yet powerful idea: <strong>counterfactuals</strong> — what would have happened if something else had occurred. However, we can never observe both outcomes for the same person. This is known as the <strong>Fundamental Problem of Causal Inference</strong>. We only observe the outcome under the condition that actually occurred — everything else is unobserved, or counterfactual.</p>
+<p>Building on the concept of counterfactuals, the <strong>Average Treatment Effect (ATE)</strong> provides a formal way to quantify the impact of a treatment or intervention across a population. Since we cannot observe both potential outcomes (treated and untreated) for the same individual, ATE instead compares the average outcome we would see if everyone received the treatment versus if no one did. Mathematically, it is the difference between the expected value of the potential outcome under treatment and the expected value under control. While individual causal effects remain unobservable, the ATE offers a population-level summary of the treatment’s impact — a cornerstone of policy evaluation, randomized experiments, and observational causal analysis.</p>
+<div id="notation" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Notation<a href="introduction-to-counterfactuals-and-potential-outcomes.html#notation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Counterfactuals can be represented using <strong>potential outcomes notation</strong>:</p>
 <ul>
-<li>Identification versus estimation<br />
-</li>
-<li>Estimation of causal effects</li>
-<li>Taxonomy of estimation models</li>
-<li>Critical reading exercise: evaluating identification and estimation in a published study</li>
+<li><span class="math inline">\(Y\)</span> = the observed outcome</li>
+<li><span class="math inline">\(Y(0)\)</span> = the potential outcome under no treatment</li>
+<li><span class="math inline">\(Y(1)\)</span> = the potential outcome under treatment</li>
+<li><span class="math inline">\(W\)</span> = a binary variable that represents whether a unit was treated or not. If <span class="math inline">\(W = 1\)</span>, then the unit was treated. If <span class="math inline">\(W = 0\)</span>, then the unit was not treated.</li>
 </ul>
-</blockquote>
-<div id="identification-and-estimation" class="section level2 hasAnchor" number="12.1">
-<h2><span class="header-section-number">12.1</span> Identification and Estimation<a href="from-identification-to-estimation.html#identification-and-estimation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>In causal inference, identification refers to the theoretical question of whether a causal effect can be determined from the observed data and the assumptions encoded in the study design or model. It answers the question: “Can we, in principle, express the causal effect of interest as a function of the observed variables?” Identification depends on assumptions such as exchangeability (no unmeasured confounding), positivity, and consistency, and often involves tools like potential outcomes or directed acyclic graphs (DAGs). If a causal effect is not identifiable, no amount of statistical analysis will yield a valid estimate — because the data alone cannot disentangle the causal effect from bias or confounding.</p>
-<p>Once identification is established, the next step is estimation, which involves applying statistical methods to calculate the size of the effect using real data. Estimation uses techniques like regression, inverse probability weighting, or matching to quantify the identified causal relationship. In our simulations, for example, once we specify that the causal effect of smoking on lung cancer is identifiable by adjusting for age, we use regression to estimate that effect. If we skip the identification step and go straight to estimation without accounting for confounding or bias, our estimates may be precise — but wrong. Together, identification and estimation form the backbone of credible causal analysis: one ensures that we’re asking the right question, and the other that we’re answering it correctly.</p>
-<p><strong>ADD AN EXAMPLE OF GOING END-TO-END FROM CAUSAL QUESTION -&gt; IDENTIFICATION STRATEGY -&gt; DEFENDING ASSUMPTIONS –&gt; ESTIMATION</strong></p>
+<p>Notice that the observed outcome can be expressed in terms of potential outcomes:</p>
+<p><span class="math display">\[Y = W \cdot Y(1) + (1 - W) \cdot Y(0)\]</span></p>
+<p>So <span class="math inline">\(Y = Y(1)\)</span> if the unit was treated and <span class="math inline">\(Y = Y(0)\)</span> if the unit was not treated. This equation is known as <strong>consistency</strong>.</p>
 </div>
-<div id="estimation-of-causal-effects" class="section level2 hasAnchor" number="12.2">
-<h2><span class="header-section-number">12.2</span> Estimation of causal effects<a href="from-identification-to-estimation.html#estimation-of-causal-effects" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Estimation of causal effects refers to the process of using statistical methods to quantify the size and direction of a causal relationship between an exposure and an outcome. Once a causal effect has been identified—meaning that, under certain assumptions, it can be expressed in terms of observed variables—estimation allows us to compute a numerical value for that effect using data. Common estimation techniques include linear regression, inverse probability weighting, and matching. The goal is not just to observe an association, but to measure how much changing the exposure would change the outcome, assuming the identification conditions are satisfied.</p>
-</div>
-<div id="taxonomy-of-estimation-models" class="section level2 hasAnchor" number="12.3">
-<h2><span class="header-section-number">12.3</span> Taxonomy of estimation models<a href="from-identification-to-estimation.html#taxonomy-of-estimation-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The taxonomy of estimation models refers to the classification of different statistical approaches used to estimate causal effects based on the structure of the data and the assumptions made. Broadly, estimation models fall into categories such as outcome regression (e.g., linear or logistic regression), exposure modeling (e.g., propensity scores), and doubly robust methods that combine both. These models vary in how they handle confounding, missing data, and complexity of relationships between variables. Choosing the appropriate estimation model depends on the research question, the nature of the confounding, and how well the model’s assumptions align with the underlying causal structure.</p>
-
+<div id="simulation-seeing-confounding-bias-in-action" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Simulation: Seeing Confounding Bias in Action<a href="introduction-to-counterfactuals-and-potential-outcomes.html#simulation-seeing-confounding-bias-in-action" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The simulation below tests the effect of a treatment on 2,000 patients. The treatment was assigned to older people with higher levels of cholesterol. If we simply take the difference of the average outcome of the treated group and the average outcome of the control group, then our estimate of the average treatment effect will be biased because age and cholesterol levels are <strong>confounding</strong> the effect of the treatment. This is shown by how the true average treatment effect differs from the naive average treatment effect estimate.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb23-2"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-2" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">2000</span></span>
+<span id="cb23-3"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-3" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-4" tabindex="-1"></a>age <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span>
+<span id="cb23-5"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-5" tabindex="-1"></a>bmi <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">25</span>, <span class="at">sd =</span> <span class="dv">4</span>)</span>
+<span id="cb23-6"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-6" tabindex="-1"></a>cholesterol <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">200</span>, <span class="at">sd =</span> <span class="dv">30</span>)</span>
+<span id="cb23-7"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-7" tabindex="-1"></a></span>
+<span id="cb23-8"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-8" tabindex="-1"></a><span class="co"># Treatment assignment: strong bias toward older, high-cholesterol people</span></span>
+<span id="cb23-9"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-9" tabindex="-1"></a>treatment <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(n, <span class="dv">1</span>, <span class="fu">plogis</span>(<span class="fl">0.2</span> <span class="sc">*</span> age <span class="sc">+</span> <span class="fl">0.05</span> <span class="sc">*</span> cholesterol <span class="sc">-</span> <span class="dv">25</span>))</span>
+<span id="cb23-10"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-10" tabindex="-1"></a></span>
+<span id="cb23-11"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-11" tabindex="-1"></a><span class="co"># True untreated outcome</span></span>
+<span id="cb23-12"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-12" tabindex="-1"></a>y_0 <span class="ot">&lt;-</span> <span class="dv">140</span> <span class="sc">-</span> <span class="fl">1.5</span> <span class="sc">*</span> age <span class="sc">+</span> <span class="fl">0.3</span> <span class="sc">*</span> bmi <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> cholesterol <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="dv">5</span>)</span>
+<span id="cb23-13"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-13" tabindex="-1"></a></span>
+<span id="cb23-14"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-14" tabindex="-1"></a><span class="co"># True treated outcome: better, but depends on age &amp; cholesterol</span></span>
+<span id="cb23-15"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-15" tabindex="-1"></a>y_1 <span class="ot">&lt;-</span> y_0 <span class="sc">-</span> (<span class="dv">40</span> <span class="sc">+</span> <span class="fl">1.5</span> <span class="sc">*</span> age <span class="sc">-</span> <span class="fl">0.8</span> <span class="sc">*</span> cholesterol) <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="dv">2</span>)</span>
+<span id="cb23-16"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-16" tabindex="-1"></a></span>
+<span id="cb23-17"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-17" tabindex="-1"></a><span class="co"># Observed outcome</span></span>
+<span id="cb23-18"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-18" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(treatment <span class="sc">==</span> <span class="dv">1</span>, y_1, y_0)</span>
+<span id="cb23-19"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-19" tabindex="-1"></a></span>
+<span id="cb23-20"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-20" tabindex="-1"></a><span class="co"># True ATE: average of individual-level effects</span></span>
+<span id="cb23-21"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-21" tabindex="-1"></a>true_ate <span class="ot">&lt;-</span> <span class="fu">mean</span>(y_1 <span class="sc">-</span> y_0)</span>
+<span id="cb23-22"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-22" tabindex="-1"></a></span>
+<span id="cb23-23"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-23" tabindex="-1"></a>df_conf <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(age, bmi, cholesterol, treatment, y)</span>
+<span id="cb23-24"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-24" tabindex="-1"></a></span>
+<span id="cb23-25"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-25" tabindex="-1"></a><span class="co"># Naive estimate: difference in means</span></span>
+<span id="cb23-26"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-26" tabindex="-1"></a>naive_ate <span class="ot">&lt;-</span> <span class="fu">mean</span>(df_conf<span class="sc">$</span>y[df_conf<span class="sc">$</span>treatment <span class="sc">==</span> <span class="dv">1</span>]) <span class="sc">-</span> <span class="fu">mean</span>(df_conf<span class="sc">$</span>y[df_conf<span class="sc">$</span>treatment <span class="sc">==</span> <span class="dv">0</span>])</span>
+<span id="cb23-27"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-27" tabindex="-1"></a></span>
+<span id="cb23-28"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb23-28" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;True ATE:&quot;</span>, <span class="fu">round</span>(true_ate, <span class="dv">3</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## True ATE: 44.567</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb25-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Naive (unadjusted) ATE estimate:&quot;</span>, <span class="fu">round</span>(naive_ate, <span class="dv">3</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Naive (unadjusted) ATE estimate: 49.021</code></pre>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb27-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">The naive estimate is biased because treatment was assigned based on age and cholesterol.</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## 
+## The naive estimate is biased because treatment was assigned based on age and cholesterol.</code></pre>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="introduction-to-counterfactuals-and-potential-outcomes.html#cb29-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;We&#39;ll learn methods to close this gap starting in Week 2.</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## We&#39;ll learn methods to close this gap starting in Week 2.</code></pre>
+<hr />
 </div>
 </div>
             </section>
@@ -316,8 +332,8 @@ Case studies on unmeasured confounding and robustness of findings</p>
           </div>
         </div>
       </div>
-<a href="other-common-pitfalls-of-causal-analyses.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="applications-of-causal-inference-in-public-health-and-medical-research.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="association-vs.-causation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="causal-estimands-and-identification.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -348,7 +364,7 @@ gitbook.start({
     "size": 2
   },
   "edit": {
-    "link": "https://github.com/fbargaglistoffi/causal_inference_graduate/edit/main/08_identification_estimation.Rmd",
+    "link": "https://github.com/fbargaglistoffi/causal_inference_graduate/edit/main/01_potential_outcomes.Rmd",
     "text": "Edit"
   },
   "history": {
@@ -356,7 +372,7 @@ gitbook.start({
     "text": null
   },
   "view": {
-    "link": "https://github.com/fbargaglistoffi/causal_inference_graduate/blob/main/08_identification_estimation.Rmd",
+    "link": "https://github.com/fbargaglistoffi/causal_inference_graduate/blob/main/01_potential_outcomes.Rmd",
     "text": null
   },
   "download": null,
