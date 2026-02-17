@@ -1,7 +1,10 @@
 bookdown::gitbook:
   css: style.css
   config:
+    fontsettings:
+      theme: night
     toc:
+      collapse: section
       before: |
         <li><a href="./">Causal Inference</a></li>
       after: |
