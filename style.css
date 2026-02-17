@@ -13,18 +13,44 @@ pre code {
   white-space: inherit;
 }
 
-/* Hide edit (pen) and view source (eye) buttons */
-.fa-edit, .fa-pencil, .fa-eye,
-.code-folding-btn, .edit-btn,
-[aria-label="Edit"], [aria-label="View source"] {
-  display: none !important;
+/* Force night theme across all pages */
+.book.color-theme-1 .book-body,
+.book.color-theme-2 .book-body,
+.book .book-body {
+  color: #bdcadb;
+  background: #1c1f2b;
 }
 
-/* Remove gap left by hidden toolbar buttons */
-.book-header .btn {
-  display: none;
+.book.color-theme-1 .book-body .page-wrapper .page-inner section,
+.book.color-theme-2 .book-body .page-wrapper .page-inner section,
+.book .book-body .page-wrapper .page-inner section {
+  color: #bdcadb;
 }
-.book-header .btn.font-settings,
-.book-header .btn.info {
-  display: inline-block;
+
+.book-summary, .book-summary ul.summary li a,
+.book-summary ul.summary li span {
+  background: #111218;
+  color: #bdcadb;
+}
+
+.book-header {
+  background: #1c1f2b;
+  color: #bdcadb;
+}
+
+pre, code {
+  background: #272a36;
+  color: #bdcadb;
+}
+
+a {
+  color: #4a90d9;
+}
+
+/* Hide toolbar buttons we don't need */
+.fa-edit, .fa-pencil, .fa-eye,
+.code-folding-btn, .btn.btn-default.btn-info,
+.fa-info, .fa-share-alt,
+.sharing-buttons, .dropdown-sharing {
+  display: none !important;
 }
