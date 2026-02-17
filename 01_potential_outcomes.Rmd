@@ -20,23 +20,26 @@ library(dplyr)
 
 # Foundations of Causal Thinking
 
-**Slides:** [Module 1](https://drive.google.com/file/d/1cDgTAxA05Z87-gjDN3Ooljl2bF1Cc4ug/view?usp=sharing)
+> ## Class materials  
+>
+>**Slides:** [Module 1](https://drive.google.com/file/d/1cDgTAxA05Z87-gjDN3Ooljl2bF1Cc4ug/view?usp=sharing)
+>
+>## Textbook Reading
+>
+>[Hernán & Robins, *Causal Inference: What If* – Chapter 1](https://static1.squarespace.com/static/675db8b0dd37046447128f5f/t/677676888e31cc50c2c33877/1735816881944/hernanrobins_WhatIf_2jan25.pdf)
+>
 
-## Textbook Reading
+>## Supplementary Reading
+>
+>[Pearl, J. and Mackenzie, D. (2018) *The Book of Why: The New Science of Cause and Effect*. Basic Books.](https://bayes.cs.ucla.edu/WHY/why-ch1.pdf)
 
-[Hernán & Robins, *Causal Inference: What If* – Chapter 1](https://static1.squarespace.com/static/675db8b0dd37046447128f5f/t/677676888e31cc50c2c33877/1735816881944/hernanrobins_WhatIf_2jan25.pdf)
-
-## Supplementary Reading
-
-[Pearl, J. and Mackenzie, D. (2018) *The Book of Why: The New Science of Cause and Effect*. Basic Books.](https://bayes.cs.ucla.edu/WHY/why-ch1.pdf)
-
-## Topics Covered
-
-- Association vs. Causation
-- Introduction to Counterfactuals and Potential Outcomes
-- Causal Estimands and Identification
-- Measuring Effects for Binary Outcomes
-- Critical reading exercise: analyzing causal claims in public health news
+>## Topics Covered
+>
+>- Association vs. Causation
+>- Introduction to Counterfactuals and Potential Outcomes
+>- Causal Estimands and Identification
+>- Measuring Effects for Binary Outcomes
+>- Critical reading exercise: analyzing causal claims in public health news
 
 ---
 
@@ -50,7 +53,7 @@ To demonstrate this paradox, we simulate a study comparing two pneumonia treatme
 
 > **Checklist Item 1 — What is the causal question?** Before looking at the data, let's define the question: *What is the effect of Treatment B (vs. Treatment A) on mortality risk in pneumonia patients?* Treatment ($W$): Treatment B vs. Treatment A. Outcome ($Y$): Death (binary). Population: Pneumonia patients. Estimand: Risk difference.
 
-## Simulating Simpson's Paradox
+### Simulating Simpson's Paradox
 
 ```{r simpsons-data}
 set.seed(123)
@@ -86,7 +89,7 @@ cat("Overall death rate (Treatment A):", round(overall_a, 3), "\n")
 cat("Overall death rate (Treatment B):", round(overall_b, 3), "\n")
 ```
 
-## Visualizing the Overall (Misleading) Trend
+### Visualizing the Overall (Misleading) Trend
 
 ```{r simpsons-overall}
 overall_plot_data <- data.frame(
@@ -109,7 +112,7 @@ print(p1)
 
 If we only compare the death rates between groups that received Treatment A against groups that received Treatment B, Treatment A seems to be more effective at treating patients.
 
-## Stratifying by Severity Reveals the Truth
+### Stratifying by Severity Reveals the Truth
 
 ```{r simpsons-stratified}
 group_means <- df %>%
@@ -145,13 +148,13 @@ Only after stratifying by the severity of the case are we able to observe that T
 
 ---
 
-# Introduction to Counterfactuals and Potential Outcomes
+## Introduction to Counterfactuals and Potential Outcomes
 
 At the heart of causal inference lies a simple yet powerful idea: **counterfactuals** — what would have happened if something else had occurred. However, we can never observe both outcomes for the same person. This is known as the **Fundamental Problem of Causal Inference**. We only observe the outcome under the condition that actually occurred — everything else is unobserved, or counterfactual.
 
 Building on the concept of counterfactuals, the **Average Treatment Effect (ATE)** provides a formal way to quantify the impact of a treatment or intervention across a population. Since we cannot observe both potential outcomes (treated and untreated) for the same individual, ATE instead compares the average outcome we would see if everyone received the treatment versus if no one did. Mathematically, it is the difference between the expected value of the potential outcome under treatment and the expected value under control. While individual causal effects remain unobservable, the ATE offers a population-level summary of the treatment's impact — a cornerstone of policy evaluation, randomized experiments, and observational causal analysis.
 
-## Notation
+### Notation
 
 Counterfactuals can be represented using **potential outcomes notation**:
 
@@ -166,7 +169,7 @@ $$Y = W \cdot Y(1) + (1 - W) \cdot Y(0)$$
 
 So $Y = Y(1)$ if the unit was treated and $Y = Y(0)$ if the unit was not treated. This equation is known as **consistency**.
 
-## Simulation: Seeing Confounding Bias in Action
+### Simulation: Seeing Confounding Bias in Action
 
 The simulation below tests the effect of a treatment on 2,000 patients. The treatment was assigned to older people with higher levels of cholesterol. If we simply take the difference of the average outcome of the treated group and the average outcome of the control group, then our estimate of the average treatment effect will be biased because age and cholesterol levels are **confounding** the effect of the treatment. This is shown by how the true average treatment effect differs from the naive average treatment effect estimate.
 
@@ -206,7 +209,7 @@ cat("We'll learn methods to close this gap starting in Week 2.\n")
 
 ---
 
-# Causal Estimands and Identification
+## Causal Estimands and Identification
 
 **Causal estimands** are the quantities we aim to estimate to understand the effect of a treatment or intervention. The most common estimands include:
 
@@ -232,7 +235,7 @@ Think of $X = x$ where $X$ is some form of age classification and $x$ could be a
 
 ---
 
-# Measuring Effects for Binary Outcomes
+## Measuring Effects for Binary Outcomes
 
 Often in public health settings, we have to estimate the causal effect on a binary outcome such as survival. For example, if we are trying to measure the effect of a heart surgery on a patient's survival status, we can say that the outcome $Y = 1$ means that the patient died and $Y = 0$ means that the patient survived. There are only two possible outcomes. In this case, we try to quantify or measure the causal effect using two main **effect measures**.
 
@@ -248,7 +251,7 @@ $$\frac{Pr[Y(1) = 1]}{Pr[Y(0) = 1]}$$
 
 For example, if the heart surgery was estimated to have a risk ratio of 0.5, then the risk of death under surgery is half compared to the risk of death under no surgery.
 
-## G-Computation: A Preview
+### G-Computation: A Preview
 
 Since we are working with binary outcomes, we can model these probabilities using a logistic regression. Let's consider the example about measuring the effect of heart surgery. To estimate the risk difference using a logistic regression, we follow a set of steps called **g-computation**:
 
@@ -261,7 +264,7 @@ Since we are working with binary outcomes, we can model these probabilities usin
 
 > **Important caveat:** The g-computation approach below produces valid causal estimates in our simulation because we generated the data and *know* all the confounders. In practice, this assumption — called "no unmeasured confounding" — is never guaranteed and often questionable. Much of this course is devoted to understanding when such assumptions are credible and what can go wrong when they're not. For now, treat this as a preview of the tools; the rest of the course gives you the judgment to know when to trust them.
 
-## Simulation: Heart Surgery and Survival
+### Simulation: Heart Surgery and Survival
 
 In the example below, we are trying to measure the causal effect of a heart transplant on a patient's survival status. Our study includes 200 total patients. We have data on the patient's age, health score (ranging from 0 to 100, where a higher score means more healthy), whether they are diabetic, and whether they have had a prior heart attack. Patients that tend to be older, less healthy, have had diabetes, or have had a prior heart attack are more likely to receive the surgery. Out of 200 patients, 127 did not receive heart surgery, while 73 did.
 

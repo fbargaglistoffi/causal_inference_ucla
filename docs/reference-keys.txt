@@ -1,7 +1,4 @@
 foundations-of-causal-thinking
-textbook-reading
-supplementary-reading
-topics-covered
 association-vs.-causation
 simulating-simpsons-paradox
 visualizing-the-overall-misleading-trend
