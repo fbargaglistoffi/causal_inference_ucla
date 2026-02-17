@@ -12,6 +12,7 @@
 >
 >- Medical Research Council. (1948) "Streptomycin Treatment of Pulmonary Tuberculosis." *BMJ*, 2(4582):769–782.
 >- Finkelstein A, et al. (2012) "The Oregon Health Insurance Experiment: Evidence from the First Year." *QJE*, 127(3):1057–1106.
+
 >## Topics Covered
 >
 >- Why randomization solves the selection bias problem
@@ -19,7 +20,6 @@
 >- Estimating the Average Treatment Effect from an RCT
 >- Confidence intervals and uncertainty
 >- Statistical vs. clinical significance
->- Critical reading exercise: the Oregon Health Insurance Experiment
 
 ---
 
