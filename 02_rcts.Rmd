@@ -1,210 +1,497 @@
-# Randomized Control Trials  
+# Randomized Controlled Trials
 
-> ## Class materials  
+> ## Class materials
 >
-> Slides: [**Module 2**](https://drive.google.com/file/d/1lseBc7nuJOFFTBKwjDdK7OLf0CLr3_10/view)  
+>**Slides:** [Module 2](link-to-slides)
+
+>## Textbook Reading
 >
-> Recording: [**Module 2, Part 1**](https://your-recording-link.com)  
+>[Hernán & Robins, *Causal Inference: What If* – Chapters 1–2](https://static1.squarespace.com/static/675db8b0dd37046447128f5f/t/677676888e31cc50c2c33877/1735816881944/hernanrobins_WhatIf_2jan25.pdf)
 >
-> Recording: [**Module 2, Part 2**](https://your-recording-link.com)  
-
-> ## Textbook reading  
+>## Supplementary Reading
 >
-> [**Hernán & Robins, Causal Inference: What If – Chapters 2*](https://static1.squarespace.com/static/675db8b0dd37046447128f5f/t/677676888e31cc50c2c33877/1735816881944/hernanrobins_WhatIf_2jan25.pdf)  
-
-> ## Supplementary reading  
+>- Medical Research Council. (1948) "Streptomycin Treatment of Pulmonary Tuberculosis." *BMJ*, 2(4582):769–782.
+>- Finkelstein A, et al. (2012) "The Oregon Health Insurance Experiment: Evidence from the First Year." *QJE*, 127(3):1057–1106.
+>## Topics Covered
 >
-> [**Pearl, J. (2009). Causal inference in statistics: An overview.   Statistics Surveys, 3, 96–146.**](https://projecteuclid.org/journals/statistics-surveys/volume-3/issue-none/Causal-inference-in-statistics-An-overview/10.1214/09-SS057.full)\  
-> Selected DAG examples from public health studies (provided in class)  
+>- Why randomization solves the selection bias problem
+>- Simulating a randomized experiment
+>- Estimating the Average Treatment Effect from an RCT
+>- Confidence intervals and uncertainty
+>- Statistical vs. clinical significance
+>- Critical reading exercise: the Oregon Health Insurance Experiment
 
-> ## Topics covered  
->
-> -   Randomized controlled trials: the gold standard  
-> -   Basic experimental design principles  
-> -   Limitations of RCTs in public health contexts  
-> -   Common threats to internal and external validity  
-> -   Causal Quantities: SATE vs PATE
-> -   Critical reading exercise: evaluating a published RCT  
+---
 
-## Randomized controlled trials: the gold standard  
+## Review: The Selection Bias Problem
 
-Randomized Controlled Trials (RCTs) are widely considered the gold standard in causal inference because they offer the most rigorous way to establish whether a treatment or intervention truly causes an outcome. The key feature that sets RCTs apart is randomization: participants are randomly assigned to treatment or control groups, which ensures that—on average—all other characteristics (like age, health status, and behaviors) are equally distributed across groups. This process breaks any systematic link between confounders and treatment assignment, making the groups exchangeable and allowing us to interpret differences in outcomes as causal effects of the treatment. 
+Last week, we saw that a naive comparison of treated and untreated groups can be misleading when treatment assignment is **confounded**, meaning that when the characteristics that drive someone to receive treatment also affect the outcome. Today we show why **randomization** eliminates this problem.
 
-**Exchangeability** is the key assumption for RCTs, and random assignment of the treatment in RCTs allows us to defend this assumption. Mathematically, exchangeability is written as:  
+Not all credible studies use researcher-controlled randomization. Sometimes nature provides "as-if random" assignment through lotteries (e.g., the Vietnam draft), arbitrary cutoffs (e.g., the legal drinking age at 21), or geographic boundaries. These **quasi-experiments** sit between full randomization and pure self-selection on the credibility spectrum. We will formalize these designs later in the course; the OHIE exercise at the end of this page is one such example.
 
-$$
-(Y(1), Y(0)) \perp W
-$$
-To understand this consider an single person. Exchangeability says that if we have information about what treatment they received, then that doesn't give us any information about what their potential outcome will be. We use exchangeability to identify the average treatment effect (ATE). Identifying the ATE means we are using some assumptions to express the ATE which is expressed in counterfactual outcomes as something that can be expressed using observed data. In this case, the ATE can be written as a difference in means between the treated and control groups.
+> **Checklist Items 2-3.** As you work through this code, keep two questions in mind: *How was treatment assigned?* (Item 2) and *Is the comparison fair?* (Item 3). When treatment is randomized, the answer to both questions is strong, and the code below shows you exactly why.
 
-$$
-\begin{align*}
-ATE &= E[Y(1) - Y(0)] \\
-&= E[Y(1)] - E[Y(0)] \quad \text{by linearity of expectation} \\
-&= E[Y(1) \ | \ W=1] - E[Y(0) \ | \  W = 0] \quad \text{by exchangeability} \\
-&= E[Y \ | \ W = 1] - E[Y \ | \ W = 0] \quad \text{by consistency}
-\end{align*}
-$$
+### Quick Demonstration: Confounded vs. Randomized Assignment
 
+We start with a simple comparison. We simulate 2,000 patients where a blood pressure drug truly lowers systolic blood pressure (SBP) by 10 mmHg on average. In the first scenario, sicker patients are more likely to receive the drug (confounded). In the second, treatment is assigned by a coin flip (randomized).
 
-Because of this design, RCTs eliminate the need to adjust for confounders or worry about selection bias in the same way observational studies do. They provide clean estimates of the average treatment effect (ATE) with high internal validity, especially when they are well-executed and have minimal loss to follow-up. However, RCTs are not without limitations. They can be expensive, time-consuming, and sometimes unethical or impractical—such as when withholding treatment would cause harm. Despite these limitations, RCTs serve as the benchmark against which other study designs are compared, and understanding their strengths helps us interpret both experimental and non-experimental evidence more critically.  
-
-In this simulation, I will recreate a simple randomized controlled trial (RCT) to estimate the effect of a new treatment on a patient's blood pressure (mmHg). I randomly assigned 2,000 individuals to either a treatment or control group and simulate their outcomes based on their assignment. Because of randomization, I expected the two groups to be similar in baseline characteristics, allowing for an unbiased estimate of the treatment effect. In this example, the baseline characteristics that were measured were age, BMI, cholesterol (mg/dL), and daily sodium intake (mg/day). After simulating the data, I estimated the Average Treatment Effect (ATE) by comparing mean outcomes between the groups, and visualized the distribution of outcomes to confirm the treatment impact.  
-
-**Simulated Baseline Data and Treatment Assignment**  
-
-```{r}
-
-# pacman::p_load("dplyr", "ggplot2")
-
-set.seed(123)
-
+```{r confounded-vs-random}
+set.seed(42)
 n <- 2000
 
-age <- rnorm(n, 50, 10)
+# Covariates
+age <- runif(n, 25, 75)
+baseline_sbp <- 90 + 0.5 * age + rnorm(n, sd = 10)
 
-bmi <- rnorm(n, 27, 4)
+# Potential outcomes (true ATE = -10)
+y0 <- baseline_sbp + rnorm(n, sd = 5)
+y1 <- y0 - 10
 
-cholesterol <- rnorm(n, 200, 30)
+# --- Scenario 1: Confounded assignment (sicker patients get drug) ---
+prob_treat_conf <- plogis(-2 + 0.03 * age + 0.02 * baseline_sbp)
+W_conf <- rbinom(n, 1, prob_treat_conf)
+y_conf <- ifelse(W_conf == 1, y1, y0)
 
-sodium_intake <- rnorm(n, 3000, 500)
+naive_conf <- mean(y_conf[W_conf == 1]) - mean(y_conf[W_conf == 0])
 
-treatment <- rbinom(n, 1, 0.5)
+# --- Scenario 2: Randomized assignment (coin flip) ---
+W_rand <- rbinom(n, 1, 0.5)
+y_rand <- ifelse(W_rand == 1, y1, y0)
 
-y_0 <- 90 + 0.4 * age + 0.05 * cholesterol + 0.004 * sodium_intake + 
-  rnorm(n, sd = 10)
+naive_rand <- mean(y_rand[W_rand == 1]) - mean(y_rand[W_rand == 0])
 
-y_1 <- y_0 - 10 + rnorm(n, sd = 5)
+cat("True ATE:", -10, "\n\n")
+cat("Confounded assignment:\n")
+cat("  Estimated ATE (naive):", round(naive_conf, 2), "\n")
+cat("  Bias:", round(naive_conf - (-10), 2), "\n\n")
+cat("Randomized assignment:\n")
+cat("  Estimated ATE (naive):", round(naive_rand, 2), "\n")
+cat("  Bias:", round(naive_rand - (-10), 2), "\n")
+```
 
-y <- ifelse(treatment == 1, y_1, y_0)
+Under confounded assignment, the naive estimate is biased because sicker patients received the drug, so the treated group had higher SBP to begin with. Under randomization, the difference in means is close to the true ATE of $-10$ because the two groups are comparable.
 
-rct_data <- data.frame(
-  age = age,
-  bmi = bmi,
-  cholesterol = cholesterol,
-  sodium_intake = sodium_intake,
-  treatment = treatment,
-  y = y
+---
+
+## Simulating a Randomized Experiment
+
+Let's build a full RCT simulation step by step. We simulate a clinical trial testing whether a new blood pressure drug lowers SBP compared to placebo.
+
+### Setting Up the Population
+
+```{r rct-population}
+set.seed(2024)
+n <- 2000
+
+# Generate patient characteristics
+age       <- runif(n, 25, 75)
+female    <- rbinom(n, 1, 0.5)
+smoker    <- rbinom(n, 1, 0.22)
+bmi       <- rnorm(n, mean = 27, sd = 4)
+diabetes  <- rbinom(n, 1, 0.12)
+
+# Baseline SBP depends on covariates
+baseline_sbp <- 80 + 0.5 * age + 2 * smoker + 0.3 * bmi +
+                5 * diabetes + rnorm(n, sd = 8)
+
+df <- data.frame(age, female, smoker, bmi, diabetes, baseline_sbp)
+head(df)
+```
+
+### Randomization: Treatment Assignment
+
+In an RCT, treatment is assigned independently of patient characteristics. This is the key that ensures **exchangeability**: $Y(0), Y(1) \perp W$.
+
+```{r rct-randomize}
+# Simple randomization (coin flip)
+df$W <- rbinom(n, 1, 0.5)
+
+cat("Treatment group:", sum(df$W), "patients\n")
+cat("Control group:", sum(1 - df$W), "patients\n")
+```
+
+### Checking Balance: Does Randomization Work?
+
+A crucial step in evaluating any RCT is checking whether baseline characteristics are balanced across treatment and control groups. This is what **Table 1** shows in a published RCT paper.
+
+```{r balance-table}
+balance_check <- df %>%
+  group_by(W) %>%
+  summarize(
+    mean_age      = mean(age),
+    pct_female    = mean(female) * 100,
+    pct_smoker    = mean(smoker) * 100,
+    mean_bmi      = mean(bmi),
+    pct_diabetes  = mean(diabetes) * 100,
+    mean_sbp      = mean(baseline_sbp),
+    .groups = "drop"
+  )
+
+# Format for display
+balance_display <- data.frame(
+  Variable = c("Age (mean)", "Female (%)", "Smoker (%)",
+               "BMI (mean)", "Diabetes (%)", "Baseline SBP (mean)"),
+  Control   = round(as.numeric(balance_check[balance_check$W == 0, -1]), 1),
+  Treatment = round(as.numeric(balance_check[balance_check$W == 1, -1]), 1)
 )
 
-head(rct_data)
+balance_display$Difference <- balance_display$Treatment - balance_display$Control
 
+knitr::kable(balance_display, caption = "Table 1: Baseline Characteristics by Treatment Group")
 ```
 
-**Estimated the Average Treatment Effect (ATE)**  
+The differences should be small, not because of any adjustment, but because randomization makes the groups comparable. With 1,000 patients per arm, we expect very good balance.
 
-```{r}
+### Visualizing Balance
 
-ate_estimate <- rct_data |>
-  group_by(treatment) |>
-  summarize(mean_outcome = mean(y)) |>
-  summarize(ATE = diff(mean_outcome)) |>
-  pull(ATE)
-
-paste("Estimated ATE: ", round(ate_estimate, 2))
-
+```{r balance-plot, fig.height=4}
+ggplot(df, aes(x = age, fill = factor(W, labels = c("Control", "Treatment")))) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(values = c("Control" = "#D62728", "Treatment" = "#1F77B4"),
+                    name = "Group") +
+  labs(title = "Age Distribution by Treatment Group",
+       subtitle = "Under randomization, distributions should overlap substantially",
+       x = "Age", y = "Density") +
+  theme_minimal()
 ```
 
-Based on our estimate, the treatment reduces blood pressure by 10 mmHg.
+> **Checklist Item 3 in practice:** When you read an RCT, look at Table 1. If the baseline characteristics are similar across groups, the comparison is likely fair. Large imbalances, especially in a randomized study, suggest something may have gone wrong.
 
-**Visualization of the Outcome Distributions**  
+---
 
-```{r}
+## Estimating the ATE
 
-ggplot(rct_data, aes(x = as.factor(treatment), y = y, fill = as.factor(treatment))) + 
-  geom_boxplot(alpha = 0.7) + 
-  labs(
-    title = "Distribution of Outcomes by Treatment Group", 
-    x = "Treatment: Control (0) vs Treated (1)",
-    y = "Outcome"
-  ) + 
-  scale_fill_manual(values = c("red", "blue")) +
+### Generating Outcomes
+
+```{r rct-outcomes}
+# True treatment effect: drug lowers SBP by 10 mmHg on average
+true_ate <- -10
+
+# Potential outcomes
+df$y0 <- baseline_sbp + rnorm(n, sd = 5)   # outcome without drug
+df$y1 <- df$y0 + true_ate                   # outcome with drug
+
+# Observed outcome (we only see one per person)
+df$y_obs <- ifelse(df$W == 1, df$y1, df$y0)
+```
+
+### The Simple Estimator: Difference in Means
+
+In an RCT, the ATE is estimated by the difference in sample means. No regression or matching needed.
+
+$$\widehat{ATE} = \bar{Y}_1 - \bar{Y}_0 = \frac{1}{N_1}\sum_{i:W_i=1} Y_i^{obs} - \frac{1}{N_0}\sum_{i:W_i=0} Y_i^{obs}$$
+
+```{r rct-estimate}
+y_bar_1 <- mean(df$y_obs[df$W == 1])
+y_bar_0 <- mean(df$y_obs[df$W == 0])
+ate_hat <- y_bar_1 - y_bar_0
+
+cat("Mean outcome (Treatment):", round(y_bar_1, 2), "\n")
+cat("Mean outcome (Control):",   round(y_bar_0, 2), "\n")
+cat("Estimated ATE:", round(ate_hat, 2), "\n")
+cat("True ATE:", true_ate, "\n")
+cat("Estimation error:", round(ate_hat - true_ate, 2), "\n")
+```
+
+The estimate is close to the true value of $-10$. This works because randomization ensures exchangeability: the treated and control groups are comparable, so the selection bias term equals zero.
+
+### Confidence Intervals
+
+A point estimate alone is not enough. We need to quantify uncertainty.
+
+```{r rct-ci}
+# Standard error of the difference in means
+n1 <- sum(df$W == 1)
+n0 <- sum(df$W == 0)
+s1 <- sd(df$y_obs[df$W == 1])
+s0 <- sd(df$y_obs[df$W == 0])
+
+se <- sqrt(s1^2 / n1 + s0^2 / n0)
+
+# 95% confidence interval
+ci_lower <- ate_hat - 1.96 * se
+ci_upper <- ate_hat + 1.96 * se
+
+cat("Estimated ATE:", round(ate_hat, 2), "\n")
+cat("Standard Error:", round(se, 2), "\n")
+cat("95% CI: [", round(ci_lower, 2), ",", round(ci_upper, 2), "]\n\n")
+
+if (ci_lower > 0 | ci_upper < 0) {
+  cat("The CI does NOT include zero → evidence of a non-zero effect.\n")
+} else {
+  cat("The CI includes zero → we cannot rule out no effect.\n")
+}
+```
+
+### Using a t-test (Equivalent Approach)
+
+The difference-in-means test is exactly a two-sample t-test. R makes this easy:
+
+```{r rct-ttest}
+t_result <- t.test(y_obs ~ W, data = df)
+print(t_result)
+```
+
+The p-value and confidence interval from `t.test()` match our manual calculation. Under randomization, this simple test is all you need.
+
+### Visualizing the Treatment Effect
+
+```{r rct-boxplot, fig.height=4.5}
+ggplot(df, aes(x = factor(W, labels = c("Control", "Treatment")),
+               y = y_obs,
+               fill = factor(W, labels = c("Control", "Treatment")))) +
+  geom_boxplot(alpha = 0.7, outlier.alpha = 0.3) +
+  scale_fill_manual(values = c("Control" = "#D62728", "Treatment" = "#1F77B4")) +
+  labs(title = "Observed Outcomes by Treatment Group",
+       subtitle = paste0("Estimated ATE = ", round(ate_hat, 2), " mmHg (true = ", true_ate, ")"),
+       x = "", y = "Systolic Blood Pressure (mmHg)") +
+  theme_minimal() +
+  guides(fill = "none")
+```
+
+---
+
+## Repeated Experiments: The Sampling Distribution
+
+A single RCT gives one estimate. But if we could repeat the experiment many times, the estimates would form a distribution centered on the true ATE. This is the idea behind the **sampling distribution**.
+
+```{r sampling-dist, fig.height=4.5}
+set.seed(2024)
+n_sims <- 1000
+estimates <- numeric(n_sims)
+
+for (s in 1:n_sims) {
+  # Rerandomize treatment
+  W_sim <- rbinom(n, 1, 0.5)
+  y_sim <- ifelse(W_sim == 1, df$y1, df$y0)
+  estimates[s] <- mean(y_sim[W_sim == 1]) - mean(y_sim[W_sim == 0])
+}
+
+ggplot(data.frame(est = estimates), aes(x = est)) +
+  geom_histogram(bins = 40, fill = "#1F77B4", alpha = 0.7, color = "white") +
+  geom_vline(xintercept = true_ate, color = "red", linewidth = 1.2, linetype = "dashed") +
+  geom_vline(xintercept = mean(estimates), color = "#2CA02C", linewidth = 1) +
+  labs(title = "Sampling Distribution of the ATE Estimator",
+       subtitle = paste0("1,000 re-randomizations | Mean of estimates: ",
+                         round(mean(estimates), 2), " | True ATE: ", true_ate),
+       x = "Estimated ATE", y = "Count") +
   theme_minimal()
 
+cat("Mean of 1,000 estimates:", round(mean(estimates), 2), "\n")
+cat("SD of estimates:", round(sd(estimates), 2), "\n")
+cat("True ATE:", true_ate, "\n")
 ```
 
+The histogram is centered on $-10$, confirming the estimator is **unbiased**. The spread of the distribution is the standard error, which decreases with larger sample sizes.
 
-```{r}
+---
 
-# library(cobalt)
+## Statistical vs. Clinical Significance
 
-bal.out <- bal.tab(treatment~age+bmi+cholesterol+sodium_intake, data = rct_data, s.d.denom = "pooled")
+A result can be statistically significant yet clinically irrelevant, or clinically important but statistically non-significant. The next simulation illustrates both scenarios.
 
-set.cobalt.options(binary = "std")
+```{r stat-vs-clinical}
+set.seed(99)
 
-love.plot(bal.out, limits = c(-0.1, 0.1))
+# Scenario 1: Large sample, tiny true effect (0.5 mmHg)
+n_large <- 10000
+W_large <- rbinom(n_large, 1, 0.5)
+y0_large <- rnorm(n_large, mean = 130, sd = 15)
+y1_large <- y0_large - 0.5  # tiny effect
+y_large <- ifelse(W_large == 1, y1_large, y0_large)
+t1 <- t.test(y_large[W_large == 1], y_large[W_large == 0])
 
+cat("=== Scenario 1: Large sample, tiny effect ===\n")
+cat("True effect: -0.5 mmHg\n")
+cat("Estimated effect:", round(t1$estimate[1] - t1$estimate[2], 2), "mmHg\n")
+cat("P-value:", format.pval(t1$p.value, digits = 3), "\n")
+cat("Statistically significant?", ifelse(t1$p.value < 0.05, "YES", "NO"), "\n")
+cat("Clinically meaningful? Probably not. 0.5 mmHg is negligible.\n\n")
+
+# Scenario 2: Small sample, large true effect (15 mmHg)
+n_small <- 40
+W_small <- rbinom(n_small, 1, 0.5)
+y0_small <- rnorm(n_small, mean = 130, sd = 15)
+y1_small <- y0_small - 15  # large effect
+y_small <- ifelse(W_small == 1, y1_small, y0_small)
+t2 <- t.test(y_small[W_small == 1], y_small[W_small == 0])
+
+cat("=== Scenario 2: Small sample, large effect ===\n")
+cat("True effect: -15 mmHg\n")
+cat("Estimated effect:", round(t2$estimate[1] - t2$estimate[2], 2), "mmHg\n")
+cat("P-value:", format.pval(t2$p.value, digits = 3), "\n")
+cat("Statistically significant?", ifelse(t2$p.value < 0.05, "YES", "NO"), "\n")
+cat("Clinically meaningful? Yes. 15 mmHg is a substantial reduction.\n")
 ```
 
-This visualization is called a **love plot**. It shows how balanced each of the observed characteristics is between the treated and control group. For example, a value of 0.05 for age means that the treated group's mean age is 0.05 standard deviations above the control group's mean age, which is not much. Typically, an absolute standardized difference value of 0.10 or less typically means that the difference between the groups is negligible. 
+> **Takeaway:** Always ask *both* questions: (1) Is the effect statistically distinguishable from zero? (2) Is the effect large enough to matter for patients or policy?
 
-So in this plot, all the observed characteristics are balanced. This example shows that random assignment of the treatment balances observed and unobserved characteristics. Since the groups are so similar, we say that the treated and control groups are exchangeable.
+---
 
-## Basic Experimental Design Principles  
+## Exercise: The Oregon Health Insurance Experiment
 
-At the heart of randomized controlled trials (RCTs) lies experimental design, the set of strategies we use to ensure that the comparison between groups is fair, unbiased, and informative. Good experimental design ensures that any differences in outcomes between the treatment and control groups can be confidently attributed to the treatment itself, and not to other confounding variables. Three basic principles guide experimental design: randomization, control, and replication.  
+The Oregon Health Insurance Experiment (OHIE) is one of the most influential randomized studies in health policy. In 2008, Oregon used a **lottery** to randomly select who could apply for Medicaid, creating a natural experiment on the effect of health insurance.
 
-- Randomization is the process of randomly assigning participants to treatment or control groups. This prevents systematic differences between groups at baseline and ensures that confounding variables (both known and unknown) are evenly distributed.  
-- Control involves creating a baseline group (the control group) that does not receive the treatment, allowing for a meaningful comparison.  
-- Replication refers to having enough participants so that random fluctuations even out, providing more precise and reliable estimates of the treatment effect.  
+### Background
 
-In our previous simulation, we applied these principles by randomly assigning 2,000 individuals to either a treatment or control group, simulating outcomes based only on treatment status and baseline characteristics (age). Because we randomized treatment assignment, we can be confident that any observed difference in outcomes is causally attributable to the treatment, not to age differences, baseline health, or other confounders. Without randomization, we would have needed to control for these factors. This simulation highlights why randomization is considered the gold standard for causal inference.  
+- **Treatment ($W$):** Winning the lottery (gaining access to apply for Medicaid)
+- **Control ($W = 0$):** Not selected in the lottery
+- **Outcomes ($Y$):** Healthcare utilization, health outcomes, financial strain
+- **Population:** Low-income uninsured adults in Oregon
 
-## Limitations of RCTs in Public Health Contexts  
+> **Checklist Items 1-3:**
+>
+> - *Item 1*: The causal question is clear: does gaining access to Medicaid improve health outcomes?
+> - *Item 2*: Treatment was assigned by lottery (random). Strong.
+> - *Item 3*: Lottery winners and losers should be comparable at baseline, so the comparison is fair.
 
-While randomized controlled trials (RCTs) are the gold standard for establishing causality, they are not without important limitations when applied to public health settings. First, ethical constraints often limit what interventions can be randomly assigned. For example, it would be unethical to randomly assign people to smoke or not smoke in order to study lung cancer. Public health research must often rely on observational studies where randomization is impossible.  
+### Loading the Data
 
-Second, feasibility and cost can be major barriers. Conducting large-scale RCTs can require enormous resources, making them impractical for studying widespread or long-term public health interventions like school nutrition programs or climate effects on health. Generalizability is another concern. Many RCTs are conducted in tightly controlled environments with selective populations, meaning their results may not apply to broader, more diverse real-world populations.  
+```{r ohie-load}
+# Load the OHIE data
+# The data file should be in your working directory
+# Uncomment and modify the path below once the data are provided
+#
+# ohie <- read.csv("ohie_data.csv")
+# head(ohie)
 
-In our earlier simulation, randomization guaranteed an unbiased estimate of the average treatment effect (ATE) within the study population. However, in real-world public health research, participants who volunteer for RCTs may differ from the general public, and interventions may behave differently outside of controlled settings. This highlights the importance of thinking critically about how experimental results translate into everyday public health practice.  
+# For now, we simulate OHIE-like data to illustrate the analysis
+set.seed(2008)
+n_ohie <- 10000
 
-## Common Threats to Internal and External Validity  
+# Lottery assignment (randomized)
+lottery_win <- rbinom(n_ohie, 1, 0.5)
 
-When evaluating any causal study, it's critical to think about validity, whether the results are accurate (internal validity) and whether they generalize beyond the study setting (external validity).  
+# Baseline characteristics (should be balanced by randomization)
+age       <- runif(n_ohie, 19, 64)
+female    <- rbinom(n_ohie, 1, 0.55)
+english   <- rbinom(n_ohie, 1, 0.85)
 
-Internal validity refers to whether the observed effect truly reflects the causal effect within the study population. Threats to internal validity include:  
+# Outcomes: healthcare utilization (binary: had a doctor visit in past year)
+# True effect of lottery win on doctor visit: +12 percentage points
+prob_visit <- plogis(-0.5 + 0.01 * age + 0.2 * female + 0.12 * lottery_win)
+doctor_visit <- rbinom(n_ohie, 1, prob_visit)
 
-- Confounding, if randomization fails or is compromised (e.g., noncompliance with assigned treatment).  
-- Selection bias, if participants drop out or are lost to follow-up in a way that is related to both treatment and outcome.  
-- Measurement error, if outcomes or treatments are recorded inaccurately.  
+# Financial strain: had any medical debt (binary)
+# True effect: -8 percentage points
+prob_debt <- plogis(0.1 + 0.005 * age - 0.1 * female - 0.08 * lottery_win)
+medical_debt <- rbinom(n_ohie, 1, prob_debt)
 
-External validity, on the other hand, concerns whether results from the study can be generalized to other settings, populations, or time periods. Threats to external validity include:  
+ohie <- data.frame(lottery_win, age, female, english, doctor_visit, medical_debt)
+```
 
-- Non-representative samples, such as RCTs recruiting only highly motivated individuals who differ from the general population.  
-- Intervention differences, where the way a treatment is delivered in a trial setting doesn't match how it would be implemented in the real world.  
-- Contextual factors, such as cultural, economic, or healthcare system differences that make the same intervention work differently elsewhere.  
+### Step 1: Check Balance (Table 1)
 
-In the earlier RCT simulation, we achieved excellent internal validity because treatment was randomized perfectly and outcomes were cleanly measured. However, that simulation assumes an idealized setting; in real public health research, threats to validity often creep in, and careful design and critical thinking are needed to recognize and minimize them.  
+Before estimating effects, verify that the lottery created comparable groups.
 
-## Causal Quantities: SATE vs PATE
+```{r ohie-balance}
+ohie_balance <- ohie %>%
+  group_by(lottery_win) %>%
+  summarize(
+    n            = n(),
+    mean_age     = mean(age),
+    pct_female   = mean(female) * 100,
+    pct_english  = mean(english) * 100,
+    .groups = "drop"
+  )
 
-When we do an RCT, we must be careful about the causal quantity of interest we are trying to estimate.
+balance_tbl <- data.frame(
+  Variable   = c("N", "Age (mean)", "Female (%)", "English speaker (%)"),
+  `Non-selected` = c(ohie_balance$n[1],
+                     round(ohie_balance$mean_age[1], 1),
+                     round(ohie_balance$pct_female[1], 1),
+                     round(ohie_balance$pct_english[1], 1)),
+  `Lottery winner` = c(ohie_balance$n[2],
+                       round(ohie_balance$mean_age[2], 1),
+                       round(ohie_balance$pct_female[2], 1),
+                       round(ohie_balance$pct_english[2], 1))
+)
 
-If we are interested in understanding the effect of a treatment for just the individuals in our sample, then we are estimating the **Sample Average Treatment Effect (SATE)**.
+knitr::kable(balance_tbl, caption = "Table 1: Baseline Characteristics by Lottery Status")
+```
 
-$$
-\begin{align*}
-  SATE = \frac{1}{n}\sum_{i=1}^n (Y_i(1) - Y_i(0))
-\end{align*}
-$$
+Because assignment was random, the groups should look similar. If you see large imbalances, it would raise questions about the randomization.
 
-Intuitively, the SATE is the average causal effect of individuals in your sample. These results cannot be generalized to a greater population without some assumptions about how sampling was conducted.
+### Step 2: Estimate the Intent-to-Treat (ITT) Effect
 
-If we are trying to understand a causal effect on an entire population beyond just our sample, then we are trying to estimate the **Population Average Treatment Effect (PATE)**. The PATE requires an extra component to the study's design. To estimate the PATE, random sampling must occur to ensure that the sample is representative of the population. This allows us to make conclusions about the population from our sample.
+The **intent-to-treat** analysis compares outcomes based on *assignment* (lottery win vs. loss), regardless of whether winners actually enrolled in Medicaid. This preserves the randomization.
 
-$$
-\begin{align*}
-PATE &= E[Y(1) - Y(0)]
-\end{align*}
-$$
+```{r ohie-itt}
+# Doctor visits
+itt_visit <- mean(ohie$doctor_visit[ohie$lottery_win == 1]) -
+             mean(ohie$doctor_visit[ohie$lottery_win == 0])
 
-The main difference between the SATE and PATE is that the PATE has an extra assumption about randomly sampling from the population. This assumption let's us make conclusions about the causal effect for the entire population, rather than only the sample.
+t_visit <- t.test(doctor_visit ~ lottery_win, data = ohie)
 
-Both estimands can be estimated using the difference in means estimator $\hat{\tau}$:
+cat("=== ITT: Doctor Visit in Past Year ===\n")
+cat("Lottery winners:", round(mean(ohie$doctor_visit[ohie$lottery_win == 1]) * 100, 1), "%\n")
+cat("Non-selected:",   round(mean(ohie$doctor_visit[ohie$lottery_win == 0]) * 100, 1), "%\n")
+cat("ITT effect:", round(itt_visit * 100, 1), "percentage points\n")
+cat("95% CI: [", round(t_visit$conf.int[1] * 100, 1), ",",
+    round(t_visit$conf.int[2] * 100, 1), "] pp\n")
+cat("P-value:", format.pval(t_visit$p.value, digits = 3), "\n\n")
 
-$$
-\begin{align*}
-\hat{\tau} &= \frac{1}{n_1} \sum_{i=1}^{n} W_iY_i - \frac{1}{n_0} \sum_{i = 1}^{n}(1-W_i)Y_i
-\end{align*}
-$$
-Since the difference in means estimator is used to estimate both estimands, we have to be extremely careful in specifying whether we are trying to estimate the SATE or PATE.
+# Medical debt
+itt_debt <- mean(ohie$medical_debt[ohie$lottery_win == 1]) -
+            mean(ohie$medical_debt[ohie$lottery_win == 0])
+
+t_debt <- t.test(medical_debt ~ lottery_win, data = ohie)
+
+cat("=== ITT: Any Medical Debt ===\n")
+cat("Lottery winners:", round(mean(ohie$medical_debt[ohie$lottery_win == 1]) * 100, 1), "%\n")
+cat("Non-selected:",   round(mean(ohie$medical_debt[ohie$lottery_win == 0]) * 100, 1), "%\n")
+cat("ITT effect:", round(itt_debt * 100, 1), "percentage points\n")
+cat("95% CI: [", round(t_debt$conf.int[1] * 100, 1), ",",
+    round(t_debt$conf.int[2] * 100, 1), "] pp\n")
+cat("P-value:", format.pval(t_debt$p.value, digits = 3), "\n")
+```
+
+### Step 3: Visualize the Results
+
+```{r ohie-plot, fig.height=4}
+results <- data.frame(
+  Outcome = c("Doctor Visit", "Medical Debt"),
+  ITT = c(itt_visit, itt_debt),
+  Lower = c(t_visit$conf.int[1], t_debt$conf.int[1]),
+  Upper = c(t_visit$conf.int[2], t_debt$conf.int[2])
+)
+
+ggplot(results, aes(x = Outcome, y = ITT)) +
+  geom_point(size = 4, color = "#1F77B4") +
+  geom_errorbar(aes(ymin = Lower, ymax = Upper), width = 0.15, linewidth = 1,
+                color = "#1F77B4") +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray50") +
+  labs(title = "Oregon HIE: Intent-to-Treat Effects",
+       subtitle = "Difference in means (lottery winners vs. non-selected) with 95% CI",
+       y = "Effect (proportion)", x = "") +
+  coord_flip() +
+  theme_minimal()
+```
+
+### A Nuance: ITT vs. the Effect of Having Insurance
+
+Not all lottery winners actually enrolled in Medicaid (only about 25% in the real OHIE). This means the ITT estimates the effect of *winning the lottery* (access to Medicaid), not the effect of *having Medicaid* (actual coverage). The ITT is still a valid causal estimate, but it answers a slightly different question.
+
+We will learn how to handle this kind of **noncompliance** in Week 7 using instrumental variables. For now, the key point is: always analyze by *assignment* to preserve the integrity of the randomization.
+
+---
+
+## Summary
+
+This week's programming exercises demonstrated three key ideas:
+
+1. **Randomization eliminates selection bias**: When treatment is randomly assigned, the naive difference in means is an unbiased estimator of the ATE. No regression or adjustment needed.
+
+2. **Balance is the observable consequence of exchangeability**: Checking Table 1 (baseline characteristics by group) is the practical way to verify that the comparison is fair (Checklist Item 3).
+
+3. **The ITT analysis preserves the randomization**: In the OHIE, comparing lottery winners to non-selected individuals gives a clean causal estimate of the effect of *access* to Medicaid.
+
+Our Causal Credibility Checklist now has three items:
+
+- $\boxtimes$ **Item 1:** What is the causal question? (Week 1)
+- $\boxtimes$ **Item 2:** How was treatment assigned? (Week 2)
+- $\boxtimes$ **Item 3:** Is the comparison fair? (Week 2)
+
+---
+
+*Next week: What happens when we can't randomize? We move to observational studies and add Checklist Item 4: could confounding explain the result?*

@@ -22,11 +22,11 @@ Welcome to the course website for **The Science of Why: Causal Inference for Pub
 In this course, students will: 
 
 - Explore foundational concepts such as counterfactuals, causal estimands, and identification strategies.  
-- Learn how to critically evaluate causal claims in public health literature.  
-- Understand and apply experimental and observational study designs, causal diagrams (DAGs), and bias adjustment methods.  
+- Learn how to critically evaluate causal claims in the medical and public health literature.  
+- Understand and apply experimental and observational study designs, causal diagrams, and bias adjustment methods.  
 - Develop practical skills through R-based tutorials and case studies.  
 
-This course is ideal for undergraduates interested in public health, epidemiology, biostatistics, or social science research. 
+This course is ideal for students interested in public health, epidemiology, biostatistics, or social science research. 
 
 ## Instructor {.unnumbered}
 
@@ -36,7 +36,7 @@ Department of Biostatistics
 UCLA Fielding School of Public Health  
 [falco\@ucla.edu](mailto:falco@ucla.edu)  
 
-Office hours: By appointment. (Book via the scheduling link on this website.)  
+Office hours: Right after class (1 hour)
 
 ## Teaching Assistants {.unnumbered}  
 
@@ -73,10 +73,10 @@ We will explore how causal effects are identified and estimated, how to detect a
 
 ## Upon successful completion of this course, students will be able to: {.unnumbered}  
 
--   Communicate public health findings and causal claims in written and oral forms  
+-   Communicate medical and public health findings and causal claims in written and oral forms  
 -   Evaluate causal claims in academic and public health literature  
 -   Design and assess both randomized trials and observational studies  
--   Construct and analyze causal diagrams (DAGs) for identifying sources of bias  
+-   Construct and analyze causal diagrams for identifying sources of bias  
 -   Apply concepts of effect modification, interaction, and confounding  
 -   Interpret findings within the context of public health policy and practice  
 -   Work independently and collaboratively to assess causal research  
