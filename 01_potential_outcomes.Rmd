@@ -28,7 +28,7 @@ library(dplyr)
 
 ## Supplementary Reading
 
-[Pearl, J. and Mackenzie, D. (2018) *The Book of Why: The New Science of Cause and Effect*. Basic Books.](https://bayes.cs.ucla.edu/WHY/why-ch1.pdf) Selected public health news articles (provided on the course site).
+[Pearl, J. and Mackenzie, D. (2018) *The Book of Why: The New Science of Cause and Effect*. Basic Books.](https://bayes.cs.ucla.edu/WHY/why-ch1.pdf)
 
 ## Topics Covered
 
