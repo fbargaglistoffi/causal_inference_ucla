@@ -42,7 +42,7 @@ a {
   color: #4a90d9;
 }
 
-/* Code blocks with better contrast */
+/* Code blocks */
 pre {
   background-color: #0d1117 !important;
   border: 1px solid #3a3f4b;
@@ -64,6 +64,35 @@ code {
 
 pre.sourceCode {
   background-color: #0d1117 !important;
+}
+
+/* Syntax highlighting for R code */
+.hljs-comment, code span.co {
+  color: #8b949e !important;
+}
+
+.hljs-string, code span.st {
+  color: #a5d6ff !important;
+}
+
+.hljs-number, .hljs-literal, code span.dv, code span.fl {
+  color: #79c0ff !important;
+}
+
+.hljs-keyword, code span.kw, code span.ot {
+  color: #ff7b72 !important;
+}
+
+.hljs-function, .hljs-title, code span.fu {
+  color: #d2a8ff !important;
+}
+
+.hljs-built_in, code span.cf {
+  color: #ff7b72 !important;
+}
+
+code span.sc, code span.op {
+  color: #ffa657 !important;
 }
 
 /* Hide toolbar buttons: edit, view source, info, sharing */
