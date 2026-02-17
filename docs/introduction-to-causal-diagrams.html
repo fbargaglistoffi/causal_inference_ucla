@@ -4,23 +4,22 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>5 Introduction to Causal Diagrams | Week 1: Foundations of Causal Thinking in Public Health</title>
+  <title>5 Introduction to Causal Diagrams | Causal-Inference-Graduate.knit</title>
   <meta name="description" content="An undergraduate course on causal inference" />
   <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="5 Introduction to Causal Diagrams | Week 1: Foundations of Causal Thinking in Public Health" />
+  <meta property="og:title" content="5 Introduction to Causal Diagrams | Causal-Inference-Graduate.knit" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="An undergraduate course on causal inference" />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="5 Introduction to Causal Diagrams | Week 1: Foundations of Causal Thinking in Public Health" />
+  <meta name="twitter:title" content="5 Introduction to Causal Diagrams | Causal-Inference-Graduate.knit" />
   
   <meta name="twitter:description" content="An undergraduate course on causal inference" />
   
 
-<meta name="author" content="Falco J. Bargagli-Stoffi" />
 
 
 
@@ -255,7 +254,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Week 1: Foundations of Causal Thinking in Public Health</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"></a>
           </h1>
         </div>
 
@@ -316,17 +315,17 @@ Examples from public health studies involving confounding adjustment</p>
 <span id="cb59-21"><a href="introduction-to-causal-diagrams.html#cb59-21" tabindex="-1"></a>g <span class="ot">&lt;-</span> bnlearn<span class="sc">::</span><span class="fu">as.igraph</span>(dag)</span>
 <span id="cb59-22"><a href="introduction-to-causal-diagrams.html#cb59-22" tabindex="-1"></a><span class="fu">plot</span>(g, <span class="at">layout =</span> <span class="fu">layout_as_tree</span>(g, <span class="at">root =</span> <span class="st">&quot;diet&quot;</span>),</span>
 <span id="cb59-23"><a href="introduction-to-causal-diagrams.html#cb59-23" tabindex="-1"></a>     <span class="at">vertex.label.color=</span><span class="st">&quot;black&quot;</span>, <span class="at">vertex.size=</span><span class="dv">60</span>, <span class="at">edge.arrow.size=</span><span class="fl">0.5</span>)</span></code></pre></div>
-<p><img src="Causal-Inference-Graduate_files/figure-html/unnamed-chunk-14-1.png" width="768" /></p>
+<p><img src="Causal-Inference-Graduate_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 </div>
 <div id="common-causal-structures-in-public-health" class="section level2 hasAnchor" number="5.2">
 <h2><span class="header-section-number">5.2</span> Common Causal Structures in Public Health<a href="introduction-to-causal-diagrams.html#common-causal-structures-in-public-health" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>In public health research, understanding the causal relationships between variables is essential for identifying risk factors, designing interventions, and making policy decisions. Common causal structures include <strong>confounding, mediation, and colliders</strong>, each of which influences how we interpret observed associations.</p>
 <p>A <strong>confounder</strong> is a variable that affects both the exposure and the outcome, potentially biasing the estimated effect if not properly adjusted for. Assume we had a hypothesis that ice cream sales cause murder rates. We would draw the DAG below, and show that outside temperature is a confounder, since it affects both ice cream sales (the exposure) and murder rate (the outcome).</p>
-<p><img src="Causal-Inference-Graduate_files/figure-html/unnamed-chunk-15-1.png" width="768" /></p>
+<p><img src="Causal-Inference-Graduate_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <p>A <strong>mediator</strong> lies on the causal pathway between exposure and outcome, helping to explain how the exposure exerts its effect. In the example below, weight loss is the mediator because the exposure exercise causes weight loss, which affects the risk of diabetes. Based on this DAG, we are assuming that the only way exercise affects diabetes risk is through weight loss. In reality, this might not be true, but we kept the structure of this DAG simple for example’s sake.</p>
-<p><img src="Causal-Inference-Graduate_files/figure-html/unnamed-chunk-16-1.png" width="768" /></p>
+<p><img src="Causal-Inference-Graduate_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 <p>A <strong>collider</strong>, on the other hand, is influenced by two variables, and conditioning on it can introduce spurious associations. In the example below, the lawn being wet is a collider because it is caused by both by whether the sprinkler turns on and whether it rains outside. An easy way to remember if a variable is a collider is if it is a variable where two arrows point toward (or collide into) the variable.</p>
-<p><img src="Causal-Inference-Graduate_files/figure-html/unnamed-chunk-17-1.png" width="768" /></p>
+<p><img src="Causal-Inference-Graduate_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 <p>Identifying these structures often requires drawing directed acyclic graphs (DAGs) to map out assumptions and determine which variables to adjust for when estimating causal effects. They also help us understand the flow of associations between the different variables. We use paths to track the flow of association.</p>
 <p>A <strong>backdoor path</strong> is any path from the exposure to the outcome with an arrow pointing towards the exposure. For example, in the ice cream and murder rate DAG, there is a backdoor path Ice Cream Sales <span class="math inline">\(\rightarrow\)</span> Outside Temperature <span class="math inline">\(\leftarrow\)</span> Murder Rate since the arrow between Outside Temperature and Murder Rate points back at Ice Cream Sales.</p>
 <p>Paths can either be closed or open. Opening a path allows association to flow from one variable to another, while closing does not. In general, we want to close all backdoor paths keep all other paths open by conditioning on set of specific variables. This will guarantee conditional exchangeability, allowing us to identify the causal effect.</p>
@@ -341,7 +340,7 @@ Examples from public health studies involving confounding adjustment</p>
 <li><p><strong>Prune and combine factors based on domain knowledge</strong> - Using domain knowledge, some of the factors are related in similar ways. For example, a person’s insurance status, the quality of their living area, and whether or not they have time to take off work and go to the doctor’s all affect whether they go to the doctor’s office and their sickness level after going to the doctor’s in similar ways. Namely, the higher quality the insurance, living area, and amount of time off available, the more likely the person is going to go to a doctor’s office and be in better health on average. We can simplify these three factors into a single one such as economic status. After simplification, we now have four variables: doctor’s office visit, economic status, sickness status before visit, sickness level after visit.</p></li>
 <li><p><strong>Add causal relationships</strong> - After simplifying our factors, we then start drawing arrows that represent the direction that causation flows from one variable to another. For example, we can hypothesize that visiting a doctor will affect a person’s sickness level, and economic status and pre-sickness level are confounders. The direction of these arrows is based on our assumptions and domain knowledge.</p></li>
 </ol>
-<p><img src="Causal-Inference-Graduate_files/figure-html/unnamed-chunk-18-1.png" width="768" /></p>
+<p><img src="Causal-Inference-Graduate_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 
 </div>
 </div>

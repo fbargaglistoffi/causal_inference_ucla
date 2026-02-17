@@ -4,23 +4,22 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>2 Randomized Control Trials | Week 1: Foundations of Causal Thinking in Public Health</title>
+  <title>2 Randomized Control Trials | Causal-Inference-Graduate.knit</title>
   <meta name="description" content="An undergraduate course on causal inference" />
   <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="2 Randomized Control Trials | Week 1: Foundations of Causal Thinking in Public Health" />
+  <meta property="og:title" content="2 Randomized Control Trials | Causal-Inference-Graduate.knit" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="An undergraduate course on causal inference" />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="2 Randomized Control Trials | Week 1: Foundations of Causal Thinking in Public Health" />
+  <meta name="twitter:title" content="2 Randomized Control Trials | Causal-Inference-Graduate.knit" />
   
   <meta name="twitter:description" content="An undergraduate course on causal inference" />
   
 
-<meta name="author" content="Falco J. Bargagli-Stoffi" />
 
 
 
@@ -255,7 +254,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Week 1: Foundations of Causal Thinking in Public Health</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"></a>
           </h1>
         </div>
 
@@ -374,7 +373,7 @@ ATE &amp;= E[Y(1) - Y(0)] \\
 <span id="cb42-7"><a href="randomized-control-trials.html#cb42-7" tabindex="-1"></a>  ) <span class="sc">+</span> </span>
 <span id="cb42-8"><a href="randomized-control-trials.html#cb42-8" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>)) <span class="sc">+</span></span>
 <span id="cb42-9"><a href="randomized-control-trials.html#cb42-9" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
-<p><img src="Causal-Inference-Graduate_files/figure-html/unnamed-chunk-6-1.png" width="768" /></p>
+<p><img src="Causal-Inference-Graduate_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="randomized-control-trials.html#cb43-1" tabindex="-1"></a><span class="co"># library(cobalt)</span></span>
 <span id="cb43-2"><a href="randomized-control-trials.html#cb43-2" tabindex="-1"></a></span>
 <span id="cb43-3"><a href="randomized-control-trials.html#cb43-3" tabindex="-1"></a>bal.out <span class="ot">&lt;-</span> <span class="fu">bal.tab</span>(treatment<span class="sc">~</span>age<span class="sc">+</span>bmi<span class="sc">+</span>cholesterol<span class="sc">+</span>sodium_intake, <span class="at">data =</span> rct_data, <span class="at">s.d.denom =</span> <span class="st">&quot;pooled&quot;</span>)</span>
@@ -382,7 +381,7 @@ ATE &amp;= E[Y(1) - Y(0)] \\
 <span id="cb43-5"><a href="randomized-control-trials.html#cb43-5" tabindex="-1"></a><span class="fu">set.cobalt.options</span>(<span class="at">binary =</span> <span class="st">&quot;std&quot;</span>)</span>
 <span id="cb43-6"><a href="randomized-control-trials.html#cb43-6" tabindex="-1"></a></span>
 <span id="cb43-7"><a href="randomized-control-trials.html#cb43-7" tabindex="-1"></a><span class="fu">love.plot</span>(bal.out, <span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.1</span>, <span class="fl">0.1</span>))</span></code></pre></div>
-<p><img src="Causal-Inference-Graduate_files/figure-html/unnamed-chunk-7-1.png" width="768" /></p>
+<p><img src="Causal-Inference-Graduate_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>This visualization is called a <strong>love plot</strong>. It shows how balanced each of the observed characteristics is between the treated and control group. For example, a value of 0.05 for age means that the treated group’s mean age is 0.05 standard deviations above the control group’s mean age, which is not much. Typically, an absolute standardized difference value of 0.10 or less typically means that the difference between the groups is negligible.</p>
 <p>So in this plot, all the observed characteristics are balanced. This example shows that random assignment of the treatment balances observed and unobserved characteristics. Since the groups are so similar, we say that the treated and control groups are exchangeable.</p>
 </div>

@@ -4,23 +4,22 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>3 Observational Studies | Week 1: Foundations of Causal Thinking in Public Health</title>
+  <title>3 Observational Studies | Causal-Inference-Graduate.knit</title>
   <meta name="description" content="An undergraduate course on causal inference" />
   <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="3 Observational Studies | Week 1: Foundations of Causal Thinking in Public Health" />
+  <meta property="og:title" content="3 Observational Studies | Causal-Inference-Graduate.knit" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="An undergraduate course on causal inference" />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="3 Observational Studies | Week 1: Foundations of Causal Thinking in Public Health" />
+  <meta name="twitter:title" content="3 Observational Studies | Causal-Inference-Graduate.knit" />
   
   <meta name="twitter:description" content="An undergraduate course on causal inference" />
   
 
-<meta name="author" content="Falco J. Bargagli-Stoffi" />
 
 
 
@@ -255,7 +254,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Week 1: Foundations of Causal Thinking in Public Health</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"></a>
           </h1>
         </div>
 
@@ -338,7 +337,7 @@ Additional DAG exercises provided in class</p>
 <span id="cb48-18"><a href="observational-studies.html#cb48-18" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="at">x =</span> <span class="fl">2.45</span>, <span class="at">y =</span> <span class="fl">0.85</span>, <span class="at">label =</span> <span class="st">&quot;True effect&quot;</span>) <span class="sc">+</span></span>
 <span id="cb48-19"><a href="observational-studies.html#cb48-19" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
 <span id="cb48-20"><a href="observational-studies.html#cb48-20" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span></code></pre></div>
-<p><img src="Causal-Inference-Graduate_files/figure-html/unnamed-chunk-9-1.png" width="768" /></p>
+<p><img src="Causal-Inference-Graduate_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <p>In this simulation, we model a situation where Genetics (Z) is a confounder that influences both Exercise (X) and Heart Health (Y). The naive model, which regresses Heart Health on Exercise without adjusting for Genetics, gives a biased estimate of the effect of Exercise (1.05). This happens because part of the observed association is actually due to Genetics, not Exercise itself. When we adjust for Genetics in the second model, the estimate of Exercise’s effect (0.84) becomes more accurate, isolating its true relationship with Heart Health. This is shown in how the bar for the adjusted graph is closer to the dotted black line, which represents the true causal effect of exercise (0.8). This example highlights how failing to account for confounding can lead researchers to overstate or misinterpret causal effects in public health and medical studies.</p>
 </div>
 <div id="exchangeability-positivity-and-sutva" class="section level2 hasAnchor" number="3.2">
