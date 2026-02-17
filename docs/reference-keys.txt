@@ -9,7 +9,6 @@ introduction-to-counterfactuals-and-potential-outcomes
 notation
 the-potential-outcomes-table
 what-happens-when-treatment-is-assigned
-simulation-seeing-confounding-bias-in-action
 causal-estimands-and-identification
 measuring-effects-for-binary-outcomes
 simulation-heart-surgery-and-survival

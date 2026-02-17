@@ -26,11 +26,11 @@
 
 **Association** refers to a statistical relationship where two variables move together, but one doesn't necessarily cause the other. For instance, ice cream sales and drowning incidents both rise in the summer, not because one causes the other, but because they share a third factor: temperature. In contrast, **causation** implies a direct cause-and-effect relationship, where changing one variable leads to changes in another. Establishing causation requires rigorous methods, such as randomized controlled trials, to rule out confounding factors.
 
-**Simpson's Paradox** occurs when a trend appears in separate groups but reverses when the data are combined. This paradox is driven by **confounding variables**—unaccounted factors that influence both the treatment and the outcome. It illustrates how aggregated data can be misleading and emphasizes the importance of analyzing relationships within subgroups to avoid drawing incorrect conclusions.
+**Simpson's Paradox** occurs when a trend appears in separate groups but reverses when the data are combined. This paradox is driven by **confounding variables**, unaccounted factors that influence both the treatment and the outcome. It illustrates how aggregated data can be misleading and emphasizes the importance of analyzing relationships within subgroups to avoid drawing incorrect conclusions.
 
 To demonstrate this paradox, we simulate a study comparing two pneumonia treatments across 2,000 people. Treatment A was mostly given to mild cases, while Treatment B was given to severe cases. When data are analyzed without considering severity, Treatment A seems more effective. However, when stratified by severity, Treatment B consistently shows lower death rates in both mild and severe groups.
 
-> **Checklist Item 1 — What is the causal question?** Before looking at the data, let's define the question: *What is the effect of Treatment B (vs. Treatment A) on mortality risk in pneumonia patients?* Treatment ($W$): Treatment B vs. Treatment A. Outcome ($Y$): Death (binary). Population: Pneumonia patients. Estimand: Risk difference.
+> **Checklist Item 1: What is the causal question?** Before looking at the data, let's define the question: *What is the effect of Treatment B (vs. Treatment A) on mortality risk in pneumonia patients?* Treatment ($W$): Treatment B vs. Treatment A. Outcome ($Y$): Death (binary). Population: Pneumonia patients. Estimand: Risk difference.
 
 ### Simulating Simpson's Paradox
 
@@ -123,7 +123,7 @@ ggplot(plot_df, aes(x = Group, y = Death_rate, fill = Treatment)) +
         strip.text = element_text(face = "bold", size = 11))
 ```
 
-Only after stratifying by the severity of the case are we able to observe that Treatment B is actually more effective than Treatment A for both mild and severe pneumonia cases. The confounding variable—severity—was distorting the overall comparison.
+Only after stratifying by the severity of the case are we able to observe that Treatment B is actually more effective than Treatment A for both mild and severe pneumonia cases. The confounding variable (severity) was distorting the overall comparison.
 
 ---
 
@@ -141,9 +141,9 @@ Think of a simulation as a laboratory for causal reasoning: we build a miniature
 
 ## Introduction to Counterfactuals and Potential Outcomes
 
-At the heart of causal inference lies a simple yet powerful idea: **counterfactuals** — what would have happened if something else had occurred. However, we can never observe both outcomes for the same person. This is known as the **Fundamental Problem of Causal Inference**. We only observe the outcome under the condition that actually occurred — everything else is unobserved, or counterfactual.
+At the heart of causal inference lies a simple yet powerful idea: **counterfactuals**, meaning what would have happened if something else had occurred. However, we can never observe both outcomes for the same person. This is known as the **Fundamental Problem of Causal Inference**. We only observe the outcome under the condition that actually occurred, and everything else is unobserved, or counterfactual.
 
-Building on the concept of counterfactuals, the **Average Treatment Effect (ATE)** provides a formal way to quantify the impact of a treatment or intervention across a population. Since we cannot observe both potential outcomes (treated and untreated) for the same individual, ATE instead compares the average outcome we would see if everyone received the treatment versus if no one did. Mathematically, it is the difference between the expected value of the potential outcome under treatment and the expected value under control. While individual causal effects remain unobservable, the ATE offers a population-level summary of the treatment's impact — a cornerstone of policy evaluation, randomized experiments, and observational causal analysis.
+Building on the concept of counterfactuals, the **Average Treatment Effect (ATE)** provides a formal way to quantify the impact of a treatment or intervention across a population. Since we cannot observe both potential outcomes (treated and untreated) for the same individual, ATE instead compares the average outcome we would see if everyone received the treatment versus if no one did. Mathematically, it is the difference between the expected value of the potential outcome under treatment and the expected value under control. While individual causal effects remain unobservable, the ATE offers a population-level summary of the treatment's impact, a cornerstone of policy evaluation, randomized experiments, and observational causal analysis.
 
 ### Notation
 
@@ -162,7 +162,7 @@ So $Y = Y(1)$ if the unit was treated and $Y = Y(0)$ if the unit was not treated
 
 ### The Potential Outcomes Table
 
-Let's make this concrete. We simulate 6 patients and — because this is a simulation — we get to see **both** potential outcomes for each person. This mirrors the HRT table from the slides.
+Let's make this concrete. We simulate 6 patients and, because this is a simulation, we get to see **both** potential outcomes for each person. This mirrors the HRT table from the slides.
 
 ```{r po-table}
 set.seed(42)
@@ -184,14 +184,14 @@ knitr::kable(po_table,
 cat("\nTrue ATE:", mean(po_table$Causal_Effect), "\n")
 ```
 
-Every patient benefits from aspirin (all causal effects are negative). The ATE tells us the average benefit. But in the real world, we cannot see both columns — each patient either takes aspirin or doesn't.
+Every patient benefits from aspirin (all causal effects are negative). The ATE tells us the average benefit. But in the real world, we cannot see both columns. Each patient either takes aspirin or doesn't.
 
 ### What Happens When Treatment Is Assigned?
 
-Now let's assign treatment and see how the table changes. We mask the counterfactual outcome with "?" — this is the **Fundamental Problem of Causal Inference** in action.
+Now let's assign treatment and see how the table changes. We mask the counterfactual outcome with "?". This is the **Fundamental Problem of Causal Inference** in action.
 
 ```{r po-masked}
-# Assign treatment (not randomly — sicker patients more likely to get aspirin)
+# Assign treatment (not randomly; sicker patients more likely to get aspirin)
 po_table$W <- c(1, 0, 1, 0, 1, 0)  # patients 1, 3, 5 get aspirin
 
 # What we actually observe
@@ -220,48 +220,10 @@ cat("Mean outcome (control):", mean_control, "\n")
 cat("Naive estimate (treated - control):", mean_treated - mean_control, "\n")
 cat("True ATE:", mean(po_table$Causal_Effect), "\n")
 cat("\nThe naive estimate differs from the true ATE because treatment was\n")
-cat("not randomly assigned — sicker patients received aspirin.\n")
+cat("not randomly assigned. Sicker patients received aspirin.\n")
 ```
 
-Notice the gap: the naive comparison and the true ATE don't match. This is because patients 1, 3, and 5 (who got aspirin) had *higher* baseline headache scores than patients 2, 4, and 6. The naive comparison confounds the drug's effect with pre-existing differences between the groups — exactly the problem that motivates everything in this course.
-
-### Simulation: Seeing Confounding Bias in Action
-
-The simulation below tests the effect of a treatment on 2,000 patients. The treatment was assigned to older people with higher levels of cholesterol. If we simply take the difference of the average outcome of the treated group and the average outcome of the control group, then our estimate of the average treatment effect will be biased because age and cholesterol levels are **confounding** the effect of the treatment. This is shown by how the true average treatment effect differs from the naive average treatment effect estimate.
-
-```{r confounding-sim}
-set.seed(123)
-n <- 2000
-
-age <- rnorm(n, mean = 50, sd = 10)
-bmi <- rnorm(n, mean = 25, sd = 4)
-cholesterol <- rnorm(n, mean = 200, sd = 30)
-
-# Treatment assignment: strong bias toward older, high-cholesterol people
-treatment <- rbinom(n, 1, plogis(0.2 * age + 0.05 * cholesterol - 25))
-
-# True untreated outcome
-y_0 <- 140 - 1.5 * age + 0.3 * bmi + 0.5 * cholesterol + rnorm(n, sd = 5)
-
-# True treated outcome: better, but depends on age & cholesterol
-y_1 <- y_0 - (40 + 1.5 * age - 0.8 * cholesterol) + rnorm(n, sd = 2)
-
-# Observed outcome
-y <- ifelse(treatment == 1, y_1, y_0)
-
-# True ATE: average of individual-level effects
-true_ate <- mean(y_1 - y_0)
-
-df_conf <- data.frame(age, bmi, cholesterol, treatment, y)
-
-# Naive estimate: difference in means
-naive_ate <- mean(df_conf$y[df_conf$treatment == 1]) - mean(df_conf$y[df_conf$treatment == 0])
-
-cat("True ATE:", round(true_ate, 3), "\n")
-cat("Naive (unadjusted) ATE estimate:", round(naive_ate, 3), "\n")
-cat("\nThe naive estimate is biased because treatment was assigned based on age and cholesterol.\n")
-cat("We'll learn methods to close this gap starting in Week 2.\n")
-```
+Notice the gap: the naive comparison and the true ATE don't match. This is because patients 1, 3, and 5 (who got aspirin) had *higher* baseline headache scores than patients 2, 4, and 6. The naive comparison confounds the drug's effect with pre-existing differences between the groups, and this is exactly the problem that motivates everything in this course.
 
 ---
 
@@ -283,7 +245,7 @@ $$CATE = E[Y(1) - Y(0) \mid X = x]$$
 
 Think of $X = x$ where $X$ is some form of age classification and $x$ could be a value of the age classification, such as younger or older.
 
-**Identification** is the process of linking a causal estimand (like ATE) to observable data. Without valid identification, any estimates we produce may be biased or incorrect. One major challenge in causal inference is that we can never observe both potential outcomes for the same person — only the outcome under the actual treatment they received. This is the Fundamental Problem of Causal Inference.
+**Identification** is the process of linking a causal estimand (like ATE) to observable data. Without valid identification, any estimates we produce may be biased or incorrect. One major challenge in causal inference is that we can never observe both potential outcomes for the same person, only the outcome under the actual treatment they received. This is the Fundamental Problem of Causal Inference.
 
 ---
 
@@ -305,7 +267,7 @@ For example, if the heart surgery was estimated to have a risk ratio of 0.5, the
 
 ### Simulation: Heart Surgery and Survival
 
-Let's put these measures to work. We simulate a study of 500 patients where we know the true potential outcomes for a heart surgery. Since this is a simulation, we can see *both* $Y(1)$ and $Y(0)$ for every patient — something we can never do in the real world. This lets us compute the true risk difference and risk ratio, and then see how the naive comparison (which ignores confounding) gets it wrong.
+Let's put these measures to work. We simulate a study of 500 patients where we know the true potential outcomes for a heart surgery. Since this is a simulation, we can see *both* $Y(1)$ and $Y(0)$ for every patient, something we can never do in the real world. This lets us compute the true risk difference and risk ratio, and then see how the naive comparison (which ignores confounding) gets it wrong.
 
 ```{r binary-sim}
 set.seed(123)
@@ -337,11 +299,11 @@ cat("Risk Difference:", round(true_rd, 3), "\n")
 cat("Risk Ratio:", round(true_rr, 3), "\n")
 ```
 
-The surgery reduces the risk of death — the risk difference is negative and the risk ratio is below 1. But remember: in reality we never see both $Y(1)$ and $Y(0)$. Each patient walks only one path.
+The surgery reduces the risk of death: the risk difference is negative and the risk ratio is below 1. But remember: in reality we never see both $Y(1)$ and $Y(0)$. Each patient walks only one path.
 
 ### The Fundamental Problem in Action
 
-Now let's see what happens when treatment is *not* randomly assigned. Sicker patients (older, lower health scores) are more likely to receive the surgery — just as in the real world.
+Now let's see what happens when treatment is *not* randomly assigned. Sicker patients (older, lower health scores) are more likely to receive the surgery, just as in the real world.
 
 ```{r binary-naive}
 # Confounded treatment assignment: sicker patients get surgery
@@ -367,7 +329,7 @@ cat("Naive Risk Difference:", round(naive_rd, 3), "\n")
 cat("Bias:", round(naive_rd - true_rd, 3), "\n")
 ```
 
-The naive comparison is biased — it may even reverse the sign of the effect, making it look like the surgery *hurts* when it actually helps. This is exactly the HRT story from the slides: healthier women chose HRT, so the naive comparison confounded the treatment effect with pre-existing health differences.
+The naive comparison is biased. It may even reverse the sign of the effect, making it look like the surgery *hurts* when it actually helps. This is exactly the HRT story from the slides: healthier women chose HRT, so the naive comparison confounded the treatment effect with pre-existing health differences.
 
 ### Visualizing the Bias
 
@@ -391,8 +353,8 @@ ggplot(plot_df, aes(x = Type, y = Value, fill = Type)) +
   theme(legend.position = "none", axis.text.x = element_text(size = 8))
 ```
 
-This is the core challenge of causal inference with binary outcomes: without a valid study design, our estimates of risk differences and risk ratios can be severely misleading. Starting in Week 2, we will learn how **randomization** solves this problem — and in later weeks, we will learn estimation strategies for settings where randomization is not possible.
+This is the core challenge of causal inference with binary outcomes: without a valid study design, our estimates of risk differences and risk ratios can be severely misleading. Starting in Week 2, we will learn how **randomization** solves this problem, and in later weeks, we will learn estimation strategies for settings where randomization is not possible.
 
 ---
 
-*Next week: Randomized Controlled Trials — why randomization solves the confounding problem, and we add Checklist Items 2–3 to our toolkit.*
+*Next week: Randomized Controlled Trials: why randomization solves the confounding problem, and we add Checklist Items 2-3 to our toolkit.*
