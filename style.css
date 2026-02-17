@@ -12,3 +12,24 @@ pre {
 pre code {
   white-space: inherit;
 }
+
+/* Hide edit (pen) and view source (eye) buttons */
+.fa-edit, .fa-pencil, .fa-eye,
+.code-folding-btn, .edit-btn,
+[aria-label="Edit"], [aria-label="View source"] {
+  display: none !important;
+}
+
+/* Sepia baseline */
+body {
+  background-color: #f4ecd8;
+  color: #5b4636;
+}
+
+pre, code {
+  background-color: #efe6d5;
+}
+
+.main-container, .container-fluid {
+  background-color: #f4ecd8;
+}
