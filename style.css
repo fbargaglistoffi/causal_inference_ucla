@@ -20,16 +20,11 @@ pre code {
   display: none !important;
 }
 
-/* Sepia baseline */
-body {
-  background-color: #f4ecd8;
-  color: #5b4636;
+/* Remove gap left by hidden toolbar buttons */
+.book-header .btn {
+  display: none;
 }
-
-pre, code {
-  background-color: #efe6d5;
-}
-
-.main-container, .container-fluid {
-  background-color: #f4ecd8;
+.book-header .btn.font-settings,
+.book-header .btn.info {
+  display: inline-block;
 }
