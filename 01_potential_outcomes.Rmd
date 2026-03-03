@@ -353,8 +353,8 @@ ggplot(plot_df, aes(x = Type, y = Value, fill = Type)) +
   theme(legend.position = "none", axis.text.x = element_text(size = 8))
 ```
 
-This is the core challenge of causal inference with binary outcomes: without a valid study design, our estimates of risk differences and risk ratios can be severely misleading. Starting in Week 2, we will learn how **randomization** solves this problem, and in later weeks, we will learn estimation strategies for settings where randomization is not possible.
+This is the core challenge of causal inference with binary outcomes: without a valid study design, our estimates of risk differences and risk ratios can be severely misleading. Starting in module 2, we will learn how **randomization** solves this problem, and in later modules, we will learn estimation strategies for settings where randomization is not possible.
 
 ---
 
-*Next week: Randomized Controlled Trials: why randomization solves the confounding problem, and we add Checklist Items 2-3 to our toolkit.*
+*Next module: Randomized Controlled Trials: why randomization solves the confounding problem, and we add Checklist Items 2-3 to our toolkit.*

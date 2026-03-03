@@ -25,7 +25,7 @@
 
 ## Review: The Selection Bias Problem
 
-Last week, we saw that a naive comparison of treated and untreated groups can be misleading when treatment assignment is **confounded**, meaning that when the characteristics that drive someone to receive treatment also affect the outcome. Today we show why **randomization** eliminates this problem.
+Last module, we saw that a naive comparison of treated and untreated groups can be misleading when treatment assignment is **confounded**, meaning that when the characteristics that drive someone to receive treatment also affect the outcome. Today we show why **randomization** eliminates this problem.
 
 Not all credible studies use researcher-controlled randomization. Sometimes nature provides "as-if random" assignment through lotteries (e.g., the Vietnam draft), arbitrary cutoffs (e.g., the legal drinking age at 21), or geographic boundaries. These **quasi-experiments** sit between full randomization and pure self-selection on the credibility spectrum. We will formalize these designs later in the course; the OHIE exercise at the end of this page is one such example.
 
@@ -472,13 +472,13 @@ ggplot(results, aes(x = Outcome, y = ITT)) +
 
 Not all lottery winners actually enrolled in Medicaid (only about 25% in the real OHIE). This means the ITT estimates the effect of *winning the lottery* (access to Medicaid), not the effect of *having Medicaid* (actual coverage). The ITT is still a valid causal estimate, but it answers a slightly different question.
 
-We will learn how to handle this kind of **noncompliance** in Week 7 using instrumental variables. For now, the key point is: always analyze by *assignment* to preserve the integrity of the randomization.
+We will learn how to handle this kind of **noncompliance** using instrumental variables. For now, the key point is: always analyze by *assignment* to preserve the integrity of the randomization.
 
 ---
 
 ## Summary
 
-This week's programming exercises demonstrated three key ideas:
+This module's programming exercises demonstrated three key ideas:
 
 1. **Randomization eliminates selection bias**: When treatment is randomly assigned, the naive difference in means is an unbiased estimator of the ATE. No regression or adjustment needed.
 
@@ -488,10 +488,10 @@ This week's programming exercises demonstrated three key ideas:
 
 Our Causal Credibility Checklist now has three items:
 
-- $\boxtimes$ **Item 1:** What is the causal question? (Week 1)
-- $\boxtimes$ **Item 2:** How was treatment assigned? (Week 2)
-- $\boxtimes$ **Item 3:** Is the comparison fair? (Week 2)
+- $\boxtimes$ **Item 1:** What is the causal question? (Module 1)
+- $\boxtimes$ **Item 2:** How was treatment assigned? (Module 2)
+- $\boxtimes$ **Item 3:** Is the comparison fair? (Module 2)
 
 ---
 
-*Next week: What happens when we can't randomize? We move to observational studies and add Checklist Item 4: could confounding explain the result?*
+*Next module: What happens when we can't randomize? We move to observational studies and add Checklist Item 4: could confounding explain the result?*

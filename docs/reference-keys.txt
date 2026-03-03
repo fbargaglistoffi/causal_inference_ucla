@@ -42,8 +42,11 @@ a-nuance-itt-vs.-the-effect-of-having-insurance
 summary
 observational-studies
 the-challenge-of-confounding-in-public-health-and-medical-research
+from-bradford-hills-criteria-to-modern-causal-inference
 exchangeability-positivity-and-sutva
 effect-identification-in-observational-studies
+checklist-item-4-could-confounding-explain-the-result
+critical-reading-exercise-evaluating-the-framingham-heart-study
 effect-modification-and-interaction
 effect-modification-and-adjustment-methods
 interaction
