@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>4 Introduction to Causal Diagrams (DAGs) | Causal-Inference-Graduate.knit</title>
+  <meta name="description" content="An undergraduate course on causal inference" />
+  <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="4 Introduction to Causal Diagrams (DAGs) | Causal-Inference-Graduate.knit" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="An undergraduate course on causal inference" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="4 Introduction to Causal Diagrams (DAGs) | Causal-Inference-Graduate.knit" />
+  
+  <meta name="twitter:description" content="An undergraduate course on causal inference" />
+  
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="observational-studies.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Causal Inference</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#course-description"><i class="fa fa-check"></i>Course Description</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#instructor"><i class="fa fa-check"></i>Instructor</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#teaching-assistants"><i class="fa fa-check"></i>Teaching Assistants</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#course-logistics"><i class="fa fa-check"></i>Course Logistics</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#required-materials"><i class="fa fa-check"></i>Required Materials</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#learning-objectives"><i class="fa fa-check"></i>Learning Objectives</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#upon-successful-completion-of-this-course-students-will-be-able-to"><i class="fa fa-check"></i>Upon successful completion of this course, students will be able to:</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#tools"><i class="fa fa-check"></i>Tools</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#useful-links"><i class="fa fa-check"></i>Useful Links</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#acknowledgments"><i class="fa fa-check"></i>Acknowledgments</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="setup.html"><a href="setup.html"><i class="fa fa-check"></i>Setup</a>
+<ul>
+<li class="chapter" data-level="" data-path="setup.html"><a href="setup.html#installing-and-using-required-packages"><i class="fa fa-check"></i>Installing and Using Required Packages</a></li>
+<li class="chapter" data-level="" data-path="setup.html"><a href="setup.html#loading-packages"><i class="fa fa-check"></i>Loading Packages</a></li>
+<li class="chapter" data-level="" data-path="setup.html"><a href="setup.html#difference-between-install.packages-and-library"><i class="fa fa-check"></i>Difference Between install.packages() and library()</a></li>
+<li class="chapter" data-level="" data-path="setup.html"><a href="setup.html#session-information"><i class="fa fa-check"></i>Session Information</a></li>
+<li class="chapter" data-level="" data-path="setup.html"><a href="setup.html#why-include-this"><i class="fa fa-check"></i>Why include this?</a></li>
+<li class="chapter" data-level="" data-path="setup.html"><a href="setup.html#base-r-version-simple"><i class="fa fa-check"></i>Base R version (simple)</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="causal-dictionary.html"><a href="causal-dictionary.html"><i class="fa fa-check"></i>Causal Dictionary</a></li>
+<li class="chapter" data-level="1" data-path="foundations-of-causal-thinking.html"><a href="foundations-of-causal-thinking.html"><i class="fa fa-check"></i><b>1</b> Foundations of Causal Thinking</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="foundations-of-causal-thinking.html"><a href="foundations-of-causal-thinking.html#association-vs.-causation"><i class="fa fa-check"></i><b>1.1</b> Association vs. Causation</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="foundations-of-causal-thinking.html"><a href="foundations-of-causal-thinking.html#simulating-simpsons-paradox"><i class="fa fa-check"></i><b>1.1.1</b> Simulating Simpson’s Paradox</a></li>
+<li class="chapter" data-level="1.1.2" data-path="foundations-of-causal-thinking.html"><a href="foundations-of-causal-thinking.html#visualizing-simpsons-paradox"><i class="fa fa-check"></i><b>1.1.2</b> Visualizing Simpson’s Paradox</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="foundations-of-causal-thinking.html"><a href="foundations-of-causal-thinking.html#why-we-use-simulations"><i class="fa fa-check"></i><b>1.2</b> Why We Use Simulations</a></li>
+<li class="chapter" data-level="1.3" data-path="foundations-of-causal-thinking.html"><a href="foundations-of-causal-thinking.html#introduction-to-counterfactuals-and-potential-outcomes"><i class="fa fa-check"></i><b>1.3</b> Introduction to Counterfactuals and Potential Outcomes</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="foundations-of-causal-thinking.html"><a href="foundations-of-causal-thinking.html#notation"><i class="fa fa-check"></i><b>1.3.1</b> Notation</a></li>
+<li class="chapter" data-level="1.3.2" data-path="foundations-of-causal-thinking.html"><a href="foundations-of-causal-thinking.html#the-potential-outcomes-table"><i class="fa fa-check"></i><b>1.3.2</b> The Potential Outcomes Table</a></li>
+<li class="chapter" data-level="1.3.3" data-path="foundations-of-causal-thinking.html"><a href="foundations-of-causal-thinking.html#what-happens-when-treatment-is-assigned"><i class="fa fa-check"></i><b>1.3.3</b> What Happens When Treatment Is Assigned?</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="foundations-of-causal-thinking.html"><a href="foundations-of-causal-thinking.html#causal-estimands-and-identification"><i class="fa fa-check"></i><b>1.4</b> Causal Estimands and Identification</a></li>
+<li class="chapter" data-level="1.5" data-path="foundations-of-causal-thinking.html"><a href="foundations-of-causal-thinking.html#measuring-effects-for-binary-outcomes"><i class="fa fa-check"></i><b>1.5</b> Measuring Effects for Binary Outcomes</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="foundations-of-causal-thinking.html"><a href="foundations-of-causal-thinking.html#simulation-heart-surgery-and-survival"><i class="fa fa-check"></i><b>1.5.1</b> Simulation: Heart Surgery and Survival</a></li>
+<li class="chapter" data-level="1.5.2" data-path="foundations-of-causal-thinking.html"><a href="foundations-of-causal-thinking.html#the-fundamental-problem-in-action"><i class="fa fa-check"></i><b>1.5.2</b> The Fundamental Problem in Action</a></li>
+<li class="chapter" data-level="1.5.3" data-path="foundations-of-causal-thinking.html"><a href="foundations-of-causal-thinking.html#visualizing-the-bias"><i class="fa fa-check"></i><b>1.5.3</b> Visualizing the Bias</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="randomized-controlled-trials.html"><a href="randomized-controlled-trials.html"><i class="fa fa-check"></i><b>2</b> Randomized Controlled Trials</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="randomized-controlled-trials.html"><a href="randomized-controlled-trials.html#review-the-selection-bias-problem"><i class="fa fa-check"></i><b>2.1</b> Review: The Selection Bias Problem</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="randomized-controlled-trials.html"><a href="randomized-controlled-trials.html#quick-demonstration-confounded-vs.-randomized-assignment"><i class="fa fa-check"></i><b>2.1.1</b> Quick Demonstration: Confounded vs. Randomized Assignment</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="randomized-controlled-trials.html"><a href="randomized-controlled-trials.html#simulating-a-randomized-experiment"><i class="fa fa-check"></i><b>2.2</b> Simulating a Randomized Experiment</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="randomized-controlled-trials.html"><a href="randomized-controlled-trials.html#setting-up-the-population"><i class="fa fa-check"></i><b>2.2.1</b> Setting Up the Population</a></li>
+<li class="chapter" data-level="2.2.2" data-path="randomized-controlled-trials.html"><a href="randomized-controlled-trials.html#randomization-treatment-assignment"><i class="fa fa-check"></i><b>2.2.2</b> Randomization: Treatment Assignment</a></li>
+<li class="chapter" data-level="2.2.3" data-path="randomized-controlled-trials.html"><a href="randomized-controlled-trials.html#checking-balance-does-randomization-work"><i class="fa fa-check"></i><b>2.2.3</b> Checking Balance: Does Randomization Work?</a></li>
+<li class="chapter" data-level="2.2.4" data-path="randomized-controlled-trials.html"><a href="randomized-controlled-trials.html#visualizing-balance"><i class="fa fa-check"></i><b>2.2.4</b> Visualizing Balance</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="randomized-controlled-trials.html"><a href="randomized-controlled-trials.html#estimating-the-ate"><i class="fa fa-check"></i><b>2.3</b> Estimating the ATE</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="randomized-controlled-trials.html"><a href="randomized-controlled-trials.html#generating-outcomes"><i class="fa fa-check"></i><b>2.3.1</b> Generating Outcomes</a></li>
+<li class="chapter" data-level="2.3.2" data-path="randomized-controlled-trials.html"><a href="randomized-controlled-trials.html#the-simple-estimator-difference-in-means"><i class="fa fa-check"></i><b>2.3.2</b> The Simple Estimator: Difference in Means</a></li>
+<li class="chapter" data-level="2.3.3" data-path="randomized-controlled-trials.html"><a href="randomized-controlled-trials.html#confidence-intervals"><i class="fa fa-check"></i><b>2.3.3</b> Confidence Intervals</a></li>
+<li class="chapter" data-level="2.3.4" data-path="randomized-controlled-trials.html"><a href="randomized-controlled-trials.html#using-a-t-test-equivalent-approach"><i class="fa fa-check"></i><b>2.3.4</b> Using a t-test (Equivalent Approach)</a></li>
+<li class="chapter" data-level="2.3.5" data-path="randomized-controlled-trials.html"><a href="randomized-controlled-trials.html#visualizing-the-treatment-effect"><i class="fa fa-check"></i><b>2.3.5</b> Visualizing the Treatment Effect</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="randomized-controlled-trials.html"><a href="randomized-controlled-trials.html#repeated-experiments-the-sampling-distribution"><i class="fa fa-check"></i><b>2.4</b> Repeated Experiments: The Sampling Distribution</a></li>
+<li class="chapter" data-level="2.5" data-path="randomized-controlled-trials.html"><a href="randomized-controlled-trials.html#statistical-vs.-clinical-significance"><i class="fa fa-check"></i><b>2.5</b> Statistical vs. Clinical Significance</a></li>
+<li class="chapter" data-level="2.6" data-path="randomized-controlled-trials.html"><a href="randomized-controlled-trials.html#exercise-the-oregon-health-insurance-experiment"><i class="fa fa-check"></i><b>2.6</b> Exercise: The Oregon Health Insurance Experiment</a>
+<ul>
+<li class="chapter" data-level="2.6.1" data-path="randomized-controlled-trials.html"><a href="randomized-controlled-trials.html#background"><i class="fa fa-check"></i><b>2.6.1</b> Background</a></li>
+<li class="chapter" data-level="2.6.2" data-path="randomized-controlled-trials.html"><a href="randomized-controlled-trials.html#loading-the-data"><i class="fa fa-check"></i><b>2.6.2</b> Loading the Data</a></li>
+<li class="chapter" data-level="2.6.3" data-path="randomized-controlled-trials.html"><a href="randomized-controlled-trials.html#step-1-check-balance-table-1"><i class="fa fa-check"></i><b>2.6.3</b> Step 1: Check Balance (Table 1)</a></li>
+<li class="chapter" data-level="2.6.4" data-path="randomized-controlled-trials.html"><a href="randomized-controlled-trials.html#step-2-estimate-the-intent-to-treat-itt-effect"><i class="fa fa-check"></i><b>2.6.4</b> Step 2: Estimate the Intent-to-Treat (ITT) Effect</a></li>
+<li class="chapter" data-level="2.6.5" data-path="randomized-controlled-trials.html"><a href="randomized-controlled-trials.html#step-3-visualize-the-results"><i class="fa fa-check"></i><b>2.6.5</b> Step 3: Visualize the Results</a></li>
+<li class="chapter" data-level="2.6.6" data-path="randomized-controlled-trials.html"><a href="randomized-controlled-trials.html#a-nuance-itt-vs.-the-effect-of-having-insurance"><i class="fa fa-check"></i><b>2.6.6</b> A Nuance: ITT vs. the Effect of Having Insurance</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="randomized-controlled-trials.html"><a href="randomized-controlled-trials.html#summary"><i class="fa fa-check"></i><b>2.7</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="observational-studies.html"><a href="observational-studies.html"><i class="fa fa-check"></i><b>3</b> Observational Studies</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="observational-studies.html"><a href="observational-studies.html#the-challenge-of-confounding-in-public-health-and-medical-research"><i class="fa fa-check"></i><b>3.1</b> The challenge of confounding in public health and medical research</a></li>
+<li class="chapter" data-level="3.2" data-path="observational-studies.html"><a href="observational-studies.html#from-bradford-hills-criteria-to-modern-causal-inference"><i class="fa fa-check"></i><b>3.2</b> From Bradford Hill’s criteria to modern causal inference</a></li>
+<li class="chapter" data-level="3.3" data-path="observational-studies.html"><a href="observational-studies.html#exchangeability-positivity-and-sutva"><i class="fa fa-check"></i><b>3.3</b> Exchangeability, positivity, and SUTVA</a></li>
+<li class="chapter" data-level="3.4" data-path="observational-studies.html"><a href="observational-studies.html#effect-identification-in-observational-studies"><i class="fa fa-check"></i><b>3.4</b> Effect identification in observational studies</a></li>
+<li class="chapter" data-level="3.5" data-path="observational-studies.html"><a href="observational-studies.html#checklist-item-4-could-confounding-explain-the-result"><i class="fa fa-check"></i><b>3.5</b> Checklist Item 4: Could confounding explain the result?</a></li>
+<li class="chapter" data-level="3.6" data-path="observational-studies.html"><a href="observational-studies.html#critical-reading-exercise-evaluating-the-framingham-heart-study"><i class="fa fa-check"></i><b>3.6</b> Critical reading exercise: evaluating the Framingham Heart Study</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="introduction-to-causal-diagrams-dags.html"><a href="introduction-to-causal-diagrams-dags.html"><i class="fa fa-check"></i><b>4</b> Introduction to Causal Diagrams (DAGs)</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="introduction-to-causal-diagrams-dags.html"><a href="introduction-to-causal-diagrams-dags.html#what-is-a-dag"><i class="fa fa-check"></i><b>4.1</b> What is a DAG?</a></li>
+<li class="chapter" data-level="4.2" data-path="introduction-to-causal-diagrams-dags.html"><a href="introduction-to-causal-diagrams-dags.html#three-types-of-paths-chains-forks-and-colliders"><i class="fa fa-check"></i><b>4.2</b> Three types of paths: chains, forks, and colliders</a></li>
+<li class="chapter" data-level="4.3" data-path="introduction-to-causal-diagrams-dags.html"><a href="introduction-to-causal-diagrams-dags.html#d-separation"><i class="fa fa-check"></i><b>4.3</b> D-separation</a></li>
+<li class="chapter" data-level="4.4" data-path="introduction-to-causal-diagrams-dags.html"><a href="introduction-to-causal-diagrams-dags.html#the-backdoor-criterion"><i class="fa fa-check"></i><b>4.4</b> The backdoor criterion</a></li>
+<li class="chapter" data-level="4.5" data-path="introduction-to-causal-diagrams-dags.html"><a href="introduction-to-causal-diagrams-dags.html#checklist-item-5-are-the-right-variables-being-adjusted-for"><i class="fa fa-check"></i><b>4.5</b> Checklist Item 5: Are the right variables being adjusted for?</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://www.falcobargaglistoffi.com/" target="blank">Instructor: Falco J. Bargagli-Stoffi</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="introduction-to-causal-diagrams-dags" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">4</span> Introduction to Causal Diagrams (DAGs)<a href="introduction-to-causal-diagrams-dags.html#introduction-to-causal-diagrams-dags" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<blockquote>
+<h2 id="class-materials-3" class="hasAnchor">Class materials<a href="introduction-to-causal-diagrams-dags.html#class-materials-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Slides: <a href="https://drive.google.com/drive/folders/14Iymvk2FlZqVsWrtbDLmwSzR5aNS-Mcg?usp=sharing"><strong>Module 4</strong></a></p>
+</blockquote>
+<blockquote>
+<h2 id="textbook-reading-3" class="hasAnchor">Textbook reading<a href="introduction-to-causal-diagrams-dags.html#textbook-reading-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><a href="https://static1.squarespace.com/static/675db8b0dd37046447128f5f/t/677676888e31cc50c2c33877/1735816881944/hernanrobins_WhatIf_2jan25.pdf"><strong>Hernán &amp; Robins, Causal Inference: What If – Chapters 6–7</strong></a>
+## Supplementary reading</p>
+<p><a href="https://journals.lww.com/epidem/abstract/1999/01000/causal_diagrams_for_epidemiologic_research.8.aspx"><strong>Greenland S, Pearl J, Robins JM. (1999). Causal Diagrams for Epidemiologic Research. Epidemiology, 10(1), 37–48.</strong></a><br />
+<a href="https://link.springer.com/chapter/10.1007/978-94-007-6094-3_13"><strong>Elwert F. (2013). Graphical Causal Models. In: Handbook of Causal Analysis for Social Research. Springer. pp. 245–273.</strong></a></p>
+</blockquote>
+<blockquote>
+<h2 id="topics-covered-3" class="hasAnchor">Topics covered<a href="introduction-to-causal-diagrams-dags.html#topics-covered-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ul>
+<li>What is a DAG? Definitions and vocabulary</li>
+<li>Three types of paths: chains, forks, and colliders</li>
+<li>D-separation: when are two variables conditionally independent?</li>
+<li>The backdoor criterion: a formal rule for choosing adjustment variables</li>
+<li>Checklist Item 5: Are the right variables being adjusted for?</li>
+<li>Critical reading exercise: drawing and evaluating DAGs</li>
+</ul>
+</blockquote>
+<div id="what-is-a-dag" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> What is a DAG?<a href="introduction-to-causal-diagrams-dags.html#what-is-a-dag" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A Directed Acyclic Graph (DAG) is a visual representation of causal assumptions about how variables relate to one another. Each node represents a variable, and each directed edge (arrow) represents a direct causal effect. “Acyclic” means you cannot follow arrows and return to where you started — there are no feedback loops. DAGs are not statistical models: they do not encode the magnitude or functional form of causal effects. Instead, they encode qualitative causal structure — who causes whom. Importantly, missing arrows are strong claims: if there is no arrow from <span class="math inline">\(A\)</span> to <span class="math inline">\(B\)</span>, the DAG asserts that <span class="math inline">\(A\)</span> does not directly cause <span class="math inline">\(B\)</span>.</p>
+<p>DAGs serve three crucial purposes. First, they make causal assumptions <strong>visible</strong> and therefore debatable — two researchers can draw different DAGs for the same problem, and the disagreement is about causal assumptions, not statistics. Second, they provide formal <strong>rules</strong> (d-separation, the backdoor criterion) for determining which variables to adjust for. Third, they help researchers <strong>communicate</strong> and <strong>critique</strong> study designs. In Module 3, we said “adjust for confounders to block backdoor paths,” but we left open the question of which variables are confounders, whether adjusting for the wrong variable could introduce bias, and how to communicate our assumptions transparently. DAGs answer all three questions.</p>
+<p><strong>Key vocabulary</strong>: A <strong>parent</strong> of a node is a direct cause; a <strong>child</strong> is a direct effect. An <strong>ancestor</strong> is any node from which you can reach the target by following arrows forward; a <strong>descendant</strong> is any node you can reach by following arrows forward from the target. A <strong>path</strong> is any sequence of connected edges (regardless of arrow direction) between two nodes. A <strong>directed path</strong> follows arrows in their direction.</p>
+</div>
+<div id="three-types-of-paths-chains-forks-and-colliders" class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> Three types of paths: chains, forks, and colliders<a href="introduction-to-causal-diagrams-dags.html#three-types-of-paths-chains-forks-and-colliders" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Every path in a DAG is built from three elementary structures, and understanding how each behaves under conditioning is the key to knowing what to adjust for.</p>
+<p>A <strong>chain</strong> (or mediator path) has the form <span class="math inline">\(A \to B \to C\)</span>. Here <span class="math inline">\(B\)</span> mediates the causal effect of <span class="math inline">\(A\)</span> on <span class="math inline">\(C\)</span>. Without conditioning, association flows from <span class="math inline">\(A\)</span> to <span class="math inline">\(C\)</span> through <span class="math inline">\(B\)</span>. Conditioning on <span class="math inline">\(B\)</span> blocks the path: once we know <span class="math inline">\(B\)</span>, learning <span class="math inline">\(A\)</span> tells us nothing new about <span class="math inline">\(C\)</span>. The practical implication is that you should not adjust for mediators if you want the total causal effect of <span class="math inline">\(A\)</span> on <span class="math inline">\(C\)</span>.</p>
+<p>A <strong>fork</strong> (or confounder path) has the form <span class="math inline">\(A \leftarrow B \to C\)</span>. Here <span class="math inline">\(B\)</span> is a common cause of both <span class="math inline">\(A\)</span> and <span class="math inline">\(C\)</span>, creating a spurious association between them. Conditioning on <span class="math inline">\(B\)</span> blocks the path and removes the spurious association. This is exactly what we did in Module 3: adjusting for confounders to block backdoor paths.</p>
+<p>A <strong>collider</strong> has the form <span class="math inline">\(A \to B \leftarrow C\)</span>. Here <span class="math inline">\(B\)</span> is a common effect of <span class="math inline">\(A\)</span> and <span class="math inline">\(C\)</span>. Without conditioning, the path is naturally blocked — <span class="math inline">\(A\)</span> and <span class="math inline">\(C\)</span> are not associated through this path. But conditioning on <span class="math inline">\(B\)</span> <strong>opens</strong> the path, creating a spurious association between <span class="math inline">\(A\)</span> and <span class="math inline">\(C\)</span>. This is the dangerous case: adjusting for a collider introduces bias rather than removing it. A classic example is Berkson’s bias, where restricting a study to hospitalized patients (a collider of multiple diseases) creates spurious associations between unrelated conditions.</p>
+<p><strong>Example Setup</strong>: Let’s simulate collider bias. We generate two independent causes, Talent and Beauty, that both affect Fame (a collider). In the full population, Talent and Beauty are independent. But among famous people (conditioning on the collider), they become negatively associated.</p>
+<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="introduction-to-causal-diagrams-dags.html#cb178-1" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">5000</span></span>
+<span id="cb178-2"><a href="introduction-to-causal-diagrams-dags.html#cb178-2" tabindex="-1"></a>talent <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb178-3"><a href="introduction-to-causal-diagrams-dags.html#cb178-3" tabindex="-1"></a>beauty <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb178-4"><a href="introduction-to-causal-diagrams-dags.html#cb178-4" tabindex="-1"></a>fame <span class="ot">&lt;-</span> <span class="fl">0.7</span> <span class="sc">*</span> talent <span class="sc">+</span> <span class="fl">0.7</span> <span class="sc">*</span> beauty <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb178-5"><a href="introduction-to-causal-diagrams-dags.html#cb178-5" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(talent, beauty, fame)</span>
+<span id="cb178-6"><a href="introduction-to-causal-diagrams-dags.html#cb178-6" tabindex="-1"></a></span>
+<span id="cb178-7"><a href="introduction-to-causal-diagrams-dags.html#cb178-7" tabindex="-1"></a><span class="co"># In the full population: no association</span></span>
+<span id="cb178-8"><a href="introduction-to-causal-diagrams-dags.html#cb178-8" tabindex="-1"></a><span class="fu">cor</span>(df<span class="sc">$</span>talent, df<span class="sc">$</span>beauty)</span></code></pre></div>
+<pre><code>## [1] 0.0062745</code></pre>
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="introduction-to-causal-diagrams-dags.html#cb180-1" tabindex="-1"></a><span class="co"># Among famous people (conditioning on collider): spurious negative association</span></span>
+<span id="cb180-2"><a href="introduction-to-causal-diagrams-dags.html#cb180-2" tabindex="-1"></a>famous <span class="ot">&lt;-</span> df[df<span class="sc">$</span>fame <span class="sc">&gt;</span> <span class="fu">quantile</span>(df<span class="sc">$</span>fame, <span class="fl">0.8</span>), ]</span>
+<span id="cb180-3"><a href="introduction-to-causal-diagrams-dags.html#cb180-3" tabindex="-1"></a><span class="fu">cor</span>(famous<span class="sc">$</span>talent, famous<span class="sc">$</span>beauty)</span></code></pre></div>
+<pre><code>## [1] -0.2229092</code></pre>
+<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="introduction-to-causal-diagrams-dags.html#cb182-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb182-2"><a href="introduction-to-causal-diagrams-dags.html#cb182-2" tabindex="-1"></a>df<span class="sc">$</span>famous <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>fame <span class="sc">&gt;</span> <span class="fu">quantile</span>(df<span class="sc">$</span>fame, <span class="fl">0.8</span>), <span class="st">&quot;Famous&quot;</span>, <span class="st">&quot;Not Famous&quot;</span>)</span>
+<span id="cb182-3"><a href="introduction-to-causal-diagrams-dags.html#cb182-3" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> talent, <span class="at">y =</span> beauty, <span class="at">color =</span> famous)) <span class="sc">+</span></span>
+<span id="cb182-4"><a href="introduction-to-causal-diagrams-dags.html#cb182-4" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">size =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb182-5"><a href="introduction-to-causal-diagrams-dags.html#cb182-5" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">linewidth =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb182-6"><a href="introduction-to-causal-diagrams-dags.html#cb182-6" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Collider Bias: Conditioning on Fame&quot;</span>,</span>
+<span id="cb182-7"><a href="introduction-to-causal-diagrams-dags.html#cb182-7" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Talent&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Beauty&quot;</span>, <span class="at">color =</span> <span class="st">&quot;&quot;</span>) <span class="sc">+</span></span>
+<span id="cb182-8"><a href="introduction-to-causal-diagrams-dags.html#cb182-8" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;Famous&quot;</span> <span class="ot">=</span> <span class="st">&quot;#1f77b4&quot;</span>, <span class="st">&quot;Not Famous&quot;</span> <span class="ot">=</span> <span class="st">&quot;#d62728&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb182-9"><a href="introduction-to-causal-diagrams-dags.html#cb182-9" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="Causal-Inference-Graduate_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>In the full population, the correlation between Talent and Beauty is approximately zero — they are independent, as we generated them to be. But among famous people (those in the top 20% of Fame), the correlation becomes notably negative. This is collider bias in action: among the famous, if someone is not particularly talented, they are likely to be beautiful (and vice versa), because at least one of the two was needed to achieve fame. This demonstrates why adjusting for a collider (or restricting analysis to a subgroup defined by a collider) introduces spurious associations that do not exist in the population.</p>
+</div>
+<div id="d-separation" class="section level2 hasAnchor" number="4.3">
+<h2><span class="header-section-number">4.3</span> D-separation<a href="introduction-to-causal-diagrams-dags.html#d-separation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Real causal models involve many variables and many paths. A path between two variables may contain multiple chains, forks, and colliders. D-separation is the formal rule that tells us whether two variables are conditionally independent given a set of variables <span class="math inline">\(S\)</span>.</p>
+<p>A path between <span class="math inline">\(A\)</span> and <span class="math inline">\(C\)</span> is <strong>blocked</strong> by a set <span class="math inline">\(S\)</span> if the path contains either: (1) a chain or fork where the middle variable is in <span class="math inline">\(S\)</span> (we condition on it), or (2) a collider where the middle variable is not in <span class="math inline">\(S\)</span> and no descendant of the middle variable is in <span class="math inline">\(S\)</span>. Two variables are <strong>d-separated</strong> given <span class="math inline">\(S\)</span> if every path between them is blocked. If they are d-separated, there is no conditional association (given <span class="math inline">\(S\)</span>). If they are <strong>d-connected</strong> (not d-separated), association may flow.</p>
+<p>The power of d-separation is that it translates causal assumptions (encoded in the DAG) into statistical predictions (conditional independencies) that can, in principle, be tested against data. If the DAG predicts that <span class="math inline">\(A\)</span> and <span class="math inline">\(C\)</span> should be independent given <span class="math inline">\(S\)</span>, but they are not in the data, then at least one assumption in the DAG is wrong.</p>
+<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="introduction-to-causal-diagrams-dags.html#cb184-1" tabindex="-1"></a><span class="co"># Demonstrating d-separation with simulation</span></span>
+<span id="cb184-2"><a href="introduction-to-causal-diagrams-dags.html#cb184-2" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">5000</span></span>
+<span id="cb184-3"><a href="introduction-to-causal-diagrams-dags.html#cb184-3" tabindex="-1"></a>Z <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n)         <span class="co"># Common cause</span></span>
+<span id="cb184-4"><a href="introduction-to-causal-diagrams-dags.html#cb184-4" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="fl">0.6</span> <span class="sc">*</span> Z <span class="sc">+</span> <span class="fu">rnorm</span>(n)   <span class="co"># Treatment</span></span>
+<span id="cb184-5"><a href="introduction-to-causal-diagrams-dags.html#cb184-5" tabindex="-1"></a>M <span class="ot">&lt;-</span> <span class="fl">0.5</span> <span class="sc">*</span> W <span class="sc">+</span> <span class="fu">rnorm</span>(n)   <span class="co"># Mediator</span></span>
+<span id="cb184-6"><a href="introduction-to-causal-diagrams-dags.html#cb184-6" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fl">0.4</span> <span class="sc">*</span> M <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> Z <span class="sc">+</span> <span class="fu">rnorm</span>(n)  <span class="co"># Outcome</span></span>
+<span id="cb184-7"><a href="introduction-to-causal-diagrams-dags.html#cb184-7" tabindex="-1"></a>C <span class="ot">&lt;-</span> <span class="fl">0.3</span> <span class="sc">*</span> W <span class="sc">+</span> <span class="fl">0.3</span> <span class="sc">*</span> Y <span class="sc">+</span> <span class="fu">rnorm</span>(n)  <span class="co"># Collider</span></span>
+<span id="cb184-8"><a href="introduction-to-causal-diagrams-dags.html#cb184-8" tabindex="-1"></a></span>
+<span id="cb184-9"><a href="introduction-to-causal-diagrams-dags.html#cb184-9" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(W, Z, M, Y, C)</span>
+<span id="cb184-10"><a href="introduction-to-causal-diagrams-dags.html#cb184-10" tabindex="-1"></a></span>
+<span id="cb184-11"><a href="introduction-to-causal-diagrams-dags.html#cb184-11" tabindex="-1"></a><span class="co"># Marginal association between W and Y (d-connected)</span></span>
+<span id="cb184-12"><a href="introduction-to-causal-diagrams-dags.html#cb184-12" tabindex="-1"></a><span class="fu">cor</span>(df<span class="sc">$</span>W, df<span class="sc">$</span>Y)</span></code></pre></div>
+<pre><code>## [1] 0.3913115</code></pre>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="introduction-to-causal-diagrams-dags.html#cb186-1" tabindex="-1"></a><span class="co"># Conditional on Z: still associated (causal path through M remains open)</span></span>
+<span id="cb186-2"><a href="introduction-to-causal-diagrams-dags.html#cb186-2" tabindex="-1"></a>resid_W <span class="ot">&lt;-</span> <span class="fu">residuals</span>(<span class="fu">lm</span>(W <span class="sc">~</span> Z, <span class="at">data =</span> df))</span>
+<span id="cb186-3"><a href="introduction-to-causal-diagrams-dags.html#cb186-3" tabindex="-1"></a>resid_Y <span class="ot">&lt;-</span> <span class="fu">residuals</span>(<span class="fu">lm</span>(Y <span class="sc">~</span> Z, <span class="at">data =</span> df))</span>
+<span id="cb186-4"><a href="introduction-to-causal-diagrams-dags.html#cb186-4" tabindex="-1"></a><span class="fu">cor</span>(resid_W, resid_Y)</span></code></pre></div>
+<pre><code>## [1] 0.1828051</code></pre>
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="introduction-to-causal-diagrams-dags.html#cb188-1" tabindex="-1"></a><span class="co"># Conditional on Z and M: now d-separated (both paths blocked)</span></span>
+<span id="cb188-2"><a href="introduction-to-causal-diagrams-dags.html#cb188-2" tabindex="-1"></a>resid_W2 <span class="ot">&lt;-</span> <span class="fu">residuals</span>(<span class="fu">lm</span>(W <span class="sc">~</span> Z <span class="sc">+</span> M, <span class="at">data =</span> df))</span>
+<span id="cb188-3"><a href="introduction-to-causal-diagrams-dags.html#cb188-3" tabindex="-1"></a>resid_Y2 <span class="ot">&lt;-</span> <span class="fu">residuals</span>(<span class="fu">lm</span>(Y <span class="sc">~</span> Z <span class="sc">+</span> M, <span class="at">data =</span> df))</span>
+<span id="cb188-4"><a href="introduction-to-causal-diagrams-dags.html#cb188-4" tabindex="-1"></a><span class="fu">cor</span>(resid_W2, resid_Y2)</span></code></pre></div>
+<pre><code>## [1] 0.0008723796</code></pre>
+<p>In this simulation, we can verify d-separation predictions empirically. <span class="math inline">\(W\)</span> and <span class="math inline">\(Y\)</span> are marginally associated (both the causal path through <span class="math inline">\(M\)</span> and the backdoor path through <span class="math inline">\(Z\)</span> are open). Conditioning on <span class="math inline">\(Z\)</span> alone blocks the backdoor path but leaves the causal path through <span class="math inline">\(M\)</span> open, so <span class="math inline">\(W\)</span> and <span class="math inline">\(Y\)</span> remain associated — this is correct and expected, since we want the causal effect to flow. Conditioning on both <span class="math inline">\(Z\)</span> and <span class="math inline">\(M\)</span> blocks all paths, and the residual correlation drops to approximately zero, confirming d-separation.</p>
+</div>
+<div id="the-backdoor-criterion" class="section level2 hasAnchor" number="4.4">
+<h2><span class="header-section-number">4.4</span> The backdoor criterion<a href="introduction-to-causal-diagrams-dags.html#the-backdoor-criterion" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The backdoor criterion is the central tool for deciding what to adjust for when estimating causal effects from observational data. Given a DAG, a set of variables <span class="math inline">\(S\)</span> satisfies the backdoor criterion relative to treatment <span class="math inline">\(W\)</span> and outcome <span class="math inline">\(Y\)</span> if: (1) no variable in <span class="math inline">\(S\)</span> is a descendant of <span class="math inline">\(W\)</span>, and (2) <span class="math inline">\(S\)</span> blocks every backdoor path from <span class="math inline">\(W\)</span> to <span class="math inline">\(Y\)</span>.</p>
+<p>If <span class="math inline">\(S\)</span> satisfies the backdoor criterion, then the Average Treatment Effect is identified through the adjustment formula:</p>
+<p><span class="math display">\[
+\text{ATE} = \sum_s \Big\{ E[Y \mid W = 1, S = s] - E[Y \mid W = 0, S = s] \Big\} \Pr(S = s)
+\]</span></p>
+<p>This is the same adjustment formula from Module 3, but now we have a principled, graph-based method for choosing <span class="math inline">\(S\)</span> rather than relying on informal reasoning about confounders.</p>
+<p>The backdoor criterion protects against the three common adjustment mistakes: (1) failing to adjust for a confounder (leaves backdoor paths open), (2) adjusting for a mediator (blocks causal paths, underestimates the effect), and (3) adjusting for a collider (opens spurious paths, introduces new bias). Multiple valid adjustment sets may exist for a given DAG — the criterion tells you which sets are valid, not that there is only one correct answer.</p>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="introduction-to-causal-diagrams-dags.html#cb190-1" tabindex="-1"></a><span class="co"># Demonstrating the backdoor criterion</span></span>
+<span id="cb190-2"><a href="introduction-to-causal-diagrams-dags.html#cb190-2" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">5000</span></span>
+<span id="cb190-3"><a href="introduction-to-causal-diagrams-dags.html#cb190-3" tabindex="-1"></a>Z <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n)                          <span class="co"># Confounder</span></span>
+<span id="cb190-4"><a href="introduction-to-causal-diagrams-dags.html#cb190-4" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="fl">0.5</span> <span class="sc">*</span> Z <span class="sc">+</span> <span class="fu">rnorm</span>(n)               <span class="co"># Treatment</span></span>
+<span id="cb190-5"><a href="introduction-to-causal-diagrams-dags.html#cb190-5" tabindex="-1"></a>M <span class="ot">&lt;-</span> <span class="fl">0.8</span> <span class="sc">*</span> W <span class="sc">+</span> <span class="fu">rnorm</span>(n)               <span class="co"># Mediator</span></span>
+<span id="cb190-6"><a href="introduction-to-causal-diagrams-dags.html#cb190-6" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fl">0.6</span> <span class="sc">*</span> M <span class="sc">+</span> <span class="fl">0.4</span> <span class="sc">*</span> Z <span class="sc">+</span> <span class="fu">rnorm</span>(n)    <span class="co"># Outcome (true total effect of W = 0.8 * 0.6 = 0.48)</span></span>
+<span id="cb190-7"><a href="introduction-to-causal-diagrams-dags.html#cb190-7" tabindex="-1"></a></span>
+<span id="cb190-8"><a href="introduction-to-causal-diagrams-dags.html#cb190-8" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(Z, W, M, Y)</span>
+<span id="cb190-9"><a href="introduction-to-causal-diagrams-dags.html#cb190-9" tabindex="-1"></a></span>
+<span id="cb190-10"><a href="introduction-to-causal-diagrams-dags.html#cb190-10" tabindex="-1"></a><span class="co"># Naive (biased): confounding through Z</span></span>
+<span id="cb190-11"><a href="introduction-to-causal-diagrams-dags.html#cb190-11" tabindex="-1"></a>naive <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> W, <span class="at">data =</span> df)</span>
+<span id="cb190-12"><a href="introduction-to-causal-diagrams-dags.html#cb190-12" tabindex="-1"></a><span class="fu">summary</span>(naive)<span class="sc">$</span>coefficients[<span class="st">&quot;W&quot;</span>, <span class="st">&quot;Estimate&quot;</span>]</span></code></pre></div>
+<pre><code>## [1] 0.6496867</code></pre>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="introduction-to-causal-diagrams-dags.html#cb192-1" tabindex="-1"></a><span class="co"># Correct: adjust for Z only (backdoor criterion satisfied)</span></span>
+<span id="cb192-2"><a href="introduction-to-causal-diagrams-dags.html#cb192-2" tabindex="-1"></a>correct <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> W <span class="sc">+</span> Z, <span class="at">data =</span> df)</span>
+<span id="cb192-3"><a href="introduction-to-causal-diagrams-dags.html#cb192-3" tabindex="-1"></a><span class="fu">summary</span>(correct)<span class="sc">$</span>coefficients[<span class="st">&quot;W&quot;</span>, <span class="st">&quot;Estimate&quot;</span>]</span></code></pre></div>
+<pre><code>## [1] 0.4835851</code></pre>
+<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="introduction-to-causal-diagrams-dags.html#cb194-1" tabindex="-1"></a><span class="co"># Wrong: adjust for mediator M (blocks causal path)</span></span>
+<span id="cb194-2"><a href="introduction-to-causal-diagrams-dags.html#cb194-2" tabindex="-1"></a>wrong <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> W <span class="sc">+</span> Z <span class="sc">+</span> M, <span class="at">data =</span> df)</span>
+<span id="cb194-3"><a href="introduction-to-causal-diagrams-dags.html#cb194-3" tabindex="-1"></a><span class="fu">summary</span>(wrong)<span class="sc">$</span>coefficients[<span class="st">&quot;W&quot;</span>, <span class="st">&quot;Estimate&quot;</span>]</span></code></pre></div>
+<pre><code>## [1] 0.005524593</code></pre>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="introduction-to-causal-diagrams-dags.html#cb196-1" tabindex="-1"></a>estimates <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb196-2"><a href="introduction-to-causal-diagrams-dags.html#cb196-2" tabindex="-1"></a>  <span class="at">Model =</span> <span class="fu">c</span>(<span class="st">&quot;Naive</span><span class="sc">\n</span><span class="st">(no adjustment)&quot;</span>, <span class="st">&quot;Correct</span><span class="sc">\n</span><span class="st">(adjust for Z)&quot;</span>, <span class="st">&quot;Wrong</span><span class="sc">\n</span><span class="st">(adjust for Z + M)&quot;</span>),</span>
+<span id="cb196-3"><a href="introduction-to-causal-diagrams-dags.html#cb196-3" tabindex="-1"></a>  <span class="at">Estimate =</span> <span class="fu">c</span>(</span>
+<span id="cb196-4"><a href="introduction-to-causal-diagrams-dags.html#cb196-4" tabindex="-1"></a>    <span class="fu">summary</span>(naive)<span class="sc">$</span>coefficients[<span class="st">&quot;W&quot;</span>, <span class="st">&quot;Estimate&quot;</span>],</span>
+<span id="cb196-5"><a href="introduction-to-causal-diagrams-dags.html#cb196-5" tabindex="-1"></a>    <span class="fu">summary</span>(correct)<span class="sc">$</span>coefficients[<span class="st">&quot;W&quot;</span>, <span class="st">&quot;Estimate&quot;</span>],</span>
+<span id="cb196-6"><a href="introduction-to-causal-diagrams-dags.html#cb196-6" tabindex="-1"></a>    <span class="fu">summary</span>(wrong)<span class="sc">$</span>coefficients[<span class="st">&quot;W&quot;</span>, <span class="st">&quot;Estimate&quot;</span>]</span>
+<span id="cb196-7"><a href="introduction-to-causal-diagrams-dags.html#cb196-7" tabindex="-1"></a>  )</span>
+<span id="cb196-8"><a href="introduction-to-causal-diagrams-dags.html#cb196-8" tabindex="-1"></a>)</span>
+<span id="cb196-9"><a href="introduction-to-causal-diagrams-dags.html#cb196-9" tabindex="-1"></a>estimates<span class="sc">$</span>Model <span class="ot">&lt;-</span> <span class="fu">factor</span>(estimates<span class="sc">$</span>Model,</span>
+<span id="cb196-10"><a href="introduction-to-causal-diagrams-dags.html#cb196-10" tabindex="-1"></a>  <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Naive</span><span class="sc">\n</span><span class="st">(no adjustment)&quot;</span>, <span class="st">&quot;Correct</span><span class="sc">\n</span><span class="st">(adjust for Z)&quot;</span>, <span class="st">&quot;Wrong</span><span class="sc">\n</span><span class="st">(adjust for Z + M)&quot;</span>))</span>
+<span id="cb196-11"><a href="introduction-to-causal-diagrams-dags.html#cb196-11" tabindex="-1"></a></span>
+<span id="cb196-12"><a href="introduction-to-causal-diagrams-dags.html#cb196-12" tabindex="-1"></a><span class="fu">ggplot</span>(estimates, <span class="fu">aes</span>(<span class="at">x =</span> Model, <span class="at">y =</span> Estimate, <span class="at">fill =</span> Model)) <span class="sc">+</span></span>
+<span id="cb196-13"><a href="introduction-to-causal-diagrams-dags.html#cb196-13" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">width =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb196-14"><a href="introduction-to-causal-diagrams-dags.html#cb196-14" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fl">0.48</span>, <span class="at">linetype =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb196-15"><a href="introduction-to-causal-diagrams-dags.html#cb196-15" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="at">x =</span> <span class="fl">3.4</span>, <span class="at">y =</span> <span class="fl">0.50</span>, <span class="at">label =</span> <span class="st">&quot;True total effect (0.48)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb196-16"><a href="introduction-to-causal-diagrams-dags.html#cb196-16" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Backdoor Criterion: Correct vs Incorrect Adjustment&quot;</span>,</span>
+<span id="cb196-17"><a href="introduction-to-causal-diagrams-dags.html#cb196-17" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Estimated Effect of W on Y&quot;</span>, <span class="at">x =</span> <span class="st">&quot;&quot;</span>) <span class="sc">+</span></span>
+<span id="cb196-18"><a href="introduction-to-causal-diagrams-dags.html#cb196-18" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;#d62728&quot;</span>, <span class="st">&quot;#2ca02c&quot;</span>, <span class="st">&quot;#ff7f0e&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb196-19"><a href="introduction-to-causal-diagrams-dags.html#cb196-19" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb196-20"><a href="introduction-to-causal-diagrams-dags.html#cb196-20" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span></code></pre></div>
+<p><img src="Causal-Inference-Graduate_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>The naive model overestimates the effect because it ignores confounding through <span class="math inline">\(Z\)</span>. The correct model adjusts for <span class="math inline">\(Z\)</span> only (satisfying the backdoor criterion) and recovers an estimate close to the true total effect of 0.48. The third model adjusts for both <span class="math inline">\(Z\)</span> and the mediator <span class="math inline">\(M\)</span>, which blocks the causal pathway and yields an estimate near zero — dramatically underestimating the true effect. This illustrates why “adjust for everything” is not a safe strategy: the backdoor criterion tells us precisely which variables to include and which to leave out.</p>
+</div>
+<div id="checklist-item-5-are-the-right-variables-being-adjusted-for" class="section level2 hasAnchor" number="4.5">
+<h2><span class="header-section-number">4.5</span> Checklist Item 5: Are the right variables being adjusted for?<a href="introduction-to-causal-diagrams-dags.html#checklist-item-5-are-the-right-variables-being-adjusted-for" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The fifth item on our Causal Credibility Checklist asks whether the study’s adjustment strategy is correct given the plausible causal structure. This item works hand-in-hand with Item 4 (could confounding explain the result?). Where Item 4 asks whether confounding is a concern, Item 5 asks whether the adjustment strategy actually addresses it correctly.</p>
+<p>To apply this item, start by drawing a plausible DAG for the study. Then check: does the set of variables the authors adjusted for satisfy the backdoor criterion? Are any mediators being adjusted for (which would block causal paths and underestimate the effect)? Are any colliders or their descendants being adjusted for (which would open spurious paths)? Are any confounders left unadjusted (which would leave backdoor paths open)?</p>
+<p>A common red flag is when authors report adjusting for a long list of covariates without justification from a causal model. Without a DAG, “we adjusted for everything available” sounds rigorous, but it may include mediators or colliders that introduce bias. The DAG provides the discipline to evaluate whether the adjustment strategy is scientifically justified.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="observational-studies.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": false,
+  "fontsettings": {
+    "theme": "night",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": "https://github.com/fbargaglistoffi/causal_inference_graduate/edit/main/04_dags.Rmd",
+    "text": "Edit"
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": "https://github.com/fbargaglistoffi/causal_inference_graduate/blob/main/04_dags.Rmd",
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "section"
+  },
+  "info": false
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

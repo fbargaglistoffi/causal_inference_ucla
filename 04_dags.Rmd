@@ -1,0 +1,174 @@
+# Introduction to Causal Diagrams (DAGs)
+
+> ## Class materials
+>
+> Slides: [**Module 4**](https://drive.google.com/drive/folders/14Iymvk2FlZqVsWrtbDLmwSzR5aNS-Mcg?usp=sharing)
+
+> ## Textbook reading
+>
+> [**Hernán & Robins, Causal Inference: What If – Chapters 6–7**](https://static1.squarespace.com/static/675db8b0dd37046447128f5f/t/677676888e31cc50c2c33877/1735816881944/hernanrobins_WhatIf_2jan25.pdf)
+> ## Supplementary reading
+>
+> [**Greenland S, Pearl J, Robins JM. (1999). Causal Diagrams for Epidemiologic Research. Epidemiology, 10(1), 37–48.**](https://journals.lww.com/epidem/abstract/1999/01000/causal_diagrams_for_epidemiologic_research.8.aspx)\
+> [**Elwert F. (2013). Graphical Causal Models. In: Handbook of Causal Analysis for Social Research. Springer. pp. 245–273.**](https://link.springer.com/chapter/10.1007/978-94-007-6094-3_13)
+
+> ## Topics covered
+>
+> -   What is a DAG? Definitions and vocabulary
+> -   Three types of paths: chains, forks, and colliders
+> -   D-separation: when are two variables conditionally independent?
+> -   The backdoor criterion: a formal rule for choosing adjustment variables
+> -   Checklist Item 5: Are the right variables being adjusted for?
+> -   Critical reading exercise: drawing and evaluating DAGs
+
+## What is a DAG?
+A Directed Acyclic Graph (DAG) is a visual representation of causal assumptions about how variables relate to one another. Each node represents a variable, and each directed edge (arrow) represents a direct causal effect. "Acyclic" means you cannot follow arrows and return to where you started — there are no feedback loops. DAGs are not statistical models: they do not encode the magnitude or functional form of causal effects. Instead, they encode qualitative causal structure — who causes whom. Importantly, missing arrows are strong claims: if there is no arrow from $A$ to $B$, the DAG asserts that $A$ does not directly cause $B$.
+
+DAGs serve three crucial purposes. First, they make causal assumptions **visible** and therefore debatable — two researchers can draw different DAGs for the same problem, and the disagreement is about causal assumptions, not statistics. Second, they provide formal **rules** (d-separation, the backdoor criterion) for determining which variables to adjust for. Third, they help researchers **communicate** and **critique** study designs. In Module 3, we said "adjust for confounders to block backdoor paths," but we left open the question of which variables are confounders, whether adjusting for the wrong variable could introduce bias, and how to communicate our assumptions transparently. DAGs answer all three questions.
+
+**Key vocabulary**: A **parent** of a node is a direct cause; a **child** is a direct effect. An **ancestor** is any node from which you can reach the target by following arrows forward; a **descendant** is any node you can reach by following arrows forward from the target. A **path** is any sequence of connected edges (regardless of arrow direction) between two nodes. A **directed path** follows arrows in their direction.
+
+## Three types of paths: chains, forks, and colliders
+Every path in a DAG is built from three elementary structures, and understanding how each behaves under conditioning is the key to knowing what to adjust for.
+
+A **chain** (or mediator path) has the form $A \to B \to C$. Here $B$ mediates the causal effect of $A$ on $C$. Without conditioning, association flows from $A$ to $C$ through $B$. Conditioning on $B$ blocks the path: once we know $B$, learning $A$ tells us nothing new about $C$. The practical implication is that you should not adjust for mediators if you want the total causal effect of $A$ on $C$.
+
+A **fork** (or confounder path) has the form $A \leftarrow B \to C$. Here $B$ is a common cause of both $A$ and $C$, creating a spurious association between them. Conditioning on $B$ blocks the path and removes the spurious association. This is exactly what we did in Module 3: adjusting for confounders to block backdoor paths.
+
+A **collider** has the form $A \to B \leftarrow C$. Here $B$ is a common effect of $A$ and $C$. Without conditioning, the path is naturally blocked — $A$ and $C$ are not associated through this path. But conditioning on $B$ **opens** the path, creating a spurious association between $A$ and $C$. This is the dangerous case: adjusting for a collider introduces bias rather than removing it. A classic example is Berkson's bias, where restricting a study to hospitalized patients (a collider of multiple diseases) creates spurious associations between unrelated conditions.
+
+**Example Setup**: Let's simulate collider bias. We generate two independent causes, Talent and Beauty, that both affect Fame (a collider). In the full population, Talent and Beauty are independent. But among famous people (conditioning on the collider), they become negatively associated.
+
+```{r}
+n <- 5000
+talent <- rnorm(n)
+beauty <- rnorm(n)
+fame <- 0.7 * talent + 0.7 * beauty + rnorm(n)
+df <- data.frame(talent, beauty, fame)
+
+# In the full population: no association
+cor(df$talent, df$beauty)
+
+# Among famous people (conditioning on collider): spurious negative association
+famous <- df[df$fame > quantile(df$fame, 0.8), ]
+cor(famous$talent, famous$beauty)
+```
+
+```{r}
+library(ggplot2)
+df$famous <- ifelse(df$fame > quantile(df$fame, 0.8), "Famous", "Not Famous")
+ggplot(df, aes(x = talent, y = beauty, color = famous)) +
+  geom_point(alpha = 0.3, size = 0.8) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 1.2) +
+  labs(title = "Collider Bias: Conditioning on Fame",
+       x = "Talent", y = "Beauty", color = "") +
+  scale_color_manual(values = c("Famous" = "#1f77b4", "Not Famous" = "#d62728")) +
+  theme_minimal()
+```
+
+In the full population, the correlation between Talent and Beauty is approximately zero — they are independent, as we generated them to be. But among famous people (those in the top 20% of Fame), the correlation becomes notably negative. This is collider bias in action: among the famous, if someone is not particularly talented, they are likely to be beautiful (and vice versa), because at least one of the two was needed to achieve fame. This demonstrates why adjusting for a collider (or restricting analysis to a subgroup defined by a collider) introduces spurious associations that do not exist in the population.
+
+## D-separation
+
+Real causal models involve many variables and many paths. A path between two variables may contain multiple chains, forks, and colliders. D-separation is the formal rule that tells us whether two variables are conditionally independent given a set of variables $S$.
+
+A path between $A$ and $C$ is **blocked** by a set $S$ if the path contains either: (1) a chain or fork where the middle variable is in $S$ (we condition on it), or (2) a collider where the middle variable is not in $S$ and no descendant of the middle variable is in $S$. Two variables are **d-separated** given $S$ if every path between them is blocked. If they are d-separated, there is no conditional association (given $S$). If they are **d-connected** (not d-separated), association may flow.
+
+The power of d-separation is that it translates causal assumptions (encoded in the DAG) into statistical predictions (conditional independencies) that can, in principle, be tested against data. If the DAG predicts that $A$ and $C$ should be independent given $S$, but they are not in the data, then at least one assumption in the DAG is wrong.
+
+```{r}
+# Demonstrating d-separation with simulation
+n <- 5000
+Z <- rnorm(n)         # Common cause
+W <- 0.6 * Z + rnorm(n)   # Treatment
+M <- 0.5 * W + rnorm(n)   # Mediator
+Y <- 0.4 * M + 0.5 * Z + rnorm(n)  # Outcome
+C <- 0.3 * W + 0.3 * Y + rnorm(n)  # Collider
+
+df <- data.frame(W, Z, M, Y, C)
+
+# Marginal association between W and Y (d-connected)
+cor(df$W, df$Y)
+
+# Conditional on Z: still associated (causal path through M remains open)
+resid_W <- residuals(lm(W ~ Z, data = df))
+resid_Y <- residuals(lm(Y ~ Z, data = df))
+cor(resid_W, resid_Y)
+
+# Conditional on Z and M: now d-separated (both paths blocked)
+resid_W2 <- residuals(lm(W ~ Z + M, data = df))
+resid_Y2 <- residuals(lm(Y ~ Z + M, data = df))
+cor(resid_W2, resid_Y2)
+```
+
+In this simulation, we can verify d-separation predictions empirically. $W$ and $Y$ are marginally associated (both the causal path through $M$ and the backdoor path through $Z$ are open). Conditioning on $Z$ alone blocks the backdoor path but leaves the causal path through $M$ open, so $W$ and $Y$ remain associated — this is correct and expected, since we want the causal effect to flow. Conditioning on both $Z$ and $M$ blocks all paths, and the residual correlation drops to approximately zero, confirming d-separation.
+
+## The backdoor criterion
+
+The backdoor criterion is the central tool for deciding what to adjust for when estimating causal effects from observational data. Given a DAG, a set of variables $S$ satisfies the backdoor criterion relative to treatment $W$ and outcome $Y$ if: (1) no variable in $S$ is a descendant of $W$, and (2) $S$ blocks every backdoor path from $W$ to $Y$.
+
+If $S$ satisfies the backdoor criterion, then the Average Treatment Effect is identified through the adjustment formula:
+
+$$
+\text{ATE} = \sum_s \Big\{ E[Y \mid W = 1, S = s] - E[Y \mid W = 0, S = s] \Big\} \Pr(S = s)
+$$
+
+This is the same adjustment formula from Module 3, but now we have a principled, graph-based method for choosing $S$ rather than relying on informal reasoning about confounders.
+
+The backdoor criterion protects against the three common adjustment mistakes: (1) failing to adjust for a confounder (leaves backdoor paths open), (2) adjusting for a mediator (blocks causal paths, underestimates the effect), and (3) adjusting for a collider (opens spurious paths, introduces new bias). Multiple valid adjustment sets may exist for a given DAG — the criterion tells you which sets are valid, not that there is only one correct answer.
+
+```{r}
+# Demonstrating the backdoor criterion
+n <- 5000
+Z <- rnorm(n)                          # Confounder
+W <- 0.5 * Z + rnorm(n)               # Treatment
+M <- 0.8 * W + rnorm(n)               # Mediator
+Y <- 0.6 * M + 0.4 * Z + rnorm(n)    # Outcome (true total effect of W = 0.8 * 0.6 = 0.48)
+
+df <- data.frame(Z, W, M, Y)
+
+# Naive (biased): confounding through Z
+naive <- lm(Y ~ W, data = df)
+summary(naive)$coefficients["W", "Estimate"]
+
+# Correct: adjust for Z only (backdoor criterion satisfied)
+correct <- lm(Y ~ W + Z, data = df)
+summary(correct)$coefficients["W", "Estimate"]
+
+# Wrong: adjust for mediator M (blocks causal path)
+wrong <- lm(Y ~ W + Z + M, data = df)
+summary(wrong)$coefficients["W", "Estimate"]
+```
+
+```{r}
+estimates <- data.frame(
+  Model = c("Naive\n(no adjustment)", "Correct\n(adjust for Z)", "Wrong\n(adjust for Z + M)"),
+  Estimate = c(
+    summary(naive)$coefficients["W", "Estimate"],
+    summary(correct)$coefficients["W", "Estimate"],
+    summary(wrong)$coefficients["W", "Estimate"]
+  )
+)
+estimates$Model <- factor(estimates$Model,
+  levels = c("Naive\n(no adjustment)", "Correct\n(adjust for Z)", "Wrong\n(adjust for Z + M)"))
+
+ggplot(estimates, aes(x = Model, y = Estimate, fill = Model)) +
+  geom_col(width = 0.5) +
+  geom_hline(yintercept = 0.48, linetype = 2) +
+  annotate("text", x = 3.4, y = 0.50, label = "True total effect (0.48)") +
+  labs(title = "Backdoor Criterion: Correct vs Incorrect Adjustment",
+       y = "Estimated Effect of W on Y", x = "") +
+  scale_fill_manual(values = c("#d62728", "#2ca02c", "#ff7f0e")) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+The naive model overestimates the effect because it ignores confounding through $Z$. The correct model adjusts for $Z$ only (satisfying the backdoor criterion) and recovers an estimate close to the true total effect of 0.48. The third model adjusts for both $Z$ and the mediator $M$, which blocks the causal pathway and yields an estimate near zero — dramatically underestimating the true effect. This illustrates why "adjust for everything" is not a safe strategy: the backdoor criterion tells us precisely which variables to include and which to leave out.
+
+## Checklist Item 5: Are the right variables being adjusted for?
+
+The fifth item on our Causal Credibility Checklist asks whether the study's adjustment strategy is correct given the plausible causal structure. This item works hand-in-hand with Item 4 (could confounding explain the result?). Where Item 4 asks whether confounding is a concern, Item 5 asks whether the adjustment strategy actually addresses it correctly.
+
+To apply this item, start by drawing a plausible DAG for the study. Then check: does the set of variables the authors adjusted for satisfy the backdoor criterion? Are any mediators being adjusted for (which would block causal paths and underestimate the effect)? Are any colliders or their descendants being adjusted for (which would open spurious paths)? Are any confounders left unadjusted (which would leave backdoor paths open)?
+
+A common red flag is when authors report adjusting for a long list of covariates without justification from a causal model. Without a DAG, "we adjusted for everything available" sounds rigorous, but it may include mediators or colliders that introduce bias. The DAG provides the discipline to evaluate whether the adjustment strategy is scientifically justified.
