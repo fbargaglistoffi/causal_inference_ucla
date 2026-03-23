@@ -1,74 +1,97 @@
-# Other Common Pitfalls of Causal Analyses
+# Other Common Pitfalls and How to Identify Them
 
 > ## Class materials
 >
-> Slides: [**Module 7**](https://your-slide-link.com)
->
-> Recording: [**Module 7, Part 1**](https://your-recording-link.com)
->
-> Recording: [**Module 7, Part 2**](https://your-recording-link.com)
+> Slides: [**Module 7**](https://drive.google.com/drive/folders/14Iymvk2FlZqVsWrtbDLmwSzR5aNS-Mcg?usp=sharing)
 
 > ## Textbook reading
 >
-> [**Hernán & Robins, Causal Inference: What If – Chapter 9**](https://static1.squarespace.com/static/675db8b0dd37046447128f5f/t/677676888e31cc50c2c33877/1735816881944/hernanrobins_WhatIf_2jan25.pdf)
+> [**Hernán & Robins, Causal Inference: What If – Chapters 8, 12**](https://static1.squarespace.com/static/675db8b0dd37046447128f5f/t/677676888e31cc50c2c33877/1735816881944/hernanrobins_WhatIf_2jan25.pdf)
 
 > ## Supplementary reading
 >
-> **ADD RELEVANT READING**  
-> Examples of misclassification and selection bias in public health research
+> [**Hernán MA, Hernández-Díaz S, Robins JM. (2004). A Structural Approach to Selection Bias. Epidemiology, 15(5), 615–625.**](https://doi.org/10.1097/01.ede.0000135174.63482.43)\
+> [**Lévesque LE, Hanley JA, Kezouh A, Suissa S. (2010). Problem of Immortal Time Bias in Cohort Studies: Example Using Statins and Cancer. BMJ, 340, b5087.**](https://doi.org/10.1136/bmj.b5087)
 
 > ## Topics covered
 >
-> -   Measurement bias
-> -   Non-compliance
+> -   Measurement error: non-differential and differential measurement bias
+> -   Selection bias and its connection to DAGs (colliders)
+> -   Non-compliance: assigned vs. received treatment
+> -   Competing risks and immortal time bias
+> -   Ecological fallacy and reverse causation
 > -   Non-causal diagrams
 > -   Publication bias and p-hacking
 > -   Over- and mis-interpretation of statistical analyses
-> -   Application: developing a checklist for critical reading of causal claims
+> -   The complete Causal Credibility Checklist
 
-## Measurement Bias
+## Measurement Error
 
-Measurement bias occurs when the method used to collect data leads to systematic errors in the values recorded for a variable. This can happen when an exposure, outcome, or confounder is misclassified or inaccurately measured in a way that consistently overstates or understates the true value. Measurement bias is problematic because it can distort observed associations and lead to incorrect conclusions about the relationships between variables. Unlike random measurement error, which tends to cancel out over large samples, measurement bias introduces consistent errors that don’t disappear with more data. It can arise from faulty instruments, poorly worded survey questions, or inconsistent data collection procedures, and it often goes unnoticed unless explicitly tested for.
+Measurement error occurs when the recorded or observed value of a variable differs from its true value. Even with the best intentions, measurements are rarely perfect. There are two main types of measurement error:
+
+**Non-differential measurement error** is random and does not depend on other variables in the analysis. The measurement error is equally likely to push the recorded value up or down, independent of the true treatment status or outcome. In causal inference, non-differential measurement error in the **treatment** typically attenuates (biases toward zero) the estimated causal effect, making true effects appear smaller than they actually are. The amount of attenuation depends on the ratio of true variance to total variance (true plus error) — a relationship known as the "reliability ratio."
+
+**Differential measurement error** depends on other variables — for example, the error might be larger for treated individuals or for those with higher outcomes. Differential measurement error can bias results in any direction, making it particularly dangerous because we cannot easily predict the direction of bias.
+
+### R Simulation: Non-differential Measurement Error in Treatment
+
+Let's simulate a simple example where true treatment has a causal effect of 2 units on the outcome, but the treatment is measured with random error:
+
+```{r}
+set.seed(42)
+n <- 5000
+# True treatment (continuous: e.g., physical activity level in hours/week)
+W_true <- rnorm(n, mean = 5, sd = 2)
+Y <- 3 + 2 * W_true + rnorm(n, sd = 3)  # True effect of W on Y is 2
+
+# Non-differential measurement error in treatment
+W_measured <- W_true + rnorm(n, sd = 2)  # Noisy measurement
+
+# Regression with true vs measured treatment
+model_true <- lm(Y ~ W_true)
+model_measured <- lm(Y ~ W_measured)
+
+cat("Effect with true treatment:", round(coef(model_true)["W_true"], 3), "\n")
+cat("Effect with measured treatment:", round(coef(model_measured)["W_measured"], 3), "\n")
+cat("True effect: 2\n")
+cat("Attenuation factor:", round(coef(model_measured)["W_measured"] / coef(model_true)["W_true"], 3), "\n")
+```
+
+**What we learn:** Non-differential measurement error in the treatment attenuates the estimated effect toward zero. The measured treatment shows an effect estimate noticeably smaller than 2 (typically around 1.1–1.2). The attenuation factor reflects how much "signal" is lost in the noisy measurement: the ratio of true variance to total variance (true variance plus error variance). In this example, the measurement error standard deviation is 2, while the true treatment standard deviation is 2, so the reliability is approximately 0.5, and we expect the effect estimate to be reduced by roughly half.
+
+### Measurement Bias: The Smoking and Lung Cancer Example
+
+Measurement bias occurs when the method used to collect data leads to systematic errors in the values recorded for a variable. This can happen when an exposure, outcome, or confounder is misclassified or inaccurately measured in a way that consistently overstates or understates the true value. Measurement bias is problematic because it can distort observed associations and lead to incorrect conclusions about the relationships between variables. Unlike random measurement error, which tends to cancel out over large samples, measurement bias introduces consistent errors that don't disappear with more data. It can arise from faulty instruments, poorly worded survey questions, or inconsistent data collection procedures, and it often goes unnoticed unless explicitly tested for.
 
 In public health and medical research, measurement bias can affect both exposure and outcome variables. For example, if smoking behavior is self-reported and individuals tend to underreport how much they smoke, the study will underestimate the true relationship between smoking and lung cancer. Similarly, if age is recorded in broad categories rather than precise years, it can limit the ability to adjust accurately for confounding. Even adjusting for confounders may not correct measurement bias if those confounders are also measured with error. This makes it critical to use reliable, validated measurement tools and to account for potential misclassification during analysis, especially in observational studies where data quality may vary widely.
 
-This simulation demonstrates measurement bias by comparing the estimated effect of smoking on lung cancer using the true smoking values versus mismeasured (underreported) smoking. The model using mismeasured smoking underestimates the true effect, showing how systematic error in recording an exposure can bias causal estimates toward zero.
+This simulation demonstrates measurement bias by comparing the estimated effect of smoking on lung cancer using the true smoking values versus mismeasured (underreported) smoking. The model using mismeasured smoking underestimates the true effect, showing how systematic error in recording an exposure can bias causal estimates toward zero:
 
 ```{r}
-
+set.seed(42)
 n <- 2000
-
 age <- rnorm(n, mean = 50, sd = 10)
-
 true_smoking <- 2 * age + rnorm(n)
-
 # no age to isolate measurement bias in smoking
 lung_cancer <- 3 * true_smoking + rnorm(n)
-
 measured_smoking <- true_smoking - rnorm(n, mean = 1, sd = 0.5)
-
 true_model <- lm(lung_cancer ~ true_smoking + age)
-
 biased_model <- lm(lung_cancer ~ measured_smoking + age)
-
 true_coef <- summary(true_model)$coefficients["true_smoking", "Estimate"]
-
 biased_coef <- summary(biased_model)$coefficients["measured_smoking", "Estimate"]
-
 true_coef
-
 biased_coef
-
 ```
 
-We can capture measurement bias in DAGs as well by denoting the measured exposure variable as $W^*$. In the example below, the measured treatment $W^*$ is affected both by confounders and the exposure variable $W$. 
+We can capture measurement bias in DAGs as well by denoting the measured exposure variable as W*. In the example below, the measured treatment W* is affected both by confounders and the exposure variable W:
 
-```{r, echo = FALSE}
+```{r}
+library(bnlearn)
+library(igraph)
+set.seed(42)
 
 dag <- model2network("[W][Y|W][W*|W:U][U]")
-
 g <- as.igraph(dag)
-
 plot(
   g,
   layout = layout_as_tree(g, root = "W*"),
@@ -76,35 +99,125 @@ plot(
   vertex.label.color = "black",
   edge.arrow.size = 1
 )
-
 ```
 
-## Non-compliance
+## Measurement Error in Confounders
 
-So far we have assumed that the examples with randomized experiments that we have covered went as intended. In real experiments, sometimes participants might not comply with the treatment they are assigned to. For example, if our example is about the effect of a heart transplant on 5-year mortality, some patients might not undergo surgery even if they were assigned the surgery.
+Measurement error in **confounders** creates a different problem. Even if we adjust for a confounder, if that confounder is measured with error, we cannot perfectly remove its confounding effect. The result is **residual confounding** — some bias remains even after adjustment.
 
-To account for the potential mismatch between the treatment assigned and the treatment received for a patient in DAG notation, we use two variables. $Z$ represents the assigned treatment, and $W$ represents the received treatment. This is different from how we denote measurement bias because $Z$ can have a causal effect on $Y$.
+### R Simulation: Residual Confounding from Imperfect Confounder Measurement
 
-```{r, echo = FALSE}
+```{r}
+set.seed(42)
+n <- 5000
+X_true <- rnorm(n)  # True confounder
+W <- 0.5 * X_true + rnorm(n)  # Treatment depends on confounder
+Y <- 3 * W + 2 * X_true + rnorm(n)  # True effect of W is 3, confounding effect is 2
+
+# Measure confounder with error
+X_measured <- X_true + rnorm(n, sd = 1.5)
+
+# Adjust for true vs measured confounder
+model_true_adj <- lm(Y ~ W + X_true)
+model_meas_adj <- lm(Y ~ W + X_measured)
+model_unadj <- lm(Y ~ W)
+
+cat("Unadjusted estimate:", round(coef(model_unadj)["W"], 3), "\n")
+cat("Adjusted (true confounder):", round(coef(model_true_adj)["W"], 3), "\n")
+cat("Adjusted (measured confounder):", round(coef(model_meas_adj)["W"], 3), "\n")
+cat("True effect: 3\n")
+```
+
+**What we learn:** Adjusting for the true confounder removes confounding bias and gives an estimate very close to the true effect of 3. Adjusting for the measured (noisy) confounder reduces bias compared to the unadjusted estimate but does not remove it entirely — the estimate falls somewhere between the fully biased (unadjusted) and fully corrected (true confounder) values. This demonstrates a major practical challenge in observational studies: confounders are almost always measured with some degree of imprecision (questionnaire responses, proxy measures, historical records), and this imprecision leaves residual confounding. Understanding this limitation helps explain why observational estimates often differ from randomized trials.
+
+## Selection Bias
+
+Selection bias occurs when the process of selecting participants into the study depends on both treatment and outcome (or on causes of both). In the language of directed acyclic graphs (DAGs), selection bias arises from conditioning on a **collider** — a variable that is caused by two other variables in the causal graph.
+
+A collider is a variable that has arrows from two different causes pointing into it. When we condition on a collider (by restricting analysis to a selected sample), we create a spurious association between those two causes, even if they are independent in the full population. This is one of the most insidious sources of bias because it can create associations where none exist.
+
+### R Simulation: Spurious Association from Selection on a Collider
+
+In this example, treatment W and outcome Y are completely independent in the source population. However, selection into the study depends on both W and Y, creating a spurious negative association:
+
+```{r}
+set.seed(42)
+n <- 10000
+# In the population: W and Y are independent!
+W <- rbinom(n, 1, 0.5)
+Y <- rnorm(n, mean = 50, sd = 10)
+
+# Selection into study depends on both W and Y
+# More likely to be in study if treated OR if outcome is high
+selection_prob <- plogis(-2 + 1.0 * W + 0.05 * Y)
+selected <- rbinom(n, 1, selection_prob)
+
+df_pop <- data.frame(W, Y)
+df_study <- df_pop[selected == 1, ]
+
+# In the full population: no association
+cat("Population estimate (true):",
+    round(mean(df_pop$Y[df_pop$W == 1]) - mean(df_pop$Y[df_pop$W == 0]), 2), "\n")
+# In the selected sample: spurious association
+cat("Study sample estimate (biased):",
+    round(mean(df_study$Y[df_study$W == 1]) - mean(df_study$Y[df_study$W == 0]), 2), "\n")
+cat("Study sample size:", nrow(df_study), "out of", n, "\n")
+```
+
+Now let's visualize the difference:
+
+```{r}
+library(ggplot2)
+plot_df <- rbind(
+  data.frame(W = factor(df_pop$W), Y = df_pop$Y, Sample = "Population"),
+  data.frame(W = factor(df_study$W), Y = df_study$Y, Sample = "Study Sample")
+)
+ggplot(plot_df, aes(x = W, y = Y, fill = W)) +
+  geom_boxplot(alpha = 0.7) +
+  facet_wrap(~Sample) +
+  scale_fill_manual(values = c("0" = "#d62728", "1" = "#1f77b4"),
+                    labels = c("Control", "Treated")) +
+  labs(title = "Selection Bias: Spurious Association in Selected Sample",
+       subtitle = "W and Y are independent in the population",
+       x = "Treatment", y = "Outcome") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+**What we learn:** In the full population, treatment and outcome are completely independent — the true effect is zero. However, when selection into the study depends on both treatment and outcome, analyzing only the selected sample creates a spurious negative association. This occurs because the sample selection mechanism created a collider: those who are treated were "allowed in" to the study even without high outcomes, while untreated individuals needed high outcomes to be selected. This negative correlation is purely a feature of the selection process, not a true causal effect.
+
+Selection bias is particularly concerning in:
+- Studies with low response rates (who refuses to participate?)
+- Analyses restricted to a subset with available data (missing data mechanisms)
+- Hospital-based studies (which patients are hospitalized?)
+- Occupational cohort studies (who stays employed in the occupation?)
+
+Identifying selection bias requires understanding the selection mechanism and checking whether it depends on both exposure and outcome.
+
+## Non-Compliance
+
+In randomized experiments, we assume that participants receive the treatment they are assigned to. However, in real experiments, sometimes participants might not comply with the treatment they are assigned to. For example, if our example is about the effect of a heart transplant on 5-year mortality, some patients might not undergo surgery even if they were assigned to the surgery group.
+
+This is a threat to validity specific to randomized controlled trials (discussed in Module 2). To account for the potential mismatch between the treatment assigned and the treatment received for a patient in DAG notation, we use two variables. Z represents the assigned treatment, and W represents the received treatment. This is different from how we denote measurement bias because Z can have a causal effect on Y.
+
+```{r}
+library(bnlearn)
+library(igraph)
+set.seed(42)
 
 dag <- model2network("[Z][U][W|Z:U][Y|W:Z:U]")
-
 g <- as.igraph(dag)
-
 lay <- rbind(
   Z = c(-1.1,  0.6),
   W = c( 0.0,  0.6),
   Y = c( 1.2,  0.6),
   U = c(-1.2, -0.6)
 )[V(g)$name, , drop = FALSE]
-
 lay <- lay * 0.7
-
 edge_names <- apply(ends(g, E(g), names = TRUE), 1, paste, collapse = "->")
 curv <- rep(0, ecount(g))
 curv[edge_names == "Z->Y"] <- 0.65
 curv[edge_names == "U->Y"] <- -0.15
-
 plot(
   g,
   layout = lay,
@@ -113,11 +226,115 @@ plot(
   edge.arrow.size = 1,
   edge.curved = curv,
   asp = 0,
-  xlim = c(-1.5, 1.5),   
+  xlim = c(-1.5, 1.5),
   ylim = c(-1.5, 1.5)
 )
-
 ```
+
+## Immortal Time Bias
+
+Immortal time bias is a specific type of time-based selection bias that occurs in cohort studies where treatment status is determined after enrollment. The "immortal time" is a period during which the outcome (usually death or another event) cannot occur by definition — because an individual must survive or remain follow-up-eligible to be classified as "treated." Including this immortal time in the analysis artificially inflates the follow-up time in the treated group, biasing results in favor of the treatment even if there is no true effect.
+
+Classic examples include:
+- Studies of "Oscar winners" where individuals must be alive to win an Oscar
+- Cohort studies of drug users where treatment is defined by use during follow-up
+- Analyses of occupational exposures where workers must remain employed to be "exposed"
+
+### R Simulation: Immortal Time Bias in a Survival Study
+
+```{r}
+set.seed(42)
+n <- 2000
+
+# Simulate survival times (exponential, no true treatment effect)
+true_survival <- rexp(n, rate = 0.1)  # Mean survival = 10 years
+
+# Time to receiving "treatment" (e.g., starting a drug, winning an award)
+time_to_treatment <- rexp(n, rate = 0.2)  # Mean = 5 years
+
+# Who actually gets treated? Only those who survive long enough
+treated <- true_survival > time_to_treatment
+cat("Proportion treated:", round(mean(treated), 3), "\n")
+
+# BIASED analysis: Compare survival of treated vs untreated
+# (includes immortal time for treated group)
+cat("\n=== Biased analysis (includes immortal time) ===\n")
+cat("Mean survival, treated:", round(mean(true_survival[treated]), 2), "years\n")
+cat("Mean survival, untreated:", round(mean(true_survival[!treated]), 2), "years\n")
+cat("Difference:", round(mean(true_survival[treated]) - mean(true_survival[!treated]), 2), "years\n")
+
+# CORRECT analysis: Count survival from time of treatment
+survival_from_treatment <- true_survival[treated] - time_to_treatment[treated]
+cat("\n=== Correct analysis (from treatment time) ===\n")
+cat("Mean survival from treatment:", round(mean(survival_from_treatment), 2), "years\n")
+cat("Expected if no effect: ~10 years (memoryless property)\n")
+```
+
+**What we learn:** Even though treatment has no true effect on survival, the biased analysis shows treated individuals living substantially longer on average. This is because the classification of "treated" itself requires survival — you can only "receive treatment" (or "win an Oscar") if you survive long enough. The time before treatment is "immortal time" where death is impossible by definition. The correct approach counts follow-up time and events only from the moment of treatment onward. This bias has appeared in prominent published studies and demonstrates why careful attention to the timeline is critical in observational studies.
+
+## Ecological Fallacy
+
+The ecological fallacy is the error of inferring individual-level causal relationships from group-level (aggregate) data. Just because two variables are correlated at the group level does not mean they are causally related at the individual level. Group-level correlations often arise from confounding variables that operate at the group level rather than from direct individual-level effects.
+
+A famous (humorous) example is Messerli (2012), which found a strong correlation between chocolate consumption and Nobel Prize winners across countries. The ecological fallacy here is obvious: eating chocolate does not make individuals win Nobel Prizes. Instead, both chocolate consumption and Nobel achievements are driven by overall national wealth and development.
+
+### R Simulation: Group-Level Correlation Without Individual-Level Effect
+
+```{r}
+set.seed(42)
+n_countries <- 30
+n_per_country <- 200
+
+# Country-level wealth (the true driver)
+country_wealth <- rnorm(n_countries, mean = 50, sd = 15)
+
+# Individual-level data
+country_id <- rep(1:n_countries, each = n_per_country)
+wealth <- rep(country_wealth, each = n_per_country)
+
+# Chocolate consumption: driven by country wealth + individual noise
+chocolate <- 0.3 * wealth + rnorm(n_countries * n_per_country, sd = 10)
+
+# Nobel-like achievement: driven by country wealth + individual noise
+# NO direct effect of chocolate
+achievement <- 0.2 * wealth + rnorm(n_countries * n_per_country, sd = 8)
+
+# Individual-level: controlling for wealth, no chocolate-achievement link
+model_individual <- lm(achievement ~ chocolate + wealth)
+cat("Individual-level effect of chocolate (adjusted):",
+    round(coef(model_individual)["chocolate"], 4), "\n")
+
+# Country-level aggregation
+country_df <- data.frame(
+  chocolate = tapply(chocolate, country_id, mean),
+  achievement = tapply(achievement, country_id, mean)
+)
+model_ecological <- lm(achievement ~ chocolate, data = country_df)
+cat("Ecological (country-level) effect of chocolate:",
+    round(coef(model_ecological)["chocolate"], 4), "\n")
+```
+
+Now let's visualize the ecological fallacy:
+
+```{r}
+library(ggplot2)
+ggplot(country_df, aes(x = chocolate, y = achievement)) +
+  geom_point(color = "#1f77b4", size = 3) +
+  geom_smooth(method = "lm", se = TRUE, color = "#d62728") +
+  labs(title = "Ecological Fallacy: Country-Level Correlation",
+       subtitle = "No individual-level effect exists — country wealth drives both variables",
+       x = "Average Chocolate Consumption", y = "Average Achievement Score") +
+  theme_minimal()
+```
+
+**What we learn:** At the individual level, chocolate consumption has essentially zero effect on achievement even before controlling for wealth — and the effect remains near zero after adjusting for wealth. But at the country level, there is a clear positive correlation between average chocolate consumption and average achievement. This group-level association arises entirely from country wealth, which influences both variables. Interpreting the country-level association as an individual-level causal effect would be the ecological fallacy.
+
+Ecological fallacies commonly occur in:
+- Policy analyses based on cross-sectional country or region comparisons
+- Studies using aggregate census or administrative data
+- Marketing or epidemiological analyses based on geographic variation
+
+The lesson is: **group-level associations do not imply individual-level causal effects**. To make individual-level causal inferences, we need individual-level data and adjustment for relevant confounders.
 
 ## Non-Causal Diagrams
 
@@ -127,12 +344,59 @@ In the context of our simulation, we can use a non-causal diagram to represent t
 
 ## Publication Bias and P-Hacking
 
-Publication bias occurs when the likelihood of a study being published depends on the nature or direction of its results — typically favoring studies with statistically significant or “positive” findings. This creates a distorted picture of the evidence in a field, because null or contradictory results are less likely to be seen. P-hacking refers to the practice of manipulating statistical analyses or data collection until a desired (usually statistically significant) result is achieved. This can include selectively reporting outcomes, running many analyses and only publishing those with low p-values, or stopping data collection once a significant result appears. Both practices inflate false-positive rates and undermine the credibility of scientific findings.
+Publication bias occurs when the likelihood of a study being published depends on the nature or direction of its results — typically favoring studies with statistically significant or "positive" findings. This creates a distorted picture of the evidence in a field, because null or contradictory results are less likely to be seen. P-hacking refers to the practice of manipulating statistical analyses or data collection until a desired (usually statistically significant) result is achieved. This can include selectively reporting outcomes, running many analyses and only publishing those with low p-values, or stopping data collection once a significant result appears. Both practices inflate false-positive rates and undermine the credibility of scientific findings.
 
-In the context of the simulation we ran — whether it involves confounding, selection bias, or measurement error — it’s easy to see how p-hacking or publication bias could skew interpretations. For example, imagine rerunning the simulation many times and only reporting the version where the naive model shows a significant effect of smoking on lung cancer (even if the underlying data or causal structure doesn’t support it). Or selectively reporting only the adjusted model that produces a "clean" result while hiding others. These practices can make even a carefully designed simulation appear misleading. The simulation reinforces the idea that statistical significance is not the same as truth, and that transparency in modeling choices and full reporting of results are critical for avoiding biased conclusions.
+In the context of the simulations we have run — whether they involve confounding, selection bias, or measurement error — it's easy to see how p-hacking or publication bias could skew interpretations. For example, imagine rerunning the simulation many times and only reporting the version where the naive model shows a significant effect of smoking on lung cancer (even if the underlying data or causal structure doesn't support it). Or selectively reporting only the adjusted model that produces a "clean" result while hiding others. These practices can make even a carefully designed simulation appear misleading. The simulations reinforce the idea that statistical significance is not the same as truth, and that transparency in modeling choices and full reporting of results are critical for avoiding biased conclusions.
 
 ## Over- and Mis-Interpretation of Statistical Analyses
 
 Over-interpretation occurs when researchers draw stronger conclusions from statistical results than the data can justify, while mis-interpretation involves misunderstanding what the results actually mean. A common example is interpreting a statistically significant association as proof of causation, even when the study design or model does not support that claim. Another frequent error is overstating the practical importance of a small effect size or assuming that a non-significant result means "no effect." These issues are often driven by pressure to produce definitive conclusions, even when the data are limited, noisy, or confounded. Careful interpretation requires understanding the limits of the methods used and being transparent about uncertainty, assumptions, and alternative explanations.
 
-In the simulations we've conducted — such as estimating the effect of smoking on lung cancer under different types of bias — it's easy to see how results can be over- or mis-interpreted. For instance, in a model affected by measurement bias or confounding, one might find a statistically significant association between smoking and lung cancer, but incorrectly conclude that the estimated effect size reflects the true causal effect. Alternatively, if the biased model appears significant and the true model does not, someone might misinterpret that as evidence that adjustment "eliminated" the effect, when in fact it corrected for bias. These examples highlight how even simple models can be misunderstood or overstated, and underscore the importance of grounding interpretation in study design, data limitations, and causal reasoning — not just statistical output.
+In the simulations we have conducted — such as estimating the effect of smoking on lung cancer under different types of bias — it's easy to see how results can be over- or mis-interpreted. For instance, in a model affected by measurement bias or confounding, one might find a statistically significant association between smoking and lung cancer, but incorrectly conclude that the estimated effect size reflects the true causal effect. Alternatively, if the biased model appears significant and the true model does not, someone might misinterpret that as evidence that adjustment "eliminated" the effect, when in fact it corrected for bias. These examples highlight how even simple models can be misunderstood or overstated, and underscore the importance of grounding interpretation in study design, data limitations, and causal reasoning — not just statistical output.
+
+## The Complete Causal Credibility Checklist
+
+Throughout this course, we have developed a seven-item framework for evaluating the credibility of causal claims made from observational data. This checklist provides a systematic approach to identifying potential sources of bias and assessing whether a study design and analysis have adequately addressed major threats to causal inference.
+
+### Item 1: Is the causal question well-defined?
+
+A well-defined causal question clearly specifies the treatment, comparison, outcome, and population. Vague questions like "Does X cause Y?" are not sufficient. Instead, define: What is the specific treatment or intervention? Who is it being compared to? What is the outcome of interest? In what population? (Module 1) Without a clear causal question, the analysis lacks focus and interpretation becomes ambiguous.
+
+### Item 2: Is there a valid comparison group?
+
+A valid comparison group is essential for identifying causal effects. The comparison group must represent what would have happened in the same individuals had they not received the treatment (the counterfactual). Randomization automatically provides a valid comparison group, but in observational studies, we must carefully construct comparisons and document whether they are reasonable. (Module 2)
+
+### Item 3: Was the assignment mechanism understood?
+
+Understanding how and why individuals came to receive treatment is fundamental to designing analysis. In randomized trials, the assignment mechanism is controlled (random). In observational studies, the assignment mechanism reflects real-world decision-making and must be carefully documented. What factors determined who received treatment and who did not? Could the assignment depend on unobserved factors predictive of the outcome? (Module 2)
+
+### Item 4: Could confounding explain the result?
+
+Confounding occurs when a variable affects both treatment assignment and the outcome, creating a spurious association. Drawing a causal DAG helps identify potential confounders. Ask: what variables could create an association between exposure and outcome even if there is no causal effect? Have all important confounders been measured and adjusted for? (Module 3)
+
+### Item 5: Are the right variables being adjusted for?
+
+Not all variables should be adjusted for — adjusting for colliders, mediators, or post-treatment variables can introduce bias rather than remove it. We must distinguish between confounders (adjust for), mediators (do not adjust for if estimating total effect), colliders (do not adjust for), and noise (adjusting does not hurt). The causal DAG guides this decision. (Module 4)
+
+### Item 6: Could the effect differ across subgroups?
+
+Treatment effects are often heterogeneous — they may be larger, smaller, or even opposite sign in different subgroups defined by age, sex, baseline risk, disease severity, or other characteristics. Estimates that pool across subgroups may mask important variation. Exploratory subgroup analyses and sensitivity analyses help identify whether the estimated effect is stable across the population. (Module 6)
+
+### Item 7: Are there other sources of bias?
+
+Even after addressing confounding, validity concerns remain. Measurement error attenuates effects and creates residual confounding if confounders are mismeasured. Selection bias arises from conditioning on colliders or selective sample inclusion. Immortal time bias inflates treatment benefit in cohort studies with time-dependent treatment assignment. Ecological fallacies occur when group-level data are used to make individual-level inferences. Reverse causation can create spurious associations if the outcome influences treatment assignment. Each of these represents a distinct threat to validity. (Module 7)
+
+## Summary: Systematic Evaluation of Causal Claims
+
+No single observational study will perfectly satisfy all seven items in the causal credibility checklist. Real-world studies involve compromises, practical constraints, and acknowledged limitations. However, the checklist provides a systematic framework for evaluating the credibility of causal claims.
+
+A strong causal claim rests on:
+1. A **clearly articulated question** about a specific treatment, outcome, and population
+2. A **credible comparison group** that represents a realistic counterfactual
+3. An **understood assignment mechanism** that documents how treatment was assigned
+4. **Minimal residual confounding** achieved through causal reasoning and thoughtful adjustment
+5. **Appropriate adjustment** that follows causal logic rather than statistical tradition
+6. **Stable effects** across subgroups and sensitivity analyses
+7. **Recognition and minimization of other biases** including measurement error, selection bias, and time-based biases
+
+When evaluating published studies or designing your own research, work through each item. Document your reasoning. Acknowledge limitations honestly. Conduct sensitivity analyses to assess robustness. Triangulate across multiple study designs if possible. The goal is not perfection but transparency and credibility in causal inference.
