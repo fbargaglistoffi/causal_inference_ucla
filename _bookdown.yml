@@ -14,6 +14,7 @@ rmd_files:
   - 05_identification_estimation.Rmd
   - 06_effect_modification.Rmd
   - 07_common_pitfalls.Rmd
+  - causal_credibility_checklist.Rmd
 
 language:
   ui:
