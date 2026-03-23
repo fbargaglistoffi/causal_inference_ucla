@@ -12,6 +12,7 @@ rmd_files:
   - 03_observational_studies.Rmd
   - 04_dags.Rmd
   - 05_identification_estimation.Rmd
+  - 06_effect_modification.Rmd
 
 language:
   ui:

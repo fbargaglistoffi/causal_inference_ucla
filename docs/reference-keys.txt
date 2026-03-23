@@ -62,3 +62,17 @@ matching
 the-propensity-score
 inverse-probability-weighting-ipw
 comparing-methods-and-choosing-the-right-approach
+effect-modification-and-interaction
+effect-modification-and-the-cate
+simulation-effect-modification-masks-opposite-subgroup-effects
+visualizing-the-effect-modification
+additive-vs-multiplicative-interaction
+simulation-multiplicative-model-but-additive-interaction
+subgroup-analysis-pitfalls-and-best-practices
+simulation-the-significance-fallacy
+best-practices-for-subgroup-analysis
+heterogeneous-treatment-effects-with-causal-forests
+simulation-estimating-cates-with-causal-forests
+visualizing-estimated-vs-true-cate
+the-table-2-fallacy
+checklist-item-6-could-the-effect-differ-across-subgroups

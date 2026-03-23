@@ -96,4 +96,4 @@ This course will make use of:
 
 ## Acknowledgments {-}
 
-Special thanks to Charlie Wang, Shravani Chiddarwar and Kevin Ngo for their invaluable help in preparing this course.
+Special thanks to [Shravani Chiddarwar](https://www.linkedin.com/in/shravani-chiddarwar/), [Kevin Ngo](https://kevoinno.github.io/), and [Charlie Wang](https://www.linkedin.com/in/charliewang4615/) for their invaluable help in preparing this course.
