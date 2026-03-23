@@ -12,6 +12,7 @@ rmd_files:
   - 02_rcts.Rmd
   - 03_observational_studies.Rmd
   - 04_dags.Rmd
+  - 05_identification_estimation.Rmd
 
 language:
   ui:

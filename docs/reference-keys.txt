@@ -54,3 +54,11 @@ d-separation
 the-backdoor-criterion
 application-drawing-dags-for-public-health-scenarios
 checklist-item-5-are-the-right-variables-being-adjusted-for
+from-identification-to-estimation
+identification-vs-estimation
+stratification
+regression-adjustment-and-g-computation
+matching
+the-propensity-score
+inverse-probability-weighting-ipw
+comparing-methods-and-choosing-the-right-approach
