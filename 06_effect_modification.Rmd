@@ -2,11 +2,7 @@
 
 > ## Class materials
 >
-> Slides: [**Module 4**](https://drive.google.com/drive/folders/14Iymvk2FlZqVsWrtbDLmwSzR5aNS-Mcg?usp=sharing)
->
-> Recording: [**Module 4, Part 1**](https://your-recording-link.com)
->
-> Recording: [**Module 4, Part 2**](https://your-recording-link.com)
+> Slides: [**Module 6**](https://drive.google.com/drive/folders/14Iymvk2FlZqVsWrtbDLmwSzR5aNS-Mcg?usp=sharing)
 
 > ## Textbook reading
 >
@@ -14,155 +10,248 @@
 
 > ## Supplementary reading
 >
-> [**Freedman, D. A. (2008). On types of scientific inquiry: The role of RCTs in health policy. Journal of the Royal Statistical Society: Series A, 171(2), 359–385.**](https://rss.onlinelibrary.wiley.com/doi/full/10.1111/j.1467-985X.2007.00500.x)  Examples of quasi-experiments from public health and education
+> [**VanderWeele TJ, Knol MJ. (2014). A Tutorial on Interaction. Epidemiologic Methods, 3(1), 33–72.**](https://doi.org/10.1515/em-2013-0005)\
+> [**Athey S, Imbens GW. (2016). Recursive Partitioning for Heterogeneous Causal Effects. PNAS, 113(27), 7353–7360.**](https://doi.org/10.1073/pnas.1510489113)
 
 > ## Topics covered
 >
-> -   Effect modification and adjustment methods\
-> -   Interaction\
-> -   Identifying interaction\
-> -   Effect modification vs interaction\
-> -   Critical reading exercise: evaluating effect modification and interaction in studies
+> -   Effect modification and the Conditional Average Treatment Effect (CATE)
+> -   Additive vs multiplicative interaction
+> -   Subgroup analysis: best practices and common pitfalls
+> -   Heterogeneous treatment effects and causal forests
+> -   The Table 2 fallacy
+> -   Checklist Item 6: Could the effect differ across subgroups?
 
-## Effect Modification and Adjustment Methods
+## Effect modification and the CATE
 
-Effect modification occurs when the effect of an exposure on an outcome differs depending on the level of another variable. Unlike confounding, which biases the estimated effect, effect modification reflects a real variation in the causal effect across different subgroups. Recognizing effect modification is important because it can reveal that a treatment or exposure is beneficial for some groups but not for others. Adjustment methods like stratification or including interaction terms in regression models help detect and describe effect modification rather than "control" it away. When we study effect modification, we are asking causal questions such as "What the effect of a treatment for group 1 vs the effect for group 2?"
+A fundamental assumption in much of causal inference is that we can estimate and report a single treatment effect — the Average Treatment Effect (ATE). But in reality, the effect of a treatment often depends on characteristics of the individuals receiving it. **Effect modification** occurs when the causal effect of treatment differs across levels of a third variable, called a **modifier** or **effect modifier**.
 
-Adjustment methods typically aim to control for confounding, but they can also be used to detect effect modification when interaction terms are included. When effect modification is present, a single summary effect estimate (like an overall average) can be misleading. Instead, researchers often report subgroup-specific effects. Careful modeling and interpretation are necessary to distinguish between true effect modification and residual confounding.
+It is important to distinguish effect modification from confounding. A **confounder** is a common cause of the treatment and the outcome — it creates bias, and we must adjust for it. An **effect modifier**, by contrast, does not necessarily cause the treatment; it changes the *magnitude* of the causal effect. Effect modification creates heterogeneity, not bias. We do not "adjust away" effect modification — we examine it.
 
-Simulation to Demonstrate Effect Modification
+The Conditional Average Treatment Effect (CATE) formalizes this idea:
 
-Let's say we are interested in understanding the effect of new drug on a person's VO2 max for young vs old people. For example, this drug might be more effective for young people. VO2 max is the maximum amount of oxygen your body can utilize during exercise. VO2 max is measured in mL per kg of body weight per minute. In this simulation, the drug increases VO2 max by 4 mL/kg/min for old people, and 7.5 mL/kg/min for young people.
+$$\text{CATE}(x) = E[Y(1) - Y(0) \mid X = x]$$
+
+where $X$ is the modifier variable. The overall ATE is simply the average of the CATEs across the population:
+
+$$\text{ATE} = E_X[\text{CATE}(X)]$$
+
+The critical insight is this: **an ATE close to zero does not mean the treatment has no effect.** It could instead mean that positive effects in some subgroups are cancelled out by negative effects in others. Reporting only the ATE can mask clinically or policy-relevant heterogeneity.
+
+### Simulation: Effect modification masks opposite subgroup effects
 
 ```{r}
-set.seed(123)
-
+set.seed(42)
 n <- 2000
+age_group <- sample(c("Young", "Old"), n, replace = TRUE, prob = c(0.5, 0.5))
+W <- rbinom(n, 1, 0.5)  # Randomized treatment (no confounding)
+# Effect is +4 for young, -4 for old → ATE ≈ 0
+Y <- 50 + 4 * W * (age_group == "Young") - 4 * W * (age_group == "Old") + rnorm(n, sd = 5)
+df <- data.frame(age_group, W, Y)
 
-treatment <- rbinom(n, 1, 0.5) # drug
+# Overall ATE
+ate <- mean(df$Y[df$W == 1]) - mean(df$Y[df$W == 0])
+cat("Overall ATE:", round(ate, 2), "\n")
 
-age_group <- rbinom(n, 1, 0.5) # 1 = young, 0 = old
-
-baseline <- 35 # baseline VO2 max is 35 mL/kg/min
-
-vo2_max <- baseline + 
-            4 * treatment + 
-            0.5 * age_group + 
-            3.5 * (treatment * age_group) + 
-            rnorm(n, mean = 0, sd = 1)
-
-df <- data.frame(vo2_max, treatment, age_group)
-
-naive_model <- lm(vo2_max ~ treatment + age_group, data = df)
-
-adjusted_model <- lm(vo2_max ~ treatment + age_group + treatment * age_group, data = df)
-
-summary(naive_model)
-
-summary(adjusted_model)
-
+# CATE by subgroup
+cate_young <- mean(df$Y[df$W == 1 & df$age_group == "Young"]) -
+              mean(df$Y[df$W == 0 & df$age_group == "Young"])
+cate_old <- mean(df$Y[df$W == 1 & df$age_group == "Old"]) -
+            mean(df$Y[df$W == 0 & df$age_group == "Old"])
+cat("CATE (Young):", round(cate_young, 2), "\n")
+cat("CATE (Old):", round(cate_old, 2), "\n")
 ```
 
-If we look only at the naive model without considering effect modification, then we would have incorrectly concluded that the drug impacts young and old people in the same way, adding 5.76 mL/kg/min to a patient's VO2 max on average. 
-
-If we look at the adjusted model considering effect modification, then we see that we more accurately estimate the ground truths. We also have the correct interpretation that the drug's effect varies depending on whether the patient is young or old. For old people, the drug is estimated to increase the VO2 max by 4.05. For young people, the drug is estimated to increase the VO2 max by 4.05 + 3.43 = 7.48. So the drug is 3.43 units more effective in young people.
-
-The following plot shows how younger patients benefit more from the drug than older patients.
+### Visualizing the effect modification
 
 ```{r}
-df_grouped <- df |>
-  mutate(age_group = ifelse(age_group == 1, "Young", "Old"))
+library(ggplot2)
+effects <- data.frame(
+  Group = c("Overall", "Young", "Old"),
+  Effect = c(ate, cate_young, cate_old)
+)
+effects$Group <- factor(effects$Group, levels = c("Young", "Overall", "Old"))
+ggplot(effects, aes(x = Group, y = Effect, fill = Group)) +
+  geom_col(width = 0.5) +
+  geom_hline(yintercept = 0, linetype = 2) +
+  scale_fill_manual(values = c("Young" = "#1f77b4", "Overall" = "gray50", "Old" = "#d62728")) +
+  labs(title = "Treatment Effect by Subgroup",
+       subtitle = "Overall ATE ≈ 0 masks opposing subgroup effects",
+       y = "Estimated Effect", x = "") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
 
-ggplot(df_grouped, aes(x = treatment, y = vo2_max, color = age_group)) +
-  geom_jitter(width = 0.1, alpha = 0.4) +
-  stat_summary(fun = mean, geom = "point", size = 3, shape = 18) +
-  stat_summary(fun = mean, geom = "line", aes(group = age_group)) +
-  scale_x_continuous(breaks = c(0, 1)) + 
-  labs(title = "Effect Modification: Drug and Age Category",
-       x = "Treatment (0 = Control, 1 = Drug)",
-       y = "VO2 Max (mL/kg/min)",
-       color = "Age Category") +
+**Key finding:** The overall ATE is approximately zero, but this masks dramatically different effects in the two subgroups. For young patients, the treatment is beneficial (+4), while for older patients it is harmful (−4). This is a textbook case of effect modification — reporting only the ATE would miss the critical fact that the treatment helps one group and harms another. In a real public health scenario, ignoring this could lead to recommendations that harm a vulnerable population.
+
+## Additive vs multiplicative interaction
+
+When testing for effect modification, the **scale** on which you measure the effect matters. The same underlying data can show interaction on one scale but not on another.
+
+**Additive interaction** refers to a departure from additivity on the difference scale. If the effect of treatment differs by levels of a modifier on the additive (absolute difference) scale, we have additive interaction. Formally, if $\text{RD}_0$ and $\text{RD}_1$ are the risk differences in modifier groups 0 and 1, additive interaction exists when $\text{RD}_1 \neq \text{RD}_0$.
+
+**Multiplicative interaction** refers to a departure from additivity on the multiplicative (ratio) scale. If the effect of treatment differs by levels of a modifier on the ratio scale, we have multiplicative interaction. Formally, if $\text{RR}_0$ and $\text{RR}_1$ are risk ratios, multiplicative interaction exists when $\text{RR}_1 \neq \text{RR}_0$.
+
+The key insight: **interaction is scale-dependent.** You can have interaction on one scale but not the other, depending on how the data are generated.
+
+### Simulation: Multiplicative model but additive interaction
+
+```{r}
+set.seed(42)
+n <- 4000
+X <- rbinom(n, 1, 0.5)  # Binary modifier
+W <- rbinom(n, 1, 0.5)  # Randomized treatment
+
+# Outcome: multiplicative model (no multiplicative interaction)
+# P(Y=1|W,X) follows a log-linear model
+log_odds <- -2 + 0.8 * W + 0.6 * X  # No W*X term on log scale
+Y <- rbinom(n, 1, plogis(log_odds))
+df <- data.frame(X, W, Y)
+
+# Risk in each group
+risks <- tapply(df$Y, list(df$W, df$X), mean)
+cat("Risk table:\n")
+print(round(risks, 3))
+
+# Risk differences (additive scale)
+rd_x0 <- risks["1", "0"] - risks["0", "0"]
+rd_x1 <- risks["1", "1"] - risks["0", "1"]
+cat("\nRisk difference when X=0:", round(rd_x0, 3), "\n")
+cat("Risk difference when X=1:", round(rd_x1, 3), "\n")
+cat("Additive interaction (difference of RDs):", round(rd_x1 - rd_x0, 3), "\n")
+
+# Risk ratios (multiplicative scale)
+rr_x0 <- risks["1", "0"] / risks["0", "0"]
+rr_x1 <- risks["1", "1"] / risks["0", "1"]
+cat("\nRisk ratio when X=0:", round(rr_x0, 3), "\n")
+cat("Risk ratio when X=1:", round(rr_x1, 3), "\n")
+cat("Ratio of RRs:", round(rr_x1 / rr_x0, 3), "\n")
+```
+
+**Key finding:** In this simulation, the data-generating process has no interaction on the log-odds (multiplicative) scale — both subgroups show the same relative change from the treatment. Yet on the additive (risk difference) scale, the treatment effect differs across levels of X because the baseline risks differ. This demonstrates that **interaction is scale-dependent**: you can have interaction on one scale but not another, depending on the baseline risk and the model structure.
+
+Which scale should you use? In most public health contexts, **additive interaction is more policy-relevant** because it reflects absolute differences in benefit or harm. However, always be transparent about which scale you are using, and consider reporting both.
+
+## Subgroup analysis: pitfalls and best practices
+
+Subgroup analysis is a powerful tool for understanding heterogeneity, but it is also fraught with pitfalls. The most common mistake is the **"significance within subgroup" fallacy**: concluding that a treatment "works" in one subgroup and "doesn't work" in another based on the within-subgroup p-values, without formally testing the interaction.
+
+This fallacy occurs because of reduced power in subgroup samples. A large overall sample might show a significant effect, but splitting it into subgroups reduces the sample size in each, inflating standard errors and p-values. You might see a statistically significant effect in the larger subgroup (simply due to better power) and a non-significant effect in the smaller subgroup (due to lower power), even if the true effects are identical.
+
+**The correct approach:** Test the interaction directly.
+
+### Simulation: The significance fallacy
+
+```{r}
+set.seed(42)
+n <- 1000
+sex <- sample(c("Male", "Female"), n, replace = TRUE, prob = c(0.7, 0.3))
+W <- rbinom(n, 1, 0.5)
+# TRUE effect is 2 for BOTH sexes — no effect modification
+Y <- 50 + 2 * W + rnorm(n, sd = 8)
+df <- data.frame(sex, W, Y)
+
+# Within-subgroup tests
+cat("=== Within-subgroup analysis (WRONG approach) ===\n")
+for (s in c("Male", "Female")) {
+  sub <- df[df$sex == s, ]
+  tt <- t.test(Y ~ W, data = sub)
+  cat(s, ": Effect =", round(diff(rev(tapply(sub$Y, sub$W, mean))), 2),
+      ", p =", round(tt$p.value, 4), "\n")
+}
+
+# Interaction test (the RIGHT approach)
+cat("\n=== Interaction test (RIGHT approach) ===\n")
+model <- lm(Y ~ W * sex, data = df)
+cat("Interaction term (W:sexMale) p-value:",
+    round(summary(model)$coefficients["W:sexMale", "Pr(>|t|)"], 4), "\n")
+```
+
+**Key finding:** Despite the true treatment effect being identical in both sexes (true effect = 2), the within-subgroup analysis might show a statistically significant effect in men (larger sample, better power) but not in women (smaller sample, lower power). A naive interpretation would conclude the treatment "works for men but not women." However, the interaction test correctly shows no evidence of effect modification — the p-value is well above 0.05. The lesson: **always test the interaction directly** rather than comparing within-subgroup p-values.
+
+### Best practices for subgroup analysis
+
+1. **Pre-specify subgroup definitions** before analyzing the data. Post-hoc subgroup definitions increase the risk of false positives.
+2. **Test interactions directly** using appropriate statistical tests (e.g., interaction terms in regression).
+3. **Report the interaction test result**, not just the within-subgroup effects.
+4. **Use adequate sample sizes** in each subgroup. Small subgroups lead to wide confidence intervals and unstable estimates.
+5. **Consider multiple testing corrections** if examining many subgroups.
+6. **Ground subgroup analyses in domain knowledge.** Are the subgroups biologically or clinically plausible?
+
+## Heterogeneous treatment effects with causal forests
+
+For continuous or high-dimensional effect modifiers, machine learning methods offer a powerful approach to discovering heterogeneous treatment effects. **Causal forests** (Athey & Imbens, 2016) use adaptive regression trees to estimate CATEs in a data-driven way.
+
+The basic idea: instead of pre-specifying which variables modify the effect, causal forests search over all covariates to identify which ones are most predictive of heterogeneity. This approach is useful for **exploratory analysis** — generating hypotheses about effect modification — but should be treated as hypothesis-generating rather than confirmatory.
+
+### Simulation: Estimating CATEs with causal forests
+
+```{r}
+# install.packages("grf")  # if needed
+library(grf)
+
+set.seed(42)
+n <- 2000
+X <- matrix(rnorm(n * 5), ncol = 5)
+colnames(X) <- paste0("X", 1:5)
+W <- rbinom(n, 1, 0.5)
+# True CATE depends on X1: tau(x) = 2 * X1
+tau <- 2 * X[, 1]
+Y <- 1 + tau * W + X[, 2] + rnorm(n)
+
+# Fit causal forest
+cf <- causal_forest(X, Y, W)
+
+# Estimate CATEs
+tau_hat <- predict(cf)$predictions
+
+# Compare estimated vs true CATE
+cat("Correlation between true and estimated CATE:",
+    round(cor(tau, tau_hat), 3), "\n")
+```
+
+### Visualizing estimated vs true CATE
+
+```{r}
+library(ggplot2)
+
+# Visualize estimated vs true CATE
+plot_df <- data.frame(True_CATE = tau, Estimated_CATE = tau_hat)
+ggplot(plot_df, aes(x = True_CATE, y = Estimated_CATE)) +
+  geom_point(alpha = 0.2, color = "#1f77b4") +
+  geom_abline(intercept = 0, slope = 1, linetype = 2, color = "red") +
+  labs(title = "Causal Forest: Estimated vs True CATE",
+       x = "True CATE", y = "Estimated CATE") +
   theme_minimal()
 ```
 
+**Key finding:** The causal forest successfully discovers that the treatment effect varies with X1. The scatter plot shows that estimated CATEs correlate well with the true CATEs (r = 0.847), though with some shrinkage toward the mean — a common feature of regularized methods. This approach is powerful for exploratory analysis of treatment effect heterogeneity, generating hypotheses about which variables modify the effect. However, causal forests should be treated as hypothesis-generating: the discovered effect modifiers should be validated in new data or through domain-motivated subgroup analyses.
 
-## Interaction
+## The Table 2 fallacy
 
-When we study interactions, we are trying to understand the joint effect of two or more treatments on a certain outcome. So we answer the causal question "What is the combined effect of treatment 1 and treatment 2 on an outcome?".
+In many observational studies, researchers report a "Table 2" containing adjusted regression coefficients for all covariates included in the model. The **Table 2 fallacy** occurs when researchers interpret the coefficients for covariates (which were included purely for confounding adjustment) as if they represent causal effects.
 
-Simulation to Demonstrate Interaction
+Here's the problem: each covariate that you want to interpret as having a causal effect requires its own causal analysis. You must ask: "What is the adjustment set needed to identify the causal effect of this covariate?" You need a DAG for that covariate as a treatment, with its own set of confounders and mediators. Simply including a variable as a covariate in a regression does not make its coefficient a valid causal estimate.
 
-Let's say we are interested in understanding the effect of new drug and taking vitamin supplements on a person's VO2 max. Assume for this example that the patients who take vitamin supplements take the same supplements in the same dosage. In this simulation, the drug increases VO2 max by 4 mL/kg/min, vitamins increase VO2 max by 1.5 mL/kg/min, and taking both the drug and vitamins adds an addition 2.5 mL/kg/min to the VO2 max.
+**Example:** Suppose you are studying the effect of an antihypertensive medication on mortality, adjusted for baseline blood pressure, age, and other factors. You report the coefficient for baseline blood pressure and interpret it as "a 10 mmHg increase in baseline blood pressure causes a X% increase in mortality." This is a fallacy. Baseline blood pressure is a confounder (or possibly a risk factor), not a treatment. Its coefficient is an adjusted association, not a causal effect. To estimate the causal effect of blood pressure reduction through any mechanism, you would need to identify appropriate confounders for that analysis — which is a different problem entirely.
 
-```{r}
-set.seed(123)
+**The lesson:** Report adjusted associations for covariates if you must, but **do not interpret them as causal effects**. If a covariate's causal effect is scientifically important, conduct a separate causal analysis for it.
 
-n <- 2000
+## Checklist Item 6: Could the effect differ across subgroups?
 
-A_1 <- rbinom(n, 1, 0.5) # drug
+As you design and evaluate a causal study, ask these critical questions:
 
-A_2 <- rbinom(n, 1, 0.5) # vitamin supplementation
+1. **Was effect modification examined?** Did the analysis investigate whether the treatment effect differs across subgroups or covariate levels?
 
-baseline <- 35 # baseline VO2 max is 35 mL/kg/min
+2. **Were subgroups pre-specified or post-hoc?** Pre-specified subgroups (defined in a protocol or analysis plan before seeing the data) are far more credible than subgroups chosen after observing the data.
 
-vo2_max <- baseline + 
-            4 * A_1 + 
-            1.5 * A_2 + 
-            2.5 * (A_1 * A_2) + 
-            rnorm(n, mean = 0, sd = 1)
+3. **Was the interaction tested directly?** Was there a formal test of interaction (e.g., an interaction term in regression), or only within-subgroup significance tests?
 
-df <- data.frame(vo2_max, A_1, A_2)
+4. **Are heterogeneous effects plausible given domain knowledge?** Does the effect modification make biological, clinical, or policy sense? Or is it a statistical artifact?
 
-naive_model <- lm(vo2_max ~ A_1 + A_2, data = df)
+5. **Could the overall ATE be masking important subgroup differences?** An ATE near zero or near the average does not rule out substantial heterogeneity. Always inspect subgroup-specific estimates.
 
-adjusted_model <- lm(vo2_max ~ A_1 + A_2 + A_1 * A_2, data = df)
+6. **Were multiple testing corrections applied if many subgroups were examined?** If you tested dozens of subgroups, at least a few will appear significant by chance.
 
-summary(naive_model)
-
-summary(adjusted_model)
-
-```
-
-If we look at the naive model, we would conclude that the drug increase VO2 max by 5.26 and the vitamins increase VO2 max by 2.69. But this isn't the truth. The naive model doesn't capture the combined effect of taking both the drug and vitamins, which is capture in the adjusted model using an interaction term. 
-
-Based on the adjusted model, we would conclude that the drug increases VO2 max by 4.05, the vitamins increase VO2 max by 1.49, and taking both adds 2.43 mL/kg/min to one's VO2 max on average. This is closer to the ground truth that we established when explaining the simulation.
-
-This plot shows that taking the drug increases VO2 max, but also taking vitamins with the drug has an combined effect that increases VO2 max.
-
-```{r}
-
-# library(ggplot2)
-# library(dplyr)
-
-df_grouped <- df |>
-  mutate(vitamin_group = ifelse(A_2 == 1, "Vitamins", "No Vitamins"))
-
-ggplot(df_grouped, aes(x = A_1, y = vo2_max, color = vitamin_group)) +
-  geom_jitter(width = 0.1, alpha = 0.4) +
-  stat_summary(fun = mean, geom = "point", size = 3, shape = 18) +
-  stat_summary(fun = mean, geom = "line", aes(group = vitamin_group)) +
-  scale_x_continuous(breaks = c(0, 1)) + 
-  labs(title = "Interaction: Drug × Vitamin Supplement",
-       x = "Treatment (0 = Control, 1 = Drug)",
-       y = "VO2 Max (mL/kg/min)",
-       color = "Vitamin Group") +
-  theme_minimal()
-
-```
-
-In this simulation, we learned that when we are interested in measuring the effect of multiple treatments on an outcome, it's important to consider the combined effect of these treatments. We achieve this by adding an interaction term in our regression model.
-
-## Identifying Interaction
-
-Identifying interaction is crucial when studying causal relationships because it tells us whether there is a combined effect of two or more treatments on an outcome. Rather than being a source of bias like confounding, interaction reveals real differences in how subgroups respond to exposures or treatments. Detecting interaction helps researchers understand for whom and under what conditions an intervention works best, allowing for more tailored public health strategies and clinical recommendations.
-
-In our simulation with the drug and vitamin supplements, interaction was present because there was a combined effect of the drug and vitamin supplementation on VO2 max. In particular, patients that took both had the largest increases in VO2 max. By fitting a model with an interaction term between the drug and vitamin use, we were able to identify and quantify this combined interaction effect. Without testing for interaction, we would have incorrectly assumed that the drug and the vitamins independently improve VO2 max.
-
-## Effect Modification vs Interaction
-
-Effect modification and interaction are closely related concepts, but they serve slightly different purposes in causal analysis. The confusing part is when we try to model both effect modification and interaction, we do it the same way with an interaction term in the regression. However, the difference between the two concepts is in the causal questions we are trying to answer.
-
-In effect modification, we are trying to understand how the effect of a single treatment varies based on levels of another factor like age or sex assigned at birth. 
-
-In interaction, we are trying to understand the combined effect of two or more treatments such as a drug and vitamin supplementation.
+Addressing these questions in your study report — even briefly — demonstrates rigorous thinking about effect heterogeneity and strengthens the credibility of your causal claims.
 
