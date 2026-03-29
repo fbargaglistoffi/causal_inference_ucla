@@ -36,11 +36,14 @@ Department of Biostatistics
 UCLA Fielding School of Public Health  
 [falco\@ucla.edu](mailto:falco@ucla.edu)  
 
-Office hours: Right after class (1 hour)
-
 ## Teaching Assistants {.unnumbered}  
 
-TBD — will be announced on the course website.  
+**[Cindy Pang](https://cindyjpang.github.io/)**
+PhD Candidate
+Department of Biostatistics  
+UCLA Fielding School of Public Health  
+[cindypang@g.ucla.edu](mailto:cindypang@g.ucla.edu)  
+
 
 ## Course Logistics {.unnumbered}  
 
@@ -49,7 +52,7 @@ TBD — will be announced on the course website.
 -   **Assignments**: Posted on the course website, due before 8 PM on specified dates  
 -   **Final Project**: Group presentation + written report during finals week  
 
-## Required Materials {.unnumbered}  
+## Materials {.unnumbered}  
 
 **Primary Textbook**:  
 Hernán MA, Robins JM. (2023) *Causal Inference: What If*  
@@ -62,10 +65,6 @@ Hernán MA, Robins JM. (2023) *Causal Inference: What If*
 Will be shared throughout the course.  
 
 ## Learning Objectives {.unnumbered}  
-
-<!--
-> [**Syllabus**](https://drive.google.com/file/d/1BX3TzItawFqx8ejSJK2UkUtC2VJxEZ6h/view?usp=sharing)  
--->
 
 This course introduces students to the foundations of causal inference in public health and medical sciences, with a strong emphasis on the difference between **association and causation**. Students will learn to critically evaluate causal claims, understand causal diagrams (DAGs), and assess study design choices in both randomized and observational studies.  
 
@@ -80,6 +79,19 @@ We will explore how causal effects are identified and estimated, how to detect a
 -   Apply concepts of effect modification, interaction, and confounding  
 -   Interpret findings within the context of public health policy and practice  
 -   Work independently and collaboratively to assess causal research  
+
+## Office Hours {.unnumbered}  
+
+## Office Hours {-} 
+
+Falco J. Bargagli-Stoffi (course, final project):
+
+- Wednesdays: 2:00pm to 3:00pm on [Zoom](https://ucla.zoom.us/my/falco)
+
+Cindy Pang (assignments, grading):
+
+- Via email at [cindypang@g.ucla.edu](mailto:cindypang@g.ucla.edu)  
+
 
 ## Tools {.unnumbered}  
 
