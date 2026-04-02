@@ -83,8 +83,6 @@ We will explore how causal effects are identified and estimated, how to detect a
 
 ## Office Hours {.unnumbered}  
 
-## Office Hours {-} 
-
 Falco J. Bargagli-Stoffi (course, final project):
 
 - Wednesdays: 2:00pm to 3:00pm on [Zoom](https://ucla.zoom.us/my/falco)
