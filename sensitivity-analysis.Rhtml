@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sensitivity Analysis Explorer — The Science of Why</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0f172a; color: #f1f5f9; font-family: system-ui, -apple-system, sans-serif; min-height: 100vh; padding: 24px 16px; }
+  .container { max-width: 880px; margin: 0 auto; }
+  h1 { font-size: 26px; font-weight: 700; text-align: center; margin-bottom: 4px; }
+  .subtitle { text-align: center; color: #94a3b8; font-size: 14px; margin-bottom: 24px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
+  .card { background: #1e293b; border-radius: 12px; padding: 20px; border: 1px solid #334155; margin-bottom: 16px; }
+  .card-label { color: #94a3b8; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+
+  /* Sliders */
+  .slider-group { margin-bottom: 20px; }
+  .slider-header { display: flex; justify-content: space-between; margin-bottom: 4px; }
+  .slider-title { font-size: 14px; font-weight: 600; }
+  .slider-value { font-size: 14px; font-weight: 700; font-family: monospace; }
+  .slider-sub { color: #94a3b8; font-size: 12px; margin-bottom: 6px; }
+  input[type=range] { width: 100%; cursor: pointer; accent-color: #3b82f6; }
+  .slider-range { display: flex; justify-content: space-between; color: #64748b; font-size: 11px; }
+
+  /* Bars */
+  .bar-row { margin-bottom: 14px; }
+  .bar-header { display: flex; justify-content: space-between; margin-bottom: 4px; }
+  .bar-label { font-size: 13px; }
+  .bar-value { font-size: 14px; font-weight: 700; font-family: monospace; }
+  .bar-track { background: #334155; border-radius: 6px; height: 28px; position: relative; overflow: hidden; }
+  .bar-fill { position: absolute; height: 100%; border-radius: 6px; transition: all 0.3s ease; }
+  .bar-center { position: absolute; left: 50%; top: 0; width: 2px; height: 100%; background: #94a3b844; }
+
+  /* Formula */
+  .formula-box { background: #0f172a; border-radius: 8px; padding: 16px; text-align: center; margin-bottom: 12px; line-height: 2.1; font-size: 15px; }
+  .c-obs { color: #60a5fa; }
+  .c-true { color: #22c55e; }
+  .c-bias { color: #ef4444; }
+  .mono { font-family: monospace; font-weight: 700; }
+
+  /* Interpretation */
+  .interp-card { border-radius: 12px; padding: 20px; border-width: 1px 1px 1px 4px; border-style: solid; }
+  .interp-text { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .null-warning { border-radius: 8px; padding: 10px 14px; margin-top: 8px; font-size: 13px; font-weight: 600; }
+  .interp-note { color: #94a3b8; font-size: 12px; margin-top: 10px; line-height: 1.5; }
+
+  /* DAG */
+  .dag-circle { stroke-width: 2; }
+  .dag-text { font-weight: bold; font-family: system-ui; font-size: 16px; }
+  .dag-note { fill: #94a3b8; font-size: 10px; font-style: italic; }
+  .dag-edge-label { font-family: monospace; font-size: 12px; font-weight: 600; }
+
+  /* Try This */
+  .try-this { color: #94a3b8; font-size: 13px; line-height: 1.7; }
+  .try-this strong { color: #f1f5f9; }
+
+  /* Footer */
+  .footer { text-align: center; color: #475569; font-size: 11px; margin-top: 24px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Sensitivity Analysis Explorer</h1>
+  <p class="subtitle">How strong would an unmeasured confounder need to be to explain away your result?</p>
+
+  <div class="grid">
+    <!-- LEFT COLUMN -->
+    <div>
+      <!-- DAG -->
+      <div class="card">
+        <div class="card-label">Causal Diagram</div>
+        <svg id="dag" viewBox="0 0 320 160" style="width:100%">
+          <!-- W node -->
+          <circle cx="50" cy="80" r="28" fill="#3b82f622" stroke="#3b82f6" class="dag-circle"/>
+          <text x="50" y="85" text-anchor="middle" fill="#3b82f6" class="dag-text">W</text>
+          <!-- Y node -->
+          <circle cx="270" cy="80" r="28" fill="#22c55e22" stroke="#22c55e" class="dag-circle"/>
+          <text x="270" y="85" text-anchor="middle" fill="#22c55e" class="dag-text">Y</text>
+          <!-- X node -->
+          <circle cx="160" cy="30" r="28" fill="#ef444422" stroke="#ef4444" class="dag-circle"/>
+          <text x="160" y="35" text-anchor="middle" fill="#ef4444" class="dag-text">X</text>
+          <!-- W→Y arrow -->
+          <defs>
+            <marker id="arr-blue" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#60a5fa"/></marker>
+            <marker id="arr-red" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#ef4444"/></marker>
+          </defs>
+          <line id="arrow-wy" x1="80" y1="80" x2="240" y2="80" stroke="#60a5fa" stroke-width="2.5" marker-end="url(#arr-blue)"/>
+          <text id="label-wy" x="160" y="73" text-anchor="middle" fill="#60a5fa" class="dag-edge-label"></text>
+          <!-- X→W arrow -->
+          <line id="arrow-xw" x1="138" y1="48" x2="72" y2="62" stroke="#ef4444" stroke-dasharray="6,4" marker-end="url(#arr-red)"/>
+          <text id="label-xw" x="95" y="42" text-anchor="middle" fill="#ef4444" class="dag-edge-label"></text>
+          <!-- X→Y arrow -->
+          <line id="arrow-xy" x1="182" y1="48" x2="248" y2="62" stroke="#ef4444" stroke-dasharray="6,4" marker-end="url(#arr-red)"/>
+          <text id="label-xy" x="225" y="42" text-anchor="middle" fill="#ef4444" class="dag-edge-label"></text>
+          <text x="160" y="155" text-anchor="middle" class="dag-note">X = unmeasured confounder (dashed = hypothetical)</text>
+        </svg>
+      </div>
+
+      <!-- Sliders -->
+      <div class="card">
+        <div class="slider-group">
+          <div class="slider-header">
+            <span class="slider-title">Observed Effect (W → Y)</span>
+            <span class="slider-value c-obs" id="val-obs"></span>
+          </div>
+          <div class="slider-sub">What your study found (before worrying about confounding)</div>
+          <input type="range" id="sl-obs" min="-1" max="1" step="0.01" value="-0.30">
+          <div class="slider-range"><span>-1.00</span><span>1.00</span></div>
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-header">
+            <span class="slider-title">γ : Confounder → Treatment (X → W)</span>
+            <span class="slider-value c-bias" id="val-gxw"></span>
+          </div>
+          <div class="slider-sub">How strongly X predicts who gets treated</div>
+          <input type="range" id="sl-gxw" min="-1" max="1" step="0.01" value="0">
+          <div class="slider-range"><span>-1.00</span><span>1.00</span></div>
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-header">
+            <span class="slider-title">δ : Confounder → Outcome (X → Y)</span>
+            <span class="slider-value c-bias" id="val-dxy"></span>
+          </div>
+          <div class="slider-sub">How strongly X affects the outcome directly</div>
+          <input type="range" id="sl-dxy" min="-1" max="1" step="0.01" value="0">
+          <div class="slider-range"><span>-1.00</span><span>1.00</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div>
+      <!-- Formula -->
+      <div class="card">
+        <div class="card-label">Omitted Variable Bias Formula</div>
+        <div class="formula-box">
+          <div><span class="c-obs">Observed</span> = <span class="c-true">True Effect</span> + <span class="c-bias">Bias</span></div>
+          <div><span class="c-bias">Bias</span> = γ × δ = <span class="c-bias mono" id="formula-bias"></span></div>
+          <div><span class="c-true">True Effect</span> = <span class="mono"><span class="c-obs" id="f-obs"></span> − <span class="c-bias" id="f-bias"></span> = <span class="c-true" id="f-true"></span></span></div>
+        </div>
+      </div>
+
+      <!-- Bar chart -->
+      <div class="card">
+        <div class="card-label">Effect Decomposition</div>
+        <div class="bar-row">
+          <div class="bar-header"><span class="bar-label">Observed Effect</span><span class="bar-value c-obs" id="bv-obs"></span></div>
+          <div class="bar-track"><div class="bar-center"></div><div id="bar-obs" class="bar-fill"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-header"><span class="bar-label">Bias (γ × δ)</span><span class="bar-value c-bias" id="bv-bias"></span></div>
+          <div class="bar-track"><div class="bar-center"></div><div id="bar-bias" class="bar-fill"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-header"><span class="bar-label">True Causal Effect</span><span class="bar-value c-true" id="bv-true"></span></div>
+          <div class="bar-track"><div class="bar-center"></div><div id="bar-true" class="bar-fill"></div></div>
+        </div>
+      </div>
+
+      <!-- Interpretation -->
+      <div class="card interp-card" id="interp-card" style="background:#1e293b;">
+        <div class="card-label">Interpretation</div>
+        <p class="interp-text" id="interp-text"></p>
+        <div class="null-warning" id="null-warning" style="display:none;background:#ef444415;color:#ef4444;">
+          The confounder crosses the null — the observed effect could be entirely spurious.
+        </div>
+        <div class="interp-note">
+          Key insight: We can never prove the absence of unmeasured confounders.
+          Sensitivity analysis asks: "How extreme would confounding need to be to change our conclusion?"
+        </div>
+      </div>
+
+      <!-- Try this -->
+      <div class="card">
+        <div class="card-label">Try This</div>
+        <div class="try-this">
+          1. Set observed effect to <strong>−0.30</strong> (exercise reduces heart disease risk)<br>
+          2. Slowly increase γ and δ — how strong must the confounder be to erase the effect?<br>
+          3. Notice: bias = γ × δ, so a <em>moderate</em> confounder on both dimensions creates more bias than a <em>strong</em> confounder on only one
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">The Science of Why — Causal Inference · Prof. Falco J. Bargagli-Stoffi · UCLA Fielding School of Public Health</div>
+</div>
+
+<script>
+const slObs = document.getElementById('sl-obs');
+const slGxw = document.getElementById('sl-gxw');
+const slDxy = document.getElementById('sl-dxy');
+
+function fmt(v) { return (v >= 0 ? '+' : '') + v.toFixed(2); }
+function fmt3(v) { return (v >= 0 ? '+' : '') + v.toFixed(3); }
+
+function setBar(id, value, maxVal, color) {
+  const el = document.getElementById(id);
+  const pct = Math.min(Math.abs(value) / maxVal * 100, 100);
+  const isNeg = value < 0;
+  el.style.background = `linear-gradient(90deg, ${color}88, ${color})`;
+  el.style.width = (pct / 2) + '%';
+  el.style.left = isNeg ? (50 - pct / 2) + '%' : '50%';
+}
+
+function update() {
+  const obs = parseFloat(slObs.value);
+  const gxw = parseFloat(slGxw.value);
+  const dxy = parseFloat(slDxy.value);
+  const bias = gxw * dxy;
+  const trueEff = obs - bias;
+
+  // Slider values
+  document.getElementById('val-obs').textContent = fmt(obs);
+  document.getElementById('val-gxw').textContent = fmt(gxw);
+  document.getElementById('val-dxy').textContent = fmt(dxy);
+
+  // Formula
+  document.getElementById('formula-bias').textContent = fmt(gxw) + ' × ' + fmt(dxy) + ' = ' + fmt3(bias);
+  document.getElementById('f-obs').textContent = fmt(obs);
+  document.getElementById('f-bias').textContent = fmt3(bias);
+  document.getElementById('f-true').textContent = fmt3(trueEff);
+
+  // Bar values
+  document.getElementById('bv-obs').textContent = fmt(obs);
+  document.getElementById('bv-bias').textContent = fmt3(bias);
+  document.getElementById('bv-true').textContent = fmt3(trueEff);
+
+  const maxBar = Math.max(Math.abs(obs), Math.abs(trueEff), Math.abs(bias), 0.5);
+  setBar('bar-obs', obs, maxBar, '#60a5fa');
+  setBar('bar-bias', bias, maxBar, '#ef4444');
+  setBar('bar-true', trueEff, maxBar, '#22c55e');
+
+  // DAG labels & thickness
+  document.getElementById('label-wy').textContent = fmt(trueEff);
+  document.getElementById('label-xw').textContent = fmt(gxw);
+  document.getElementById('label-xy').textContent = fmt(dxy);
+  document.getElementById('arrow-xw').setAttribute('stroke-width', Math.max(1, Math.abs(gxw) * 4));
+  document.getElementById('arrow-xy').setAttribute('stroke-width', Math.max(1, Math.abs(dxy) * 4));
+
+  // Interpretation
+  const biasPct = obs !== 0 ? Math.abs(bias / obs) * 100 : 0;
+  const crossesNull = (obs < 0 && trueEff >= 0) || (obs > 0 && trueEff <= 0);
+  const interpEl = document.getElementById('interp-text');
+  const interpCard = document.getElementById('interp-card');
+  const nullWarn = document.getElementById('null-warning');
+
+  let color, text;
+  if (Math.abs(gxw) < 0.05 || Math.abs(dxy) < 0.05) {
+    color = '#22c55e'; text = 'Confounder is too weak to meaningfully bias the result.';
+  } else if (biasPct < 30) {
+    color = '#22c55e'; text = 'Bias accounts for ~' + biasPct.toFixed(0) + '% of the observed effect. Result is fairly robust.';
+  } else if (biasPct < 70 && !crossesNull) {
+    color = '#f59e0b'; text = 'Bias accounts for ~' + biasPct.toFixed(0) + '% of the observed effect. Result is sensitive to this confounder.';
+  } else if (crossesNull) {
+    color = '#ef4444'; text = 'Bias MORE than explains the observed effect — the true effect may be in the opposite direction!';
+  } else {
+    color = '#ef4444'; text = 'Bias accounts for ~' + Math.min(biasPct, 100).toFixed(0) + '%+ of the observed effect. The finding is very fragile.';
+  }
+
+  interpEl.style.color = color;
+  interpEl.textContent = text;
+  interpCard.style.borderColor = color + '44';
+  interpCard.style.borderLeftColor = color;
+  nullWarn.style.display = crossesNull ? 'block' : 'none';
+}
+
+slObs.addEventListener('input', update);
+slGxw.addEventListener('input', update);
+slDxy.addEventListener('input', update);
+update();
+</script>
+</body>
+</html>
